@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Parqueo.AppConsole/Parqueo.AppConsole.csproj" />
+  <Project Path="Parqueo.Model/Parqueo.Model.csproj" />
+  <Project Path="Parqueo.Tests/Parqueo.Tests.csproj" />
+</Solution>
