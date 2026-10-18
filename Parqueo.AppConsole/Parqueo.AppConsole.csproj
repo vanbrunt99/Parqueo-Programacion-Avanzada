@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Parqueo.Model\Parqueo.Model.csproj" />
+    <ProjectReference Include="..\Parqueo.BusinessLogic\Parqueo.BusinessLogic.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,6 +23,8 @@
 
   <ItemGroup>
     <None Update="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
+    <!-- Copia de trabajo de los JSON junto al ejecutable: la consola nunca modifica la carpeta Datos/ del repositorio. -->
+    <None Include="..\Datos\*.json" Link="Datos\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

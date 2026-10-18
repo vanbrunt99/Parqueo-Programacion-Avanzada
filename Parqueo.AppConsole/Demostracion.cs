@@ -1,0 +1,118 @@
+using System.Globalization;
+using Parqueo.BusinessLogic.Consultas;
+using Parqueo.BusinessLogic.Interfaces;
+using Parqueo.Model.Entidades;
+
+namespace Parqueo.AppConsole;
+
+/// <summary>
+/// Ejecuta las consultas del enunciado contra las interfaces de repositorio.
+/// La clase no sabe si los datos vienen de JSON o de PostgreSQL: lo decide la
+/// inyección de dependencias en Program.cs.
+/// </summary>
+public sealed class Demostracion
+{
+    private static readonly CultureInfo Formato = CultureInfo.InvariantCulture;
+    private static readonly DateTime Desde = new(2026, 10, 1, 0, 0, 0);
+    private static readonly DateTime Hasta = new(2026, 10, 31, 23, 59, 59);
+
+    private readonly IAutomovilRepositorio _automoviles;
+    private readonly IParqueoRepositorio _parqueos;
+    private readonly IIngresoAutomovilRepositorio _ingresos;
+
+    public Demostracion(IAutomovilRepositorio automoviles, IParqueoRepositorio parqueos, IIngresoAutomovilRepositorio ingresos)
+    {
+        _automoviles = automoviles;
+        _parqueos = parqueos;
+        _ingresos = ingresos;
+    }
+
+    public async Task EjecutarConsultasAsync()
+    {
+        Titulo("Consulta por llave primaria");
+        var automovil = await _automoviles.ObtenerPorIdAsync(1);
+        Console.WriteLine(automovil is null ? "Automóvil 1: no existe" : $"Automóvil 1: {Describir(automovil)}; ingresos: {automovil.PrqIngresoAutomovils.Count}");
+        var parqueo = await _parqueos.ObtenerPorIdAsync(3);
+        Console.WriteLine(parqueo is null ? "Parqueo 3: no existe" : $"Parqueo 3: {Describir(parqueo)}; ingresos: {parqueo.PrqIngresoAutomovils.Count}");
+        var ingreso = await _ingresos.ObtenerPorIdAsync(6);
+        Console.WriteLine(ingreso is null ? "Ingreso 6: no existe" :
+            $"Ingreso 6: {ingreso.FechaHoraEntrada:yyyy-MM-dd HH:mm} → {Fecha(ingreso.FechaHoraSalida)}; " +
+            $"minutos {Numero(ingreso.DuracionEstadiaMinutos)}, horas {Numero(ingreso.DuracionEstadiaHoras)}, monto {Monto(ingreso.MontoTotalAPagar)}");
+        Console.WriteLine($"Automóvil 999: {(await _automoviles.ObtenerPorIdAsync(999) is null ? "no existe (null)" : "existe")}");
+
+        Titulo("Automóviles por color, intervalo de año, fabricante y tipo (aproximados)");
+        await MostrarAutomovilesAsync("Color ~ 'ro'", new FiltroAutomovil(Color: "ro"));
+        await MostrarAutomovilesAsync("Años 2015–2019", new FiltroAutomovil(AnioDesde: 2015, AnioHasta: 2019));
+        await MostrarAutomovilesAsync("Fabricante ~ 'da'", new FiltroAutomovil(Fabricante: "da"));
+        await MostrarAutomovilesAsync("Tipo ~ 'sedan'", new FiltroAutomovil(Tipo: "sedan"));
+        await MostrarAutomovilesAsync("Tipo ~ '4x4' y año ≥ 2019", new FiltroAutomovil(AnioDesde: 2019, Tipo: "4x4"));
+
+        Titulo("Parqueos por provincia, nombre y rango de precio por hora");
+        await MostrarParqueosAsync("Provincia ~ 'san jose'", new FiltroParqueo(NombreProvincia: "san jose"));
+        await MostrarParqueosAsync("Nombre ~ 'mercado'", new FiltroParqueo(Nombre: "mercado"));
+        await MostrarParqueosAsync("Precio entre 700 y 1250", new FiltroParqueo(PrecioMinimo: 700m, PrecioMaximo: 1250m));
+
+        Titulo("ObtenerPrecioPorHoraPorParqueo");
+        foreach (int idParqueo in new[] { 1, 2, 3, 99 })
+        {
+            decimal? precio = await _ingresos.ObtenerPrecioPorHoraPorParqueo(idParqueo);
+            Console.WriteLine($"Parqueo {idParqueo}: {(precio is null ? "null (no existe)" : Monto(precio))}");
+        }
+
+        Titulo($"Automóviles tipo '4x4' que ingresaron entre {Desde:yyyy-MM-dd HH:mm} y {Hasta:yyyy-MM-dd HH:mm}");
+        MostrarIngresos(await _ingresos.ListarPorTipoAsync("4x4", Desde, Hasta));
+
+        Titulo($"Automóviles en parqueos de 'Heredia' entre {Desde:yyyy-MM-dd HH:mm} y {Hasta:yyyy-MM-dd HH:mm}");
+        MostrarIngresos(await _ingresos.ListarPorProvinciaAsync("heredia", Desde, Hasta));
+    }
+
+    private async Task MostrarAutomovilesAsync(string descripcion, FiltroAutomovil filtro)
+    {
+        var resultado = await _automoviles.BuscarAsync(filtro);
+        Console.WriteLine($"{descripcion}: {resultado.Count} resultado(s)");
+        foreach (var automovil in resultado)
+        {
+            Console.WriteLine($"   {Describir(automovil)}");
+        }
+    }
+
+    private async Task MostrarParqueosAsync(string descripcion, FiltroParqueo filtro)
+    {
+        var resultado = await _parqueos.BuscarAsync(filtro);
+        Console.WriteLine($"{descripcion}: {resultado.Count} resultado(s)");
+        foreach (var parqueo in resultado)
+        {
+            Console.WriteLine($"   {Describir(parqueo)}");
+        }
+    }
+
+    private static void MostrarIngresos(IReadOnlyList<IngresoAutomovilResumen> registros)
+    {
+        Console.WriteLine("Consec. | Automóvil                          | Provincia | Entrada          | Salida           | Precio/h | Monto");
+        foreach (var r in registros)
+        {
+            string auto = $"#{r.IdAutomovil} {r.Fabricante} {r.Color} {r.Anio} ({r.Tipo})";
+            Console.WriteLine(
+                $"{r.Consecutivo,7} | {auto,-34} | {r.NombreProvincia,-9} | {r.FechaHoraEntrada:yyyy-MM-dd HH:mm} | " +
+                $"{Fecha(r.FechaHoraSalida),-16} | {Monto(r.PrecioPorHora),8} | {Monto(r.MontoACancelar)}");
+        }
+
+        Console.WriteLine($"Total de registros: {registros.Count}; total facturado: {Monto(registros.Sum(r => r.MontoACancelar ?? 0m))}");
+    }
+
+    private static string Describir(PrqAutomovil a) => $"#{a.Id} {a.Color}, {a.Anio}, {a.Fabricante}, {a.Tipo}";
+
+    private static string Describir(PrqParqueo p) => $"#{p.Id} {p.Nombre} ({p.NombreProvincia}) {Monto(p.PrecioPorHora)}/h";
+
+    private static string Fecha(DateTime? fecha) => fecha?.ToString("yyyy-MM-dd HH:mm", Formato) ?? "(en curso)";
+
+    private static string Monto(decimal? valor) => valor?.ToString("0.00", Formato) ?? "null";
+
+    private static string Numero(decimal? valor) => valor?.ToString("0.####", Formato) ?? "null";
+
+    private static void Titulo(string texto)
+    {
+        Console.WriteLine();
+        Console.WriteLine($"=== {texto} ===");
+    }
+}
