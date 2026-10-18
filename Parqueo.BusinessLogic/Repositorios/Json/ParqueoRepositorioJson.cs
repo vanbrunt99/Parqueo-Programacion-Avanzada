@@ -8,11 +8,24 @@ namespace Parqueo.BusinessLogic.Repositorios.Json;
 public sealed class ParqueoRepositorioJson : RepositorioJsonBase<PrqParqueo>, IParqueoRepositorio
 {
     public ParqueoRepositorioJson(FuenteDatosJson fuente)
-        : base(fuente, FuenteDatosJson.ArchivoParqueos)
+        : base(fuente, FuenteDatosJson.ArchivoParqueos, "prq_parqueo")
     {
     }
 
     protected override int ObtenerLlave(PrqParqueo entidad) => entidad.Id;
+
+    protected override void AsignarLlave(PrqParqueo entidad, int llave) => entidad.Id = llave;
+
+    protected override void Validar(PrqParqueo entidad) => Validador.Validar(entidad);
+
+    protected override async Task ValidarBorradoAsync(int id, CancellationToken cancelacion)
+    {
+        var ingresos = await Fuente.LeerAsync<PrqIngresoAutomovil>(FuenteDatosJson.ArchivoIngresos, cancelacion);
+        if (ingresos.Any(i => i.IdParqueo == id))
+        {
+            throw Validador.RegistroConIngresos(NombreTabla, id);
+        }
+    }
 
     protected override async Task IncluirPropiedadesNavegacionAsync(PrqParqueo parqueo, CancellationToken cancelacion)
     {

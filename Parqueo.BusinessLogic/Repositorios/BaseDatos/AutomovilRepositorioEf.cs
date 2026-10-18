@@ -10,12 +10,22 @@ namespace Parqueo.BusinessLogic.Repositorios.BaseDatos;
 public sealed class AutomovilRepositorioEf : RepositorioEfBase<PrqAutomovil>, IAutomovilRepositorio
 {
     public AutomovilRepositorioEf(ParqueoContext contexto)
-        : base(contexto, nameof(PrqAutomovil.Id))
+        : base(contexto, nameof(PrqAutomovil.Id), "prq_automovil")
     {
     }
 
     protected override IQueryable<PrqAutomovil> IncluirPropiedadesNavegacion(IQueryable<PrqAutomovil> consulta) =>
         consulta.Include(a => a.PrqIngresoAutomovils);
+
+    protected override void Validar(PrqAutomovil entidad) => Validador.Validar(entidad);
+
+    protected override async Task ValidarBorradoAsync(int id, CancellationToken cancelacion)
+    {
+        if (await Contexto.PrqIngresoAutomovils.AnyAsync(i => i.IdAutomovil == id, cancelacion))
+        {
+            throw Validador.RegistroConIngresos(NombreTabla, id);
+        }
+    }
 
     public async Task<IReadOnlyList<PrqAutomovil>> BuscarAsync(
         FiltroAutomovil filtro, Paginacion? paginacion = null, CancellationToken cancelacion = default)

@@ -10,11 +10,30 @@ public sealed class IngresoAutomovilRepositorioJson : RepositorioJsonBase<PrqIng
     private readonly GeneradorResumenIngresos _generadorResumen = new();
 
     public IngresoAutomovilRepositorioJson(FuenteDatosJson fuente)
-        : base(fuente, FuenteDatosJson.ArchivoIngresos)
+        : base(fuente, FuenteDatosJson.ArchivoIngresos, "prq_ingreso_automovil")
     {
     }
 
     protected override int ObtenerLlave(PrqIngresoAutomovil entidad) => entidad.Consecutivo;
+
+    protected override void AsignarLlave(PrqIngresoAutomovil entidad, int llave) => entidad.Consecutivo = llave;
+
+    protected override void Validar(PrqIngresoAutomovil entidad) => Validador.Validar(entidad);
+
+    protected override async Task ValidarReferenciasAsync(PrqIngresoAutomovil ingreso, CancellationToken cancelacion)
+    {
+        var parqueos = await Fuente.LeerAsync<PrqParqueo>(FuenteDatosJson.ArchivoParqueos, cancelacion);
+        if (!parqueos.Any(p => p.Id == ingreso.IdParqueo))
+        {
+            throw Validador.ReferenciaInexistente("prq_parqueo", ingreso.IdParqueo);
+        }
+
+        var automoviles = await Fuente.LeerAsync<PrqAutomovil>(FuenteDatosJson.ArchivoAutomoviles, cancelacion);
+        if (!automoviles.Any(a => a.Id == ingreso.IdAutomovil))
+        {
+            throw Validador.ReferenciaInexistente("prq_automovil", ingreso.IdAutomovil);
+        }
+    }
 
     protected override async Task IncluirPropiedadesNavegacionAsync(PrqIngresoAutomovil ingreso, CancellationToken cancelacion)
     {

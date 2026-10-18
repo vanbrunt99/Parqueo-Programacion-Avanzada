@@ -56,6 +56,15 @@ public class GeneradorResumenIngresosPruebas
         public Task<PrqIngresoAutomovil?> ObtenerPorIdAsync(int id, CancellationToken cancelacion = default) =>
             throw new NotSupportedException();
 
+        public Task<PrqIngresoAutomovil> InsertarAsync(PrqIngresoAutomovil entidad, CancellationToken cancelacion = default) =>
+            throw new NotSupportedException();
+
+        public Task<bool> ActualizarAsync(PrqIngresoAutomovil entidad, CancellationToken cancelacion = default) =>
+            throw new NotSupportedException();
+
+        public Task<bool> BorrarAsync(int id, CancellationToken cancelacion = default) =>
+            throw new NotSupportedException();
+
         public Task<IReadOnlyList<IngresoAutomovilResumen>> ListarPorTipoAsync(string tipo, DateTime desde, DateTime hasta, Paginacion? paginacion = null, CancellationToken cancelacion = default) =>
             throw new NotSupportedException();
 

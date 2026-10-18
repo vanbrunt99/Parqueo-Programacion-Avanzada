@@ -66,6 +66,69 @@ public sealed class Demostracion
         MostrarIngresos(await _ingresos.ListarPorProvinciaAsync("heredia", Desde, Hasta));
     }
 
+    /// <summary>
+    /// Inserta, actualiza y borra un registro en cada tabla. Al final borra lo que
+    /// insertó, de modo que los datos quedan como estaban (salvo el avance de las
+    /// secuencias de identidad en PostgreSQL).
+    /// </summary>
+    public async Task EjecutarCrudAsync()
+    {
+        Titulo("CRUD: insertar");
+        var automovil = await _automoviles.InsertarAsync(
+            new PrqAutomovil { Color = "Celeste", Anio = 2024, Fabricante = "Suzuki", Tipo = "moto" });
+        Console.WriteLine($"Automóvil insertado: {Describir(automovil)}");
+
+        var parqueo = await _parqueos.InsertarAsync(
+            new PrqParqueo { NombreProvincia = "Limón", Nombre = "Parqueo del Puerto", PrecioPorHora = 950.25m });
+        Console.WriteLine($"Parqueo insertado:   {Describir(parqueo)}");
+
+        var ingreso = await _ingresos.InsertarAsync(new PrqIngresoAutomovil
+        {
+            IdParqueo = parqueo.Id,
+            IdAutomovil = automovil.Id,
+            FechaHoraEntrada = new DateTime(2026, 10, 18, 9, 0, 0),
+        });
+        var leido = await _ingresos.ObtenerPorIdAsync(ingreso.Consecutivo);
+        Console.WriteLine($"Ingreso insertado:   #{leido!.Consecutivo}, entrada {leido.FechaHoraEntrada:yyyy-MM-dd HH:mm}, salida {Fecha(leido.FechaHoraSalida)}, monto {Monto(leido.MontoTotalAPagar)}");
+
+        Titulo("CRUD: actualizar");
+        automovil.Color = "Celeste metálico";
+        Console.WriteLine($"Automóvil actualizado: {await _automoviles.ActualizarAsync(automovil)} → {Describir((await _automoviles.ObtenerPorIdAsync(automovil.Id))!)}");
+        leido.FechaHoraSalida = new DateTime(2026, 10, 18, 10, 40, 0);
+        Console.WriteLine($"Ingreso actualizado (registro de salida): {await _ingresos.ActualizarAsync(leido)}");
+        leido = await _ingresos.ObtenerPorIdAsync(ingreso.Consecutivo);
+        Console.WriteLine($"   minutos {Numero(leido!.DuracionEstadiaMinutos)}, horas {Numero(leido.DuracionEstadiaHoras)}, monto {Monto(leido.MontoTotalAPagar)}");
+        Console.WriteLine($"Actualizar automóvil inexistente (999): {await _automoviles.ActualizarAsync(new PrqAutomovil { Id = 999, Color = "X", Anio = 2020, Fabricante = "X", Tipo = "moto" })}");
+
+        Titulo("CRUD: validaciones e integridad referencial");
+        await MostrarErrorAsync("Insertar automóvil tipo 'camión'",
+            () => _automoviles.InsertarAsync(new PrqAutomovil { Color = "Rojo", Anio = 2020, Fabricante = "Isuzu", Tipo = "camión" }));
+        await MostrarErrorAsync("Insertar ingreso con parqueo 999",
+            () => _ingresos.InsertarAsync(new PrqIngresoAutomovil { IdParqueo = 999, IdAutomovil = automovil.Id, FechaHoraEntrada = new DateTime(2026, 10, 18, 9, 0, 0) }));
+        await MostrarErrorAsync("Borrar automóvil con ingresos",
+            () => _automoviles.BorrarAsync(automovil.Id));
+
+        Titulo("CRUD: borrar");
+        Console.WriteLine($"Ingreso #{ingreso.Consecutivo} borrado: {await _ingresos.BorrarAsync(ingreso.Consecutivo)}");
+        Console.WriteLine($"Automóvil #{automovil.Id} borrado: {await _automoviles.BorrarAsync(automovil.Id)}");
+        Console.WriteLine($"Parqueo #{parqueo.Id} borrado: {await _parqueos.BorrarAsync(parqueo.Id)}");
+        Console.WriteLine($"Borrar parqueo inexistente (999): {await _parqueos.BorrarAsync(999)}");
+        Console.WriteLine($"Consulta posterior del automóvil #{automovil.Id}: {(await _automoviles.ObtenerPorIdAsync(automovil.Id) is null ? "null (ya no existe)" : "existe")}");
+    }
+
+    private static async Task MostrarErrorAsync(string descripcion, Func<Task> operacion)
+    {
+        try
+        {
+            await operacion();
+            Console.WriteLine($"{descripcion}: se aceptó (inesperado)");
+        }
+        catch (Exception error) when (error is ArgumentException or InvalidOperationException)
+        {
+            Console.WriteLine($"{descripcion}: rechazado ({error.GetType().Name}) — {error.Message}");
+        }
+    }
+
     private async Task MostrarAutomovilesAsync(string descripcion, FiltroAutomovil filtro)
     {
         var resultado = await _automoviles.BuscarAsync(filtro);

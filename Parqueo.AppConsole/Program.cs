@@ -48,6 +48,13 @@ Console.WriteLine(origen == OrigenDatos.BaseDatos
 using var alcance = host.Services.CreateScope();
 var demostracion = alcance.ServiceProvider.GetRequiredService<Demostracion>();
 await demostracion.EjecutarConsultasAsync();
+
+// Demostración opcional de insertar, actualizar y borrar: --Crud=true
+if (builder.Configuration.GetValue<bool>("Crud"))
+{
+    await demostracion.EjecutarCrudAsync();
+}
+
 return 0;
 
 // Muestra servidor, base y usuario, nunca la contraseña.

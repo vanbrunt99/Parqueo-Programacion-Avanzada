@@ -12,7 +12,7 @@ public sealed class IngresoAutomovilRepositorioEf : RepositorioEfBase<PrqIngreso
     private readonly GeneradorResumenIngresos _generadorResumen = new();
 
     public IngresoAutomovilRepositorioEf(ParqueoContext contexto)
-        : base(contexto, nameof(PrqIngresoAutomovil.Consecutivo))
+        : base(contexto, nameof(PrqIngresoAutomovil.Consecutivo), "prq_ingreso_automovil")
     {
     }
 
@@ -20,6 +20,21 @@ public sealed class IngresoAutomovilRepositorioEf : RepositorioEfBase<PrqIngreso
         consulta
             .Include(i => i.IdAutomovilNavigation)
             .Include(i => i.IdParqueoNavigation);
+
+    protected override void Validar(PrqIngresoAutomovil entidad) => Validador.Validar(entidad);
+
+    protected override async Task ValidarReferenciasAsync(PrqIngresoAutomovil ingreso, CancellationToken cancelacion)
+    {
+        if (!await Contexto.PrqParqueos.AnyAsync(p => p.Id == ingreso.IdParqueo, cancelacion))
+        {
+            throw Validador.ReferenciaInexistente("prq_parqueo", ingreso.IdParqueo);
+        }
+
+        if (!await Contexto.PrqAutomovils.AnyAsync(a => a.Id == ingreso.IdAutomovil, cancelacion))
+        {
+            throw Validador.ReferenciaInexistente("prq_automovil", ingreso.IdAutomovil);
+        }
+    }
 
     public async Task<decimal?> ObtenerPrecioPorHoraPorParqueo(int idParqueo, CancellationToken cancelacion = default)
     {

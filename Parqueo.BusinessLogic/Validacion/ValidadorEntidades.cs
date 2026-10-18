@@ -1,0 +1,118 @@
+using Parqueo.Model.Entidades;
+
+namespace Parqueo.BusinessLogic.Validacion;
+
+/// <summary>
+/// Reglas de validación de las tres tablas, compartidas por los repositorios de EF
+/// y de JSON (una sola fuente de verdad). Reflejan las restricciones de
+/// diseño-bd.sql para que los archivos JSON acepten exactamente los mismos datos
+/// que PostgreSQL. Los datos inválidos producen <see cref="ArgumentException"/>.
+/// </summary>
+public sealed class ValidadorEntidades
+{
+    /// <summary>Tipos permitidos, iguales a la restricción ck_prq_automovil_tipo.</summary>
+    public static readonly IReadOnlyList<string> TiposAutomovil = ["sedán", "4x4", "moto"];
+
+    /// <summary>Provincias permitidas, iguales a la restricción ck_prq_parqueo_provincia.</summary>
+    public static readonly IReadOnlyList<string> Provincias =
+        ["San José", "Alajuela", "Cartago", "Heredia", "Guanacaste", "Puntarenas", "Limón"];
+
+    public const int AnioMinimo = 1886;
+
+    private const decimal PrecioMaximo = 99_999_999.99m; // numeric(10,2)
+
+    public void Validar(PrqAutomovil automovil)
+    {
+        ArgumentNullException.ThrowIfNull(automovil);
+        ValidarTexto(automovil.Color, "color", 30);
+        ValidarTexto(automovil.Fabricante, "fabricante", 50);
+
+        int anioMaximo = DateTime.Today.Year + 1;
+        if (automovil.Anio < AnioMinimo || automovil.Anio > anioMaximo)
+        {
+            throw new ArgumentException($"El año debe estar entre {AnioMinimo} y {anioMaximo}; se recibió {automovil.Anio}.");
+        }
+
+        if (!TiposAutomovil.Contains(automovil.Tipo))
+        {
+            throw new ArgumentException(
+                $"El tipo '{automovil.Tipo}' no es válido. Valores permitidos: {string.Join(", ", TiposAutomovil)}.");
+        }
+    }
+
+    public void Validar(PrqParqueo parqueo)
+    {
+        ArgumentNullException.ThrowIfNull(parqueo);
+        ValidarTexto(parqueo.Nombre, "nombre del parqueo", 100);
+
+        if (!Provincias.Contains(parqueo.NombreProvincia))
+        {
+            throw new ArgumentException(
+                $"La provincia '{parqueo.NombreProvincia}' no es válida. Valores permitidos: {string.Join(", ", Provincias)}.");
+        }
+
+        if (parqueo.PrecioPorHora <= 0 || parqueo.PrecioPorHora > PrecioMaximo)
+        {
+            throw new ArgumentException($"El precio por hora debe ser mayor que 0 y menor o igual a {PrecioMaximo}.");
+        }
+
+        if (decimal.Round(parqueo.PrecioPorHora, 2) != parqueo.PrecioPorHora)
+        {
+            throw new ArgumentException("El precio por hora admite como máximo 2 decimales.");
+        }
+    }
+
+    public void Validar(PrqIngresoAutomovil ingreso)
+    {
+        ArgumentNullException.ThrowIfNull(ingreso);
+
+        if (ingreso.IdParqueo <= 0 || ingreso.IdAutomovil <= 0)
+        {
+            throw new ArgumentException("El ingreso debe indicar un id de parqueo y un id de automóvil válidos.");
+        }
+
+        if (ingreso.FechaHoraEntrada == default)
+        {
+            throw new ArgumentException("Debe indicar la fecha y hora de entrada.");
+        }
+
+        if (ingreso.FechaHoraEntrada.Kind == DateTimeKind.Utc || ingreso.FechaHoraSalida?.Kind == DateTimeKind.Utc)
+        {
+            throw new ArgumentException("Las fechas se registran en hora local de Costa Rica, no en UTC.");
+        }
+
+        if (ingreso.FechaHoraSalida is DateTime salida && salida <= ingreso.FechaHoraEntrada)
+        {
+            throw new ArgumentException("La fecha y hora de salida debe ser posterior a la de entrada.");
+        }
+    }
+
+    /// <summary>Error de llave foránea: el registro referenciado no existe.</summary>
+    public InvalidOperationException ReferenciaInexistente(string tabla, int id) =>
+        new($"No existe el registro {id} en {tabla}; no se puede guardar el ingreso.");
+
+    /// <summary>Error de borrado: el registro tiene ingresos que lo referencian.</summary>
+    public InvalidOperationException RegistroConIngresos(string tabla, int id) =>
+        new($"No se puede borrar el registro {id} de {tabla} porque tiene ingresos registrados.");
+
+    /// <summary>Error de inserción con llave primaria repetida.</summary>
+    public InvalidOperationException LlaveDuplicada(string tabla, int id) =>
+        new($"Ya existe un registro con la llave {id} en {tabla}.");
+
+    /// <summary>La llave la asigna el origen de datos (identidad o consecutivo).</summary>
+    public ArgumentException LlaveNoPermitida(string tabla, int id) =>
+        new($"La llave de {tabla} la asigna el origen de datos; envíe 0 en lugar de {id}.");
+
+    private static void ValidarTexto(string? valor, string campo, int longitudMaxima)
+    {
+        if (string.IsNullOrWhiteSpace(valor))
+        {
+            throw new ArgumentException($"El campo {campo} es obligatorio.");
+        }
+
+        if (valor.Length > longitudMaxima)
+        {
+            throw new ArgumentException($"El campo {campo} admite como máximo {longitudMaxima} caracteres.");
+        }
+    }
+}
