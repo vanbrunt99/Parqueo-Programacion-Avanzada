@@ -1,0 +1,34 @@
+# Entorno: contenedor Linux del agente (Ubuntu 24.04, .NET SDK 10.0.402, PostgreSQL 16.15 LOCAL,
+# base parqueo_local, usuario estudiante_prq). NO corresponde a la instancia en la nube del profesor.
+# Fecha de ejecución: 17 de octubre de 2026 (hora de Costa Rica). Salida real, sin editar; las contraseñas nunca se imprimen.
+# Comando: psql -h 127.0.0.1 -U estudiante_prq -d parqueo_local -f BaseDatos/verificar-restricciones.sql
+# (cada sentencia debe ser rechazada por una restricción; se ejecutó después de la demostración de la consola)
+
+SET
+-- Tipo inválido
+psql:BaseDatos/verificar-restricciones.sql:15: ERROR:  new row for relation "prq_automovil" violates check constraint "ck_prq_automovil_tipo"
+DETAIL:  Failing row contains (8, Café, 2020, Kia, camión).
+-- Año fuera de rango
+psql:BaseDatos/verificar-restricciones.sql:17: ERROR:  new row for relation "prq_automovil" violates check constraint "ck_prq_automovil_anio"
+DETAIL:  Failing row contains (9, Café, 1700, Kia, sedán).
+-- Precio por hora en cero
+psql:BaseDatos/verificar-restricciones.sql:19: ERROR:  new row for relation "prq_parqueo" violates check constraint "ck_prq_parqueo_precio_por_hora"
+DETAIL:  Failing row contains (5, Limón, Parqueo Puerto, 0.00).
+-- Provincia inexistente
+psql:BaseDatos/verificar-restricciones.sql:21: ERROR:  new row for relation "prq_parqueo" violates check constraint "ck_prq_parqueo_provincia"
+DETAIL:  Failing row contains (6, Panamá, Parqueo X, 500.00).
+-- Salida anterior a la entrada
+psql:BaseDatos/verificar-restricciones.sql:23: ERROR:  new row for relation "prq_ingreso_automovil" violates check constraint "ck_prq_ingreso_automovil_salida_posterior"
+DETAIL:  Failing row contains (19, 1, 1, 2026-10-18 10:00:00, 2026-10-18 09:00:00).
+-- Parqueo inexistente (llave foránea)
+psql:BaseDatos/verificar-restricciones.sql:25: ERROR:  insert or update on table "prq_ingreso_automovil" violates foreign key constraint "fk_prq_ingreso_automovil_parqueo"
+DETAIL:  Key (id_parqueo)=(99) is not present in table "prq_parqueo".
+-- Borrar automóvil con ingresos (ON DELETE RESTRICT)
+psql:BaseDatos/verificar-restricciones.sql:27: ERROR:  update or delete on table "prq_automovil" violates foreign key constraint "fk_prq_ingreso_automovil_automovil" on table "prq_ingreso_automovil"
+DETAIL:  Key (id)=(1) is still referenced from table "prq_ingreso_automovil".
+-- Conteos sin cambios
+ autos | parqueos | ingresos 
+-------+----------+----------
+     6 |        3 |       17
+(1 row)
+

@@ -1,0 +1,253 @@
+# Entorno: contenedor Linux del agente (Ubuntu 24.04, .NET SDK 10.0.402, PostgreSQL 16.15 LOCAL,
+# base parqueo_local, usuario estudiante_prq). NO corresponde a la instancia en la nube del profesor.
+# Fecha de ejecución: 17 de octubre de 2026 (hora de Costa Rica). Salida real, sin editar; las contraseñas nunca se imprimen.
+# 1) dotnet build Parqueo.slnx
+  Parqueo.Model -> /home/claude/Parqueo-Programacion-Avanzada/Parqueo.Model/bin/Debug/net10.0/Parqueo.Model.dll
+  Parqueo.BusinessLogic -> /home/claude/Parqueo-Programacion-Avanzada/Parqueo.BusinessLogic/bin/Debug/net10.0/Parqueo.BusinessLogic.dll
+  Parqueo.AppConsole -> /home/claude/Parqueo-Programacion-Avanzada/Parqueo.AppConsole/bin/Debug/net10.0/Parqueo.AppConsole.dll
+  Parqueo.Tests -> /home/claude/Parqueo-Programacion-Avanzada/Parqueo.Tests/bin/Debug/net10.0/Parqueo.Tests.dll
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+# 2) dotnet test Parqueo.slnx   (sin PARQUEO_PRUEBAS_BD: las pruebas de PostgreSQL se omiten)
+Passed!  - Failed:     0, Passed:   137, Skipped:    94, Total:   231, Duration: 1 s - Parqueo.Tests.dll (net10.0)
+
+# 3) dotnet test Parqueo.slnx --logger "console;verbosity=normal"   (con PARQUEO_PRUEBAS_BD apuntando a parqueo_local)
+  Passed Parqueo.Tests.Consultas.BusquedaAproximadaPruebas.TextoVacio_NoGeneraPatron(texto: null) 
+  Passed Parqueo.Tests.Consultas.BusquedaAproximadaPruebas.TextoVacio_NoGeneraPatron(texto: "") 
+  Passed Parqueo.Tests.Consultas.BusquedaAproximadaPruebas.TextoVacio_NoGeneraPatron(texto: "   ") 
+  Passed Parqueo.Tests.Consultas.BusquedaAproximadaPruebas.Coincide_SinDistinguirMayusculasNiTildes(texto: "san   josé", valor: "San José") 
+  Passed Parqueo.Tests.Consultas.BusquedaAproximadaPruebas.Coincide_SinDistinguirMayusculasNiTildes(texto: "sedan", valor: "sedán") 
+  Passed Parqueo.Tests.Consultas.BusquedaAproximadaPruebas.Coincide_SinDistinguirMayusculasNiTildes(texto: "a-b@c", valor: "A-B@C") 
+  Passed Parqueo.Tests.Consultas.BusquedaAproximadaPruebas.Coincide_SinDistinguirMayusculasNiTildes(texto: "limon", valor: "Limón") 
+  Passed Parqueo.Tests.Consultas.BusquedaAproximadaPruebas.Coincide_SinDistinguirMayusculasNiTildes(texto: "4x4", valor: "4x4") 
+  Passed Parqueo.Tests.Consultas.BusquedaAproximadaPruebas.Coincide_SinDistinguirMayusculasNiTildes(texto: "ruinas", valor: "Parqueo Las Ruinas") 
+  Passed Parqueo.Tests.Consultas.BusquedaAproximadaPruebas.Coincide_SinDistinguirMayusculasNiTildes(texto: "josé", valor: "San José") 
+  Passed Parqueo.Tests.Consultas.BusquedaAproximadaPruebas.Coincide_SinDistinguirMayusculasNiTildes(texto: "parqueo_x", valor: "Parqueo_X") 
+  Passed Parqueo.Tests.Consultas.BusquedaAproximadaPruebas.Coincide_SinDistinguirMayusculasNiTildes(texto: "TOYO", valor: "Toyota") 
+  Passed Parqueo.Tests.Consultas.BusquedaAproximadaPruebas.Coincide_SinDistinguirMayusculasNiTildes(texto: "san jose", valor: "San José") 
+  Passed Parqueo.Tests.Consultas.BusquedaAproximadaPruebas.Coincide_SinDistinguirMayusculasNiTildes(texto: "SEDÁN", valor: "sedán") 
+  Passed Parqueo.Tests.Consultas.BusquedaAproximadaPruebas.NoCoincide_CuandoElTextoNoEstaPresente(texto: "a_b", valor: "axb") 
+  Passed Parqueo.Tests.Consultas.BusquedaAproximadaPruebas.NoCoincide_CuandoElTextoNoEstaPresente(texto: "a+", valor: "aaa") 
+  Passed Parqueo.Tests.Consultas.BusquedaAproximadaPruebas.NoCoincide_CuandoElTextoNoEstaPresente(texto: "4.4", valor: "4x4") 
+  Passed Parqueo.Tests.Consultas.BusquedaAproximadaPruebas.NoCoincide_CuandoElTextoNoEstaPresente(texto: "moto", valor: "sedán") 
+  Passed Parqueo.Tests.Consultas.BusquedaAproximadaPruebas.NoCoincide_CuandoElTextoNoEstaPresente(texto: "san jose", valor: "sanjose") 
+  Passed Parqueo.Tests.Consultas.BusquedaAproximadaPruebas.Patron_UsaSoloClasesDeCaracteresYEscapes 
+  Passed Parqueo.Tests.Modelo.CamposPersonalizadosPruebas.SalidaNula_NoDevuelveCero 
+  Passed Parqueo.Tests.Modelo.CamposPersonalizadosPruebas.EstadiaDeDosHorasYMedia_CalculaMinutosHorasYMonto 
+  Passed Parqueo.Tests.Modelo.CamposPersonalizadosPruebas.FraccionDeHora_NoSePierdePorDivisionEntera 
+  Passed Parqueo.Tests.Modelo.CamposPersonalizadosPruebas.SegundosEnLaEstadia_SeReflejanComoFraccionDeMinuto 
+  Passed Parqueo.Tests.Modelo.CamposPersonalizadosPruebas.SinNavegacionDeParqueo_MontoEsNuloPeroLaDuracionSeCalcula 
+  Passed Parqueo.Tests.Modelo.CamposPersonalizadosPruebas.Monto_SeRedondeaADosDecimalesAlejandoseDeCero(entrada: "2026-10-06T07:00:00", salida: "2026-10-06T07:50:00", precio: "675.50", esperado: "562.92") 
+  Passed Parqueo.Tests.Modelo.CamposPersonalizadosPruebas.Monto_SeRedondeaADosDecimalesAlejandoseDeCero(entrada: "2026-10-04T10:00:00", salida: "2026-10-04T18:00:00", precio: "800.00", esperado: "6400.00") 
+  Passed Parqueo.Tests.Modelo.CamposPersonalizadosPruebas.Monto_SeRedondeaADosDecimalesAlejandoseDeCero(entrada: "2026-10-09T18:15:00", salida: "2026-10-09T19:00:00", precio: "675.50", esperado: "506.63") 
+  Passed Parqueo.Tests.Modelo.CamposPersonalizadosPruebas.Monto_SeRedondeaADosDecimalesAlejandoseDeCero(entrada: "2026-10-06T07:00:00", salida: "2026-10-06T07:50:00", precio: "675.03", esperado: "562.53") 
+  Passed Parqueo.Tests.Modelo.CamposPersonalizadosPruebas.Monto_SeRedondeaADosDecimalesAlejandoseDeCero(entrada: "2026-10-03T13:20:00", salida: "2026-10-03T16:05:00", precio: "675.50", esperado: "1857.63") 
+  Passed Parqueo.Tests.Modelo.CamposPersonalizadosPruebas.Monto_SeRedondeaADosDecimalesAlejandoseDeCero(entrada: "2026-10-15T16:45:00", salida: "2026-10-15T17:05:00", precio: "800.00", esperado: "266.67") 
+  Passed Parqueo.Tests.Modelo.CamposPersonalizadosPruebas.SalidaNula_LosTresCamposSonNulos 
+  Passed Parqueo.Tests.Modelo.CamposPersonalizadosPruebas.DiferentesTarifas_ProducenMontosDiferentesParaLaMismaDuracion 
+  Passed Parqueo.Tests.Consultas.GeneradorResumenIngresosPruebas.UsaObtenerPrecioPorHoraPorParqueo_UnaVezPorParqueo 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Parqueo_BuscarPorProvinciaAproximada(provincia: "HEREDIA", esperados: [2]) 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Parqueo_BuscarPorProvinciaAproximada(provincia: "san jose", esperados: [1]) 
+  Passed Parqueo.Tests.Repositorios.PersistenciaJsonPruebas.ArchivoInexistente_SeTrataComoTablaVaciaYSeCreaAlInsertar 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Parqueo_BuscarPorProvinciaAproximada(provincia: "tag", esperados: [3]) 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Parqueo_BuscarPorProvinciaAproximada(provincia: "Limón", esperados: []) 
+  Passed Parqueo.Tests.Repositorios.PersistenciaJsonPruebas.CambiosSobrevivenAUnaNuevaInstancia 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Automovil_BuscarPorIntervaloDeAnios(desde: null, hasta: 2012, esperados: [6]) 
+  Passed Parqueo.Tests.Repositorios.PersistenciaJsonPruebas.LeerYGuardarSinCambios_ConservaElArchivoIdentico(archivo: "parqueos.json") 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Automovil_BuscarPorIntervaloDeAnios(desde: 2020, hasta: null, esperados: [2, 4]) 
+  Passed Parqueo.Tests.Repositorios.PersistenciaJsonPruebas.LeerYGuardarSinCambios_ConservaElArchivoIdentico(archivo: "ingresos-automoviles.json") 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Automovil_BuscarPorIntervaloDeAnios(desde: 2016, hasta: 2017, esperados: []) 
+  Passed Parqueo.Tests.Repositorios.PersistenciaJsonPruebas.LeerYGuardarSinCambios_ConservaElArchivoIdentico(archivo: "automoviles.json") 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Automovil_BuscarPorIntervaloDeAnios(desde: 2015, hasta: 2019, esperados: [1, 3, 5]) 
+  Passed Parqueo.Tests.Repositorios.PersistenciaJsonPruebas.IngresoConReferenciaRotaEnElArchivo_SeInformaComoDatosInconsistentes 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Parqueo_BuscarPorNombreAproximado(nombre: "RUINAS", esperados: [3]) 
+  Passed Parqueo.Tests.Repositorios.PersistenciaJsonPruebas.FechaConKindLocal_SeGuardaSinZonaHoraria 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Parqueo_BuscarPorNombreAproximado(nombre: "mercado", esperados: [2]) 
+  Passed Parqueo.Tests.Repositorios.PersistenciaJsonPruebas.Guardar_EscribeSoloLasColumnasEnElArchivo 
+  Passed Parqueo.Tests.Repositorios.PersistenciaJsonPruebas.CarpetaInexistente_LanzaDirectoryNotFoundException 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Parqueo_BuscarPorNombreAproximado(nombre: "avenida segunda", esperados: [1]) 
+  Passed Parqueo.Tests.Repositorios.PersistenciaJsonPruebas.ArchivoConJsonInvalido_LanzaInvalidDataException 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Parqueo_BuscarPorNombreAproximado(nombre: "(central)", esperados: []) 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Automovil_BorrarInexistente_DevuelveFalse 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Parqueo_BuscarPorNombreAproximado(nombre: "parqueo_central", esperados: []) 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Parqueo_BuscarPorNombreAproximado(nombre: "parqueo", esperados: [1, 2, 3]) 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Ingreso_SalidaNoPosteriorALaEntrada_LanzaArgumentException(entrada: "2026-10-18T10:00:00", salida: "2026-10-18T10:00:00") 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Automovil_BuscarPorTipoAproximado(tipo: "sedan", esperados: [1, 3]) 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Ingreso_SalidaNoPosteriorALaEntrada_LanzaArgumentException(entrada: "2026-10-18T10:00:00", salida: "2026-10-18T09:00:00") 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Automovil_BuscarPorTipoAproximado(tipo: "SEDÁN", esperados: [1, 3]) 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Automovil_BuscarPorTipoAproximado(tipo: "4x4", esperados: [2, 5]) 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Parqueo_Insertar_AsignaLlaveYPersiste 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Automovil_BuscarPorTipoAproximado(tipo: "mot", esperados: [4, 6]) 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Ingreso_FechaEnUtc_LanzaArgumentException 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Automovil_BuscarPorTipoAproximado(tipo: "4X4", esperados: [2, 5]) 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Parqueo_InsertarDatosInvalidos_LanzaArgumentExceptionYNoGuarda(provincia: "Limón", nombre: "", precio: "500") 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Automovil_ObtenerPorId_DevuelveElRegistroConSusIngresos 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Parqueo_InsertarDatosInvalidos_LanzaArgumentExceptionYNoGuarda(provincia: "Limón", nombre: "Parqueo X", precio: "-5") 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Parqueo_RangoDePreciosInvalido_LanzaArgumentException 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Parqueo_InsertarDatosInvalidos_LanzaArgumentExceptionYNoGuarda(provincia: "Panamá", nombre: "Parqueo X", precio: "500") 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.ListarPorTipo_IncluyeAmbosExtremosDelIntervalo 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Parqueo_InsertarDatosInvalidos_LanzaArgumentExceptionYNoGuarda(provincia: "Limón", nombre: "Parqueo X", precio: "100.125") 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.ListarPorTipo_SedanSinTildeEnIntervalo 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Parqueo_InsertarDatosInvalidos_LanzaArgumentExceptionYNoGuarda(provincia: "Limón", nombre: "Parqueo X", precio: "0") 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Ingreso_ObtenerPorId_IncluyeAutomovilParqueoYCamposCalculados 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Automovil_IntervaloDeAniosInvertido_LanzaArgumentException 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Ingreso_InsertarConReferenciasInexistentes_LanzaInvalidOperationException 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Parqueo_BuscarPorRangoDePrecioPorHora(minimo: "700", maximo: "1250", esperados: [1, 2]) 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Parqueo_ActualizarYBorrarInexistente_DevuelvenFalse 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Parqueo_BuscarPorRangoDePrecioPorHora(minimo: "675.51", maximo: null, esperados: [1, 2]) 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Parqueo_BuscarPorRangoDePrecioPorHora(minimo: "800", maximo: null, esperados: [1, 2]) 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Automovil_InsertarDatosInvalidos_LanzaArgumentExceptionYNoGuarda(color: "Café", anio: 2022, fabricante: "Kia", tipo: "Sedan") 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Parqueo_BuscarPorRangoDePrecioPorHora(minimo: "1250.01", maximo: null, esperados: []) 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Automovil_InsertarDatosInvalidos_LanzaArgumentExceptionYNoGuarda(color: "", anio: 2022, fabricante: "Kia", tipo: "sedán") 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Parqueo_BuscarPorRangoDePrecioPorHora(minimo: null, maximo: "675.50", esperados: [3]) 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Automovil_InsertarDatosInvalidos_LanzaArgumentExceptionYNoGuarda(color: "Café", anio: 2022, fabricante: "Kia", tipo: "camión") 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Automovil_BuscarPorFabricanteAproximado(fabricante: "da", esperados: [2, 6]) 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Automovil_BuscarPorFabricanteAproximado(fabricante: "MITSU", esperados: [5]) 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Automovil_InsertarDatosInvalidos_LanzaArgumentExceptionYNoGuarda(color: "Café", anio: 1800, fabricante: "Kia", tipo: "4x4") 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Automovil_BuscarPorFabricanteAproximado(fabricante: "toyo", esperados: [1]) 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Automovil_InsertarDatosInvalidos_LanzaArgumentExceptionYNoGuarda(color: "Café", anio: 2022, fabricante: "   ", tipo: "moto") 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Automovil_InsertarDatosInvalidos_LanzaArgumentExceptionYNoGuarda(color: "Café", anio: 2999, fabricante: "Kia", tipo: "4x4") 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Ingreso_InsertarFinalizado_DevuelveElMontoCalculado 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.ListarPorTipo_RelacionesCorrectas 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Automovil_Actualizar_ModificaYPersiste 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Automovil_ObtenerPorIdInexistente_DevuelveNull 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Ingreso_EnCurso_TieneSalidaYCamposCalculadosNulos 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Automovil_Insertar_AsignaLlaveYPersiste 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.ListarPorProvincia_DiferentesTarifasPorParqueo 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Ingreso_BorrarIngresosPermiteLuegoBorrarElAutomovil 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Automovil_BuscarPorColorAproximado(color: "morado", esperados: []) 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Automovil_BuscarPorColorAproximado(color: "RO", esperados: [1, 3]) 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Automovil_InsertarConLlaveExistente_LanzaInvalidOperationException 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Automovil_BuscarPorColorAproximado(color: "zul", esperados: [4]) 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Parqueo_Borrar_RespetaLaIntegridadReferencial 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Automovil_BuscarPorColorAproximado(color: "rojo", esperados: [1]) 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Parqueo_BuscarConFiltrosCombinados 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Ingreso_ActualizarHaciaParqueoInexistente_NoModifica 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.ListadosDeIngresos_ParametrosInvalidos_LanzanArgumentException 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Automovil_ActualizarConDatosInvalidos_NoModifica 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.ListarPorProvincia_Paginado 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Automovil_InsertarAnioPermitidoPorLaBase_SeAcepta 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Parqueo_ObtenerPorIdInexistente_DevuelveNull 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Parqueo_ActualizarPrecio_CambiaElMontoDeLosListados 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Automovil_BuscarPaginado_DevuelveLaPaginaSolicitada 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Automovil_InsertarConLlaveNoAsignadaPorElOrigen_LanzaArgumentException 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.ObtenerPrecioPorHoraPorParqueo_DevuelveLaTarifaDelParqueo(idParqueo: 1, esperado: "1250.00") 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.ObtenerPrecioPorHoraPorParqueo_DevuelveLaTarifaDelParqueo(idParqueo: 2, esperado: "800.00") 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Automovil_BorrarConIngresos_LanzaInvalidOperationExceptionYNoBorra 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.ObtenerPrecioPorHoraPorParqueo_DevuelveLaTarifaDelParqueo(idParqueo: 3, esperado: "675.50") 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.ObtenerPrecioPorHoraPorParqueo_ParqueoInexistente_DevuelveNull 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Ingreso_RegistrarSalida_CalculaDuracionYMonto 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Automovil_BuscarConFiltrosCombinados 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Automovil_BorrarSinIngresos_EliminaYPersiste 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.ListarPorProvincia_SanJoseEnOctubre 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Ingreso_InsertarEnCurso_PersisteConCamposCalculadosNulos 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Automovil_ActualizarInexistente_DevuelveFalse 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.ListarPorProvincia_HerediaConEstadiaEnCurso 
+  Passed Parqueo.Tests.Repositorios.CrudJsonPruebas.Ingreso_ActualizarYBorrarInexistente_DevuelvenFalse 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Automovil_BuscarSinFiltros_DevuelveTodosOrdenadosPorId 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Parqueo_ObtenerPorId_DevuelveElRegistroConSusIngresos 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.ListarPorTipo_4x4EnOctubre_IncluyeEntradaSalidaYMonto 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.Ingreso_ObtenerPorIdInexistente_DevuelveNull 
+  Passed Parqueo.Tests.Repositorios.ConsultasJsonPruebas.ListarPorProvincia_SinCoincidencias_DevuelveListaVacia 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Parqueo_Insertar_AsignaLlaveYPersiste [1 s]
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Ingreso_InsertarConReferenciasInexistentes_LanzaInvalidOperationException 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Automovil_BorrarInexistente_DevuelveFalse 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Automovil_ActualizarInexistente_DevuelveFalse 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Ingreso_ActualizarHaciaParqueoInexistente_NoModifica 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Ingreso_InsertarEnCurso_PersisteConCamposCalculadosNulos 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Automovil_InsertarConLlaveExistente_LanzaInvalidOperationException 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Automovil_Actualizar_ModificaYPersiste 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Parqueo_InsertarDatosInvalidos_LanzaArgumentExceptionYNoGuarda(provincia: "Limón", nombre: "Parqueo X", precio: "0") 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Parqueo_InsertarDatosInvalidos_LanzaArgumentExceptionYNoGuarda(provincia: "Limón", nombre: "", precio: "500") 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Parqueo_InsertarDatosInvalidos_LanzaArgumentExceptionYNoGuarda(provincia: "Limón", nombre: "Parqueo X", precio: "100.125") 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Parqueo_InsertarDatosInvalidos_LanzaArgumentExceptionYNoGuarda(provincia: "Panamá", nombre: "Parqueo X", precio: "500") 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Parqueo_InsertarDatosInvalidos_LanzaArgumentExceptionYNoGuarda(provincia: "Limón", nombre: "Parqueo X", precio: "-5") 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Automovil_InsertarDatosInvalidos_LanzaArgumentExceptionYNoGuarda(color: "Café", anio: 1800, fabricante: "Kia", tipo: "4x4") 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Automovil_InsertarDatosInvalidos_LanzaArgumentExceptionYNoGuarda(color: "", anio: 2022, fabricante: "Kia", tipo: "sedán") 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Automovil_InsertarDatosInvalidos_LanzaArgumentExceptionYNoGuarda(color: "Café", anio: 2999, fabricante: "Kia", tipo: "4x4") 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Automovil_InsertarDatosInvalidos_LanzaArgumentExceptionYNoGuarda(color: "Café", anio: 2022, fabricante: "Kia", tipo: "Sedan") 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Automovil_InsertarDatosInvalidos_LanzaArgumentExceptionYNoGuarda(color: "Café", anio: 2022, fabricante: "Kia", tipo: "camión") 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Automovil_InsertarDatosInvalidos_LanzaArgumentExceptionYNoGuarda(color: "Café", anio: 2022, fabricante: "   ", tipo: "moto") 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Ingreso_InsertarFinalizado_DevuelveElMontoCalculado 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Automovil_InsertarConLlaveNoAsignadaPorElOrigen_LanzaArgumentException 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Ingreso_SalidaNoPosteriorALaEntrada_LanzaArgumentException(entrada: "2026-10-18T10:00:00", salida: "2026-10-18T09:00:00") 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Ingreso_SalidaNoPosteriorALaEntrada_LanzaArgumentException(entrada: "2026-10-18T10:00:00", salida: "2026-10-18T10:00:00") 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Automovil_Insertar_AsignaLlaveYPersiste 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Ingreso_FechaEnUtc_LanzaArgumentException 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Ingreso_BorrarIngresosPermiteLuegoBorrarElAutomovil 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Ingreso_RegistrarSalida_CalculaDuracionYMonto 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Parqueo_ActualizarYBorrarInexistente_DevuelvenFalse 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Automovil_InsertarAnioPermitidoPorLaBase_SeAcepta 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Automovil_BorrarConIngresos_LanzaInvalidOperationExceptionYNoBorra 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Ingreso_ActualizarYBorrarInexistente_DevuelvenFalse 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Automovil_BorrarSinIngresos_EliminaYPersiste 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Automovil_ActualizarConDatosInvalidos_NoModifica 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Parqueo_ActualizarPrecio_CambiaElMontoDeLosListados 
+  Passed Parqueo.Tests.Repositorios.CrudBaseDatosPruebas.Parqueo_Borrar_RespetaLaIntegridadReferencial 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Parqueo_BuscarPorNombreAproximado(nombre: "parqueo_central", esperados: []) 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Parqueo_BuscarPorNombreAproximado(nombre: "(central)", esperados: []) 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Parqueo_BuscarPorNombreAproximado(nombre: "mercado", esperados: [2]) 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Parqueo_BuscarPorNombreAproximado(nombre: "RUINAS", esperados: [3]) 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Parqueo_BuscarPorNombreAproximado(nombre: "parqueo", esperados: [1, 2, 3]) 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Parqueo_BuscarPorNombreAproximado(nombre: "avenida segunda", esperados: [1]) 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Parqueo_BuscarPorProvinciaAproximada(provincia: "Limón", esperados: []) 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Parqueo_BuscarPorProvinciaAproximada(provincia: "HEREDIA", esperados: [2]) 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Parqueo_BuscarPorProvinciaAproximada(provincia: "tag", esperados: [3]) 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Parqueo_BuscarPorProvinciaAproximada(provincia: "san jose", esperados: [1]) 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Automovil_BuscarPorTipoAproximado(tipo: "4X4", esperados: [2, 5]) 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Automovil_BuscarPorTipoAproximado(tipo: "4x4", esperados: [2, 5]) 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Automovil_BuscarPorTipoAproximado(tipo: "sedan", esperados: [1, 3]) 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Automovil_BuscarPorTipoAproximado(tipo: "SEDÁN", esperados: [1, 3]) 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Automovil_BuscarPorTipoAproximado(tipo: "mot", esperados: [4, 6]) 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Parqueo_BuscarPorRangoDePrecioPorHora(minimo: "1250.01", maximo: null, esperados: []) 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Parqueo_BuscarPorRangoDePrecioPorHora(minimo: "800", maximo: null, esperados: [1, 2]) 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Parqueo_BuscarPorRangoDePrecioPorHora(minimo: "675.51", maximo: null, esperados: [1, 2]) 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Parqueo_BuscarPorRangoDePrecioPorHora(minimo: null, maximo: "675.50", esperados: [3]) 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Parqueo_BuscarPorRangoDePrecioPorHora(minimo: "700", maximo: "1250", esperados: [1, 2]) 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.ObtenerPrecioPorHoraPorParqueo_DevuelveLaTarifaDelParqueo(idParqueo: 1, esperado: "1250.00") 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.ObtenerPrecioPorHoraPorParqueo_DevuelveLaTarifaDelParqueo(idParqueo: 2, esperado: "800.00") 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.ObtenerPrecioPorHoraPorParqueo_DevuelveLaTarifaDelParqueo(idParqueo: 3, esperado: "675.50") 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Automovil_BuscarPorFabricanteAproximado(fabricante: "da", esperados: [2, 6]) 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Automovil_BuscarPorFabricanteAproximado(fabricante: "MITSU", esperados: [5]) 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Automovil_BuscarPorFabricanteAproximado(fabricante: "toyo", esperados: [1]) 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Automovil_BuscarPorColorAproximado(color: "morado", esperados: []) 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Automovil_BuscarPorColorAproximado(color: "rojo", esperados: [1]) 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Automovil_BuscarPorColorAproximado(color: "RO", esperados: [1, 3]) 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Automovil_BuscarPorColorAproximado(color: "zul", esperados: [4]) 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.ListarPorTipo_4x4EnOctubre_IncluyeEntradaSalidaYMonto 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.ListarPorProvincia_SanJoseEnOctubre 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.ListarPorTipo_RelacionesCorrectas 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Parqueo_RangoDePreciosInvalido_LanzaArgumentException 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Parqueo_BuscarConFiltrosCombinados 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Automovil_BuscarPorIntervaloDeAnios(desde: 2015, hasta: 2019, esperados: [1, 3, 5]) 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Automovil_BuscarPorIntervaloDeAnios(desde: 2020, hasta: null, esperados: [2, 4]) 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Automovil_BuscarPorIntervaloDeAnios(desde: null, hasta: 2012, esperados: [6]) 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Automovil_BuscarPorIntervaloDeAnios(desde: 2016, hasta: 2017, esperados: []) 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Parqueo_ObtenerPorId_DevuelveElRegistroConSusIngresos 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Ingreso_ObtenerPorId_IncluyeAutomovilParqueoYCamposCalculados 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.ListarPorTipo_IncluyeAmbosExtremosDelIntervalo 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.ListarPorProvincia_Paginado 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Automovil_IntervaloDeAniosInvertido_LanzaArgumentException 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Ingreso_ObtenerPorIdInexistente_DevuelveNull 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.ListarPorTipo_SedanSinTildeEnIntervalo 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Ingreso_EnCurso_TieneSalidaYCamposCalculadosNulos 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Automovil_BuscarPaginado_DevuelveLaPaginaSolicitada 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.ListarPorProvincia_DiferentesTarifasPorParqueo 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.ListarPorProvincia_SinCoincidencias_DevuelveListaVacia 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Automovil_ObtenerPorIdInexistente_DevuelveNull 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.ObtenerPrecioPorHoraPorParqueo_ParqueoInexistente_DevuelveNull 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.ListarPorProvincia_HerediaConEstadiaEnCurso 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Automovil_BuscarConFiltrosCombinados 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.DatosDeLaBaseYDeLosJson_SonIguales 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.ListadosDeIngresos_ParametrosInvalidos_LanzanArgumentException 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Automovil_ObtenerPorId_DevuelveElRegistroConSusIngresos 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Automovil_BuscarSinFiltros_DevuelveTodosOrdenadosPorId 
+  Passed Parqueo.Tests.Repositorios.ConsultasBaseDatosPruebas.Parqueo_ObtenerPorIdInexistente_DevuelveNull 
+Test Run Successful.
+Total tests: 231
+     Passed: 231
+
+# 4) dotnet test Parqueo.slnx   (resumen, con PARQUEO_PRUEBAS_BD)
+Passed!  - Failed:     0, Passed:   231, Skipped:     0, Total:   231, Duration: 3 s - Parqueo.Tests.dll (net10.0)

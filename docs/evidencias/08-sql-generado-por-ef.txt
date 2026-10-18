@@ -1,0 +1,30 @@
+# Entorno: contenedor Linux del agente (Ubuntu 24.04, .NET SDK 10.0.402, PostgreSQL 16.15 LOCAL,
+# base parqueo_local, usuario estudiante_prq). NO corresponde a la instancia en la nube del profesor.
+# Fecha de ejecución: 17-18 de octubre de 2026. Salida real, sin editar (contraseñas nunca impresas).
+# SQL que genera EF Core (ToQueryString) para dos consultas: la búsqueda aproximada se traduce al operador ~ de PostgreSQL
+# con el patrón como parámetro; el filtro, el orden y la paginación se ejecutan en la base.
+
+-- @anioDesde='2015'
+-- @anioHasta='2020'
+-- @patronTipo='[sS][eéèëêEÉÈËÊ][dD][aáàäâAÁÀÄÂ][nN]'
+SELECT p.id, p.anio, p.color, p.fabricante, p.tipo
+FROM prq_automovil AS p
+WHERE p.anio >= @anioDesde AND p.anio <= @anioHasta AND p.tipo ~ ('(?p)' || @patronTipo)
+ORDER BY p.id
+-----
+-- @patronProvincia='[sS][aáàäâAÁÀÄÂ][nN]\s+[jJ][oóòöôOÓÒÖÔ][sS][eéèëêEÉÈËÊ]'
+-- @desde='2026-10-01T00:00:00.0000000'
+-- @hasta='2026-10-31T23:59:59.0000000'
+-- @p4='10'
+-- @p='0'
+SELECT s.consecutivo, s.fecha_hora_entrada, s.fecha_hora_salida, s.id_automovil, s.id_parqueo, p1.id, p1.anio, p1.color, p1.fabricante, p1.tipo, s.id, s.nombre, s.nombre_provincia, s.precio_por_hora
+FROM (
+    SELECT p.consecutivo, p.fecha_hora_entrada, p.fecha_hora_salida, p.id_automovil, p.id_parqueo, p0.id, p0.nombre, p0.nombre_provincia, p0.precio_por_hora
+    FROM prq_ingreso_automovil AS p
+    INNER JOIN prq_parqueo AS p0 ON p.id_parqueo = p0.id
+    WHERE p0.nombre_provincia ~ ('(?p)' || @patronProvincia) AND p.fecha_hora_entrada >= @desde AND p.fecha_hora_entrada <= @hasta
+    ORDER BY p.fecha_hora_entrada, p.consecutivo
+    LIMIT @p4 OFFSET @p
+) AS s
+INNER JOIN prq_automovil AS p1 ON s.id_automovil = p1.id
+ORDER BY s.fecha_hora_entrada, s.consecutivo
