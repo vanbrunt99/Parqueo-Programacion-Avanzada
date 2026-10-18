@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "color": "Rojo",
+    "anio": 2019,
+    "fabricante": "Toyota",
+    "tipo": "sedán"
+  },
+  {
+    "id": 2,
+    "color": "Blanco",
+    "anio": 2021,
+    "fabricante": "Hyundai",
+    "tipo": "4x4"
+  },
+  {
+    "id": 3,
+    "color": "Negro",
+    "anio": 2015,
+    "fabricante": "Nissan",
+    "tipo": "sedán"
+  },
+  {
+    "id": 4,
+    "color": "Azul",
+    "anio": 2023,
+    "fabricante": "Yamaha",
+    "tipo": "moto"
+  },
+  {
+    "id": 5,
+    "color": "Gris",
+    "anio": 2018,
+    "fabricante": "Mitsubishi",
+    "tipo": "4x4"
+  },
+  {
+    "id": 6,
+    "color": "Verde",
+    "anio": 2012,
+    "fabricante": "Honda",
+    "tipo": "moto"
+  }
+]
