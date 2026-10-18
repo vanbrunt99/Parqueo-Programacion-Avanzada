@@ -16,6 +16,9 @@ public class BusquedaAproximadaPruebas
     [InlineData("limon", "Limón")]
     [InlineData("4x4", "4x4")]
     [InlineData("ruinas", "Parqueo Las Ruinas")]
+    [InlineData("parqueo_x", "Parqueo_X")]               // "_" es literal y no rompe la expresión en .NET
+    [InlineData("jose\u0301", "San José")]               // tilde escrita como carácter aparte (NFD)
+    [InlineData("a-b@c", "A-B@C")]
     public void Coincide_SinDistinguirMayusculasNiTildes(string texto, string valor)
     {
         string patron = _busqueda.CrearPatron(texto)!;
@@ -27,6 +30,7 @@ public class BusquedaAproximadaPruebas
     [InlineData("4.4", "4x4")]       // el punto es literal, no comodín
     [InlineData("a+", "aaa")]        // el + es literal
     [InlineData("san jose", "sanjose")]
+    [InlineData("a_b", "axb")]       // el guion bajo no es comodín (a diferencia de LIKE)
     public void NoCoincide_CuandoElTextoNoEstaPresente(string texto, string valor)
     {
         string patron = _busqueda.CrearPatron(texto)!;

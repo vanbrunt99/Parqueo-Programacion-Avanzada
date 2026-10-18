@@ -15,8 +15,9 @@ public interface IRepositorio<TEntidad> where TEntidad : class
 
     /// <summary>
     /// Inserta el registro. La llave primaria debe venir en 0: la asigna el origen de
-    /// datos (identidad en PostgreSQL, siguiente consecutivo en JSON). Devuelve la
-    /// entidad guardada con su llave.
+    /// datos (identidad en PostgreSQL, siguiente consecutivo en JSON) y también se
+    /// asigna en el objeto recibido. Devuelve el registro guardado, leído de nuevo con
+    /// sus propiedades de navegación.
     /// </summary>
     /// <exception cref="ArgumentException">Datos inválidos o llave enviada por el llamador.</exception>
     /// <exception cref="InvalidOperationException">Llave duplicada o referencia inexistente.</exception>

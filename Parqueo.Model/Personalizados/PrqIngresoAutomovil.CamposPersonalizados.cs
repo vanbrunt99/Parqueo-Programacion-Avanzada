@@ -36,9 +36,11 @@ public partial class PrqIngresoAutomovil
 
     /// <summary>
     /// Monto total a pagar según el precio por hora del parqueo asociado
-    /// (<see cref="IdParqueoNavigation"/>). Es <c>null</c> si el automóvil no ha salido
-    /// o si la propiedad de navegación del parqueo no fue cargada.
-    /// Los repositorios del proyecto siempre cargan esa navegación.
+    /// (<see cref="IdParqueoNavigation"/>). Es <c>null</c> si el automóvil no ha salido.
+    /// Requiere que la navegación del parqueo esté cargada: los repositorios la cargan
+    /// en la consulta por id, en los ingresos de un automóvil o parqueo y en lo que
+    /// devuelven al insertar. Sin esa navegación (por ejemplo, un objeto creado a mano)
+    /// use <see cref="CalcularMontoTotal"/> con el precio.
     /// </summary>
     [NotMapped]
     [JsonIgnore]
@@ -58,16 +60,19 @@ public partial class PrqIngresoAutomovil
     /// 2 decimales con <see cref="MidpointRounding.AwayFromZero"/> (igual que
     /// <c>round(numeric, 2)</c> de PostgreSQL). Si el profesor indica cobrar horas
     /// completas, basta con cambiar este método, por ejemplo usando
-    /// <c>Math.Ceiling(horas)</c>.
+    /// <c>Math.Ceiling</c> sobre las horas.
     /// </remarks>
     public decimal? CalcularMontoTotal(decimal? precioPorHora)
     {
-        if (DuracionEstadiaHoras is not decimal horas || precioPorHora is not decimal precio)
+        if (TicksDeEstadia() is not long ticks || precioPorHora is not decimal precio)
         {
             return null;
         }
 
-        return Math.Round(horas * precio, 2, MidpointRounding.AwayFromZero);
+        // Se multiplica antes de dividir: (ticks × precio) es exacto y la división por
+        // las ticks de una hora no arrastra el redondeo de una fracción periódica
+        // (50 min a 675.03 = 562.525 exacto -> 562.53).
+        return Math.Round(ticks * precio / TimeSpan.TicksPerHour, 2, MidpointRounding.AwayFromZero);
     }
 
     private long? TicksDeEstadia() =>

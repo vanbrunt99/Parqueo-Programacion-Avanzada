@@ -1,5 +1,7 @@
+using System.Globalization;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 using System.Text.Unicode;
 
@@ -43,6 +45,7 @@ public sealed class FuenteDatosJson
             NewLine = "\n",
             Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
             TypeInfoResolver = new DefaultJsonTypeInfoResolver { Modifiers = { ConservarSoloColumnas } },
+            Converters = { new FechaHoraLocalConverter() },
         };
     }
 
@@ -80,7 +83,7 @@ public sealed class FuenteDatosJson
     public async Task GuardarAsync<T>(string archivo, IEnumerable<T> registros, CancellationToken cancelacion = default)
     {
         string ruta = RutaDe(archivo);
-        string temporal = ruta + ".tmp";
+        string temporal = $"{ruta}.{Guid.NewGuid():N}.tmp"; // nombre único: dos escrituras no comparten temporal
 
         await using (var flujo = File.Create(temporal))
         {
@@ -92,6 +95,22 @@ public sealed class FuenteDatosJson
     }
 
     private string RutaDe(string archivo) => Path.Combine(Directorio, archivo);
+
+    /// <summary>
+    /// Las fechas se guardan como hora local de Costa Rica sin zona horaria, igual que
+    /// <c>timestamp without time zone</c> en PostgreSQL. Así un DateTime con Kind Local
+    /// no se escribe con desfase ("-06:00") ni cambia al leerse en otra zona horaria.
+    /// </summary>
+    private sealed class FechaHoraLocalConverter : JsonConverter<DateTime>
+    {
+        private const string Formato = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.FFFFFFF";
+
+        public override DateTime Read(ref Utf8JsonReader lector, Type tipo, JsonSerializerOptions opciones) =>
+            DateTime.SpecifyKind(lector.GetDateTimeOffset().DateTime, DateTimeKind.Unspecified);
+
+        public override void Write(Utf8JsonWriter escritor, DateTime valor, JsonSerializerOptions opciones) =>
+            escritor.WriteStringValue(valor.ToString(Formato, CultureInfo.InvariantCulture));
+    }
 
     /// <summary>
     /// Solo se serializan propiedades de tipos simples (números, texto y fechas):

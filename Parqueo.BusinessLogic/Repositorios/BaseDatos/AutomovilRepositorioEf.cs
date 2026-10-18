@@ -14,8 +14,9 @@ public sealed class AutomovilRepositorioEf : RepositorioEfBase<PrqAutomovil>, IA
     {
     }
 
+    // Los ingresos traen también su parqueo para que MontoTotalAPagar tenga el precio.
     protected override IQueryable<PrqAutomovil> IncluirPropiedadesNavegacion(IQueryable<PrqAutomovil> consulta) =>
-        consulta.Include(a => a.PrqIngresoAutomovils);
+        consulta.Include(a => a.PrqIngresoAutomovils).ThenInclude(i => i.IdParqueoNavigation);
 
     protected override void Validar(PrqAutomovil entidad) => Validador.Validar(entidad);
 

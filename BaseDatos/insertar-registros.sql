@@ -106,7 +106,7 @@ SELECT i.consecutivo,
        i.fecha_hora_entrada,
        i.fecha_hora_salida,
        round(extract(epoch FROM (i.fecha_hora_salida - i.fecha_hora_entrada)) / 60, 2) AS minutos,
-       round(extract(epoch FROM (i.fecha_hora_salida - i.fecha_hora_entrada)) / 3600 * p.precio_por_hora, 2) AS monto
+       round(extract(epoch FROM (i.fecha_hora_salida - i.fecha_hora_entrada)) * p.precio_por_hora / 3600, 2) AS monto
 FROM prq_ingreso_automovil i
 JOIN prq_automovil a ON a.id = i.id_automovil
 JOIN prq_parqueo   p ON p.id = i.id_parqueo

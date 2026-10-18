@@ -80,13 +80,16 @@ public abstract class RepositorioEfBase<TEntidad> : IRepositorio<TEntidad> where
 
             // La identidad generada por PostgreSQL se devuelve también en el objeto recibido.
             typeof(TEntidad).GetProperty(NombreLlavePrimaria)!.SetValue(entidad, LeerLlave(nuevo));
-            return nuevo;
         }
         finally
         {
             // Si el guardado falla, la copia no queda pendiente en el contexto.
             entrada.State = EntityState.Detached;
         }
+
+        // Se devuelve el registro leído de la base, con sus propiedades de navegación.
+        return await ObtenerPorIdAsync(LeerLlave(nuevo), cancelacion)
+            ?? throw new InvalidOperationException($"No se pudo leer el registro insertado en {NombreTabla}.");
     }
 
     public virtual async Task<bool> ActualizarAsync(TEntidad entidad, CancellationToken cancelacion = default)

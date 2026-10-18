@@ -48,6 +48,11 @@ public abstract class ConsultasRepositoriosPruebasBase : IDisposable
         Assert.NotNull(automovil);
         Assert.Equal(("Rojo", 2019, "Toyota", "sedán"), (automovil.Color, automovil.Anio, automovil.Fabricante, automovil.Tipo));
         Assert.Equal([1, 8, 13], automovil.PrqIngresoAutomovils.Select(i => i.Consecutivo).Order());
+
+        // Los ingresos del automóvil traen su parqueo, así que el monto se puede calcular.
+        var primero = automovil.PrqIngresoAutomovils.Single(i => i.Consecutivo == 1);
+        Assert.Equal("San José", primero.IdParqueoNavigation.NombreProvincia);
+        Assert.Equal(3125.00m, primero.MontoTotalAPagar);
     }
 
     [SkippableFact]
@@ -147,6 +152,7 @@ public abstract class ConsultasRepositoriosPruebasBase : IDisposable
         Assert.NotNull(parqueo);
         Assert.Equal(("Cartago", "Parqueo Las Ruinas", 675.50m), (parqueo.NombreProvincia, parqueo.Nombre, parqueo.PrecioPorHora));
         Assert.Equal([4, 7, 10, 13], parqueo.PrqIngresoAutomovils.Select(i => i.Consecutivo).Order());
+        Assert.Equal(1857.63m, parqueo.PrqIngresoAutomovils.Single(i => i.Consecutivo == 4).MontoTotalAPagar);
     }
 
     [SkippableFact]
@@ -171,6 +177,8 @@ public abstract class ConsultasRepositoriosPruebasBase : IDisposable
     [InlineData("parqueo", new[] { 1, 2, 3 })]
     [InlineData("avenida segunda", new[] { 1 })]
     [InlineData("RUINAS", new[] { 3 })]
+    [InlineData("parqueo_central", new int[0])]   // símbolos literales: no falla en ningún origen
+    [InlineData("(central)", new int[0])]
     public async Task Parqueo_BuscarPorNombreAproximado(string nombre, int[] esperados)
     {
         var resultado = await Repos.Parqueos.BuscarAsync(new FiltroParqueo(Nombre: nombre));

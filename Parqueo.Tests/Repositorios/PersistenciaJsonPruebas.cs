@@ -66,6 +66,22 @@ public sealed class PersistenciaJsonPruebas : IDisposable
     }
 
     [Fact]
+    public async Task FechaConKindLocal_SeGuardaSinZonaHoraria()
+    {
+        var repositorio = new IngresoAutomovilRepositorioJson(_carpeta.Fuente);
+        var guardado = await repositorio.InsertarAsync(new PrqIngresoAutomovil
+        {
+            IdParqueo = 2,
+            IdAutomovil = 4,
+            FechaHoraEntrada = new DateTime(2026, 10, 19, 9, 0, 0, DateTimeKind.Local),
+        });
+
+        string texto = await File.ReadAllTextAsync(_carpeta.RutaArchivo(FuenteDatosJson.ArchivoIngresos));
+        Assert.Contains("\"fechaHoraEntrada\": \"2026-10-19T09:00:00\",", texto);
+        Assert.Equal(new DateTime(2026, 10, 19, 9, 0, 0), (await repositorio.ObtenerPorIdAsync(guardado.Consecutivo))!.FechaHoraEntrada);
+    }
+
+    [Fact]
     public async Task ArchivoConJsonInvalido_LanzaInvalidDataException()
     {
         await File.WriteAllTextAsync(_carpeta.RutaArchivo(FuenteDatosJson.ArchivoParqueos), "[ { \"id\": 1, ");

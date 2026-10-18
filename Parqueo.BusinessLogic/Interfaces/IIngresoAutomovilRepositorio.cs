@@ -21,7 +21,8 @@ public interface IIngresoAutomovilRepositorio : IRepositorio<PrqIngresoAutomovil
     /// Automóviles de un tipo (búsqueda aproximada) que ingresaron dentro del
     /// intervalo [desde, hasta] (ambos extremos incluidos, según la fecha y hora de
     /// entrada). Incluye entrada, salida y monto a cancelar, calculado con
-    /// <see cref="ObtenerPrecioPorHoraPorParqueo"/>.
+    /// <see cref="ObtenerPrecioPorHoraPorParqueo"/>. <paramref name="hasta"/> es un
+    /// instante exacto: para incluir un día completo use 23:59:59.
     /// </summary>
     Task<IReadOnlyList<IngresoAutomovilResumen>> ListarPorTipoAsync(
         string tipo,

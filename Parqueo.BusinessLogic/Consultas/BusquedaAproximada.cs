@@ -42,7 +42,9 @@ public sealed class BusquedaAproximada
             return null;
         }
 
-        var palabras = texto.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries);
+        // NFC une letra + tilde escritas por separado ("e" + U+0301 -> "é").
+        var palabras = texto.Normalize(NormalizationForm.FormC)
+            .Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries);
         var patron = new StringBuilder();
 
         for (int indice = 0; indice < palabras.Length; indice++)
@@ -54,6 +56,11 @@ public sealed class BusquedaAproximada
 
             foreach (char caracter in palabras[indice])
             {
+                if (CharUnicodeInfo.GetUnicodeCategory(caracter) == UnicodeCategory.NonSpacingMark)
+                {
+                    continue; // tilde suelta sin letra base: no aporta a la búsqueda
+                }
+
                 patron.Append(PatronDeCaracter(caracter));
             }
         }
@@ -86,10 +93,13 @@ public sealed class BusquedaAproximada
             return caracter.ToString();
         }
 
-        // Cualquier otro símbolo se toma literalmente: "\" + símbolo no alfanumérico
-        // significa "este carácter" tanto en .NET como en PostgreSQL.
-        return "\\" + caracter;
+        // Los metacaracteres de expresión regular se escapan con "\" (válido en .NET y en
+        // PostgreSQL). Los demás símbolos (_, -, @, ...) se dejan tal cual: .NET rechaza
+        // escapes desconocidos como "\_".
+        return Metacaracteres.Contains(caracter) ? "\\" + caracter : caracter.ToString();
     }
+
+    private const string Metacaracteres = @"\^$.|?*+()[]{}";
 
     private static char QuitarTilde(char caracter)
     {

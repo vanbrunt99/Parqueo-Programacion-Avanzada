@@ -81,6 +81,7 @@ public class CamposPersonalizadosPruebas
     [InlineData("2026-10-06T07:00:00", "2026-10-06T07:50:00", "675.50", "562.92")]
     [InlineData("2026-10-15T16:45:00", "2026-10-15T17:05:00", "800.00", "266.67")]
     [InlineData("2026-10-04T10:00:00", "2026-10-04T18:00:00", "800.00", "6400.00")]
+    [InlineData("2026-10-06T07:00:00", "2026-10-06T07:50:00", "675.03", "562.53")]  //  562.525 ->  562.53 (sin perder el medio céntimo)
     public void Monto_SeRedondeaADosDecimalesAlejandoseDeCero(string entrada, string salida, string precio, string esperado)
     {
         var ingreso = CrearIngreso(entrada, salida, decimal.Parse(precio, System.Globalization.CultureInfo.InvariantCulture));

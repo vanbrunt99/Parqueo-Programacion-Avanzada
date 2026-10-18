@@ -17,7 +17,10 @@ public sealed class ValidadorEntidades
     public static readonly IReadOnlyList<string> Provincias =
         ["San José", "Alajuela", "Cartago", "Heredia", "Guanacaste", "Puntarenas", "Limón"];
 
+    /// <summary>Rango de años igual a la restricción ck_prq_automovil_anio.</summary>
     public const int AnioMinimo = 1886;
+
+    public const int AnioMaximo = 2100;
 
     private const decimal PrecioMaximo = 99_999_999.99m; // numeric(10,2)
 
@@ -27,10 +30,9 @@ public sealed class ValidadorEntidades
         ValidarTexto(automovil.Color, "color", 30);
         ValidarTexto(automovil.Fabricante, "fabricante", 50);
 
-        int anioMaximo = DateTime.Today.Year + 1;
-        if (automovil.Anio < AnioMinimo || automovil.Anio > anioMaximo)
+        if (automovil.Anio < AnioMinimo || automovil.Anio > AnioMaximo)
         {
-            throw new ArgumentException($"El año debe estar entre {AnioMinimo} y {anioMaximo}; se recibió {automovil.Anio}.");
+            throw new ArgumentException($"El año debe estar entre {AnioMinimo} y {AnioMaximo}; se recibió {automovil.Anio}.");
         }
 
         if (!TiposAutomovil.Contains(automovil.Tipo))

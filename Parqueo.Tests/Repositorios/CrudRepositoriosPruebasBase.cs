@@ -58,6 +58,16 @@ public abstract class CrudRepositoriosPruebasBase : IDisposable
     }
 
     [SkippableFact]
+    public async Task Automovil_InsertarAnioPermitidoPorLaBase_SeAcepta()
+    {
+        // El validador usa el mismo rango que la restricción CHECK (1886-2100).
+        var guardado = await Repos.Automoviles.InsertarAsync(
+            new PrqAutomovil { Color = "Gris", Anio = 2030, Fabricante = "Tesla", Tipo = "sedán" });
+
+        Assert.Equal(2030, (await Verificacion.Automoviles.ObtenerPorIdAsync(guardado.Id))!.Anio);
+    }
+
+    [SkippableFact]
     public async Task Automovil_InsertarConLlaveExistente_LanzaInvalidOperationException()
     {
         var duplicado = new PrqAutomovil { Id = 1, Color = "Café", Anio = 2022, Fabricante = "Kia", Tipo = "sedán" };
@@ -234,6 +244,22 @@ public abstract class CrudRepositoriosPruebasBase : IDisposable
         Assert.Null(leido.FechaHoraSalida);
         Assert.Null(leido.MontoTotalAPagar);
         Assert.Equal(("Honda", "Cartago"), (leido.IdAutomovilNavigation.Fabricante, leido.IdParqueoNavigation.NombreProvincia));
+    }
+
+    [SkippableFact]
+    public async Task Ingreso_InsertarFinalizado_DevuelveElMontoCalculado()
+    {
+        var guardado = await Repos.Ingresos.InsertarAsync(new PrqIngresoAutomovil
+        {
+            IdParqueo = 1,
+            IdAutomovil = 1,
+            FechaHoraEntrada = new DateTime(2026, 10, 18, 8, 0, 0),
+            FechaHoraSalida = new DateTime(2026, 10, 18, 9, 0, 0),
+        });
+
+        // El objeto devuelto trae su parqueo, por lo que el monto no queda en null.
+        Assert.Equal((60m, 1m, 1250.00m), (guardado.DuracionEstadiaMinutos, guardado.DuracionEstadiaHoras, guardado.MontoTotalAPagar));
+        Assert.Equal("Toyota", guardado.IdAutomovilNavigation.Fabricante);
     }
 
     [SkippableFact]

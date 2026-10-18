@@ -84,10 +84,14 @@ public abstract class RepositorioJsonBase<TEntidad> : IRepositorio<TEntidad> whe
         await ValidarReferenciasAsync(entidad, cancelacion);
 
         // Siguiente consecutivo del archivo (equivalente a la identidad de PostgreSQL).
-        AsignarLlave(entidad, registros.Count == 0 ? 1 : registros.Max(ObtenerLlave) + 1);
+        int nuevaLlave = registros.Count == 0 ? 1 : registros.Max(ObtenerLlave) + 1;
+        AsignarLlave(entidad, nuevaLlave);
         registros.Add(entidad);
         await Fuente.GuardarAsync(Archivo, registros, cancelacion);
-        return entidad;
+
+        // Se devuelve el registro leído del archivo, con sus propiedades de navegación.
+        return await ObtenerPorIdAsync(nuevaLlave, cancelacion)
+            ?? throw new InvalidOperationException($"No se pudo leer el registro insertado en {NombreTabla}.");
     }
 
     public virtual async Task<bool> ActualizarAsync(TEntidad entidad, CancellationToken cancelacion = default)
