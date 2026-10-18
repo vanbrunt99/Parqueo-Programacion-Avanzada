@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "nombreProvincia": "San José",
+    "nombre": "Parqueo Central Avenida Segunda",
+    "precioPorHora": 1250.00
+  },
+  {
+    "id": 2,
+    "nombreProvincia": "Heredia",
+    "nombre": "Parqueo Mercado de Heredia",
+    "precioPorHora": 800.00
+  },
+  {
+    "id": 3,
+    "nombreProvincia": "Cartago",
+    "nombre": "Parqueo Las Ruinas",
+    "precioPorHora": 675.50
+  }
+]

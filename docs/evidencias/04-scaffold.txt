@@ -1,0 +1,52 @@
+# Entorno: contenedor Linux del agente (Ubuntu 24.04, .NET SDK 10.0.402, PostgreSQL 16.15 LOCAL,
+# base parqueo_local, usuario estudiante_prq). NO corresponde a la instancia en la nube del profesor.
+# Fecha de ejecución: 17 de octubre de 2026 (hora de Costa Rica). Salida real, sin editar; las contraseñas nunca se imprimen.
+# Comando (rutas abreviadas como <repo> y <nuget>):
+# dotnet ef dbcontext scaffold "Name=ConnectionStrings:ParqueoDb" Npgsql.EntityFrameworkCore.PostgreSQL --project Parqueo.Model --startup-project Parqueo.AppConsole --table prq_automovil --table prq_parqueo --table prq_ingreso_automovil --context ParqueoContext --context-dir Contexto --output-dir Entidades --namespace Parqueo.Model.Entidades --context-namespace Parqueo.Model.Contexto --no-onconfiguring --force --verbose
+# La cadena de conexión se leyó de User Secrets; no aparece en el registro.
+# Al terminar, git status no mostró cambios en Entidades/ ni Contexto/: el scaffold regenera las mismas clases y no toca Personalizados/.
+
+Using project '<repo>/Parqueo.Model/Parqueo.Model.csproj'.
+Using startup project '<repo>/Parqueo.AppConsole/Parqueo.AppConsole.csproj'.
+Build started...
+dotnet build <repo>/Parqueo.AppConsole/Parqueo.AppConsole.csproj /verbosity:quiet /nologo /p:PublishAot=false
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:01.62
+
+Build succeeded.
+Using assembly 'Parqueo.Model'.
+Using startup assembly 'Parqueo.AppConsole'.
+Using application base '<repo>/Parqueo.AppConsole/bin/Debug/net10.0'.
+Using working directory '<repo>/Parqueo.AppConsole'.
+Using root namespace 'Parqueo.Model'.
+Using project directory '<repo>/Parqueo.Model/'.
+Remaining arguments: .
+Using environment 'Development'.
+Finding design-time services referenced by assembly 'Parqueo.AppConsole'...
+Finding design-time services referenced by assembly 'Parqueo.Model'...
+No referenced design-time services were found.
+Finding design-time services for provider 'Npgsql.EntityFrameworkCore.PostgreSQL'...
+Using design-time services from provider 'Npgsql.EntityFrameworkCore.PostgreSQL'.
+Finding IDesignTimeServices implementations in assembly 'Parqueo.AppConsole'...
+No design-time services were found.
+Finding application service provider in assembly 'Parqueo.AppConsole'...
+Finding Microsoft.Extensions.Hosting service provider...
+Using application service provider from Microsoft.Extensions.Hosting.
+Found column with table: public.prq_ingreso_automovil, column name: consecutivo, data type: integer, nullable: False, identity: True, default value: (null), computed value: (null)
+Found column with table: public.prq_ingreso_automovil, column name: id_parqueo, data type: integer, nullable: False, identity: False, default value: (null), computed value: (null)
+Found column with table: public.prq_ingreso_automovil, column name: id_automovil, data type: integer, nullable: False, identity: False, default value: (null), computed value: (null)
+Found column with table: public.prq_ingreso_automovil, column name: fecha_hora_entrada, data type: timestamp without time zone, nullable: False, identity: False, default value: (null), computed value: (null)
+Found column with table: public.prq_ingreso_automovil, column name: fecha_hora_salida, data type: timestamp without time zone, nullable: True, identity: False, default value: (null), computed value: (null)
+Found column with table: public.prq_parqueo, column name: id, data type: integer, nullable: False, identity: True, default value: (null), computed value: (null)
+Found column with table: public.prq_parqueo, column name: nombre_provincia, data type: character varying(20), nullable: False, identity: False, default value: (null), computed value: (null)
+Found column with table: public.prq_parqueo, column name: nombre, data type: character varying(100), nullable: False, identity: False, default value: (null), computed value: (null)
+Found column with table: public.prq_parqueo, column name: precio_por_hora, data type: numeric(10,2), nullable: False, identity: False, default value: (null), computed value: (null)
+Found column with table: public.prq_automovil, column name: id, data type: integer, nullable: False, identity: True, default value: (null), computed value: (null)
+Found column with table: public.prq_automovil, column name: color, data type: character varying(30), nullable: False, identity: False, default value: (null), computed value: (null)
+Found column with table: public.prq_automovil, column name: anio, data type: integer, nullable: False, identity: False, default value: (null), computed value: (null)
+Found column with table: public.prq_automovil, column name: fabricante, data type: character varying(50), nullable: False, identity: False, default value: (null), computed value: (null)
+Found column with table: public.prq_automovil, column name: tipo, data type: character varying(10), nullable: False, identity: False, default value: (null), computed value: (null)

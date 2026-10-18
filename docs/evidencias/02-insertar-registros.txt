@@ -1,0 +1,54 @@
+# Entorno: contenedor Linux del agente (Ubuntu 24.04, .NET SDK 10.0.402, PostgreSQL 16.15 LOCAL,
+# base parqueo_local, usuario estudiante_prq). NO corresponde a la instancia en la nube del profesor.
+# Fecha de ejecución: 17 de octubre de 2026 (hora de Costa Rica). Salida real, sin editar; las contraseñas nunca se imprimen.
+# Comando: psql -h 127.0.0.1 -U estudiante_prq -d parqueo_local -v ON_ERROR_STOP=1 -f "BaseDatos/insertar-registros.sql"
+
+SET
+BEGIN
+INSERT 0 6
+INSERT 0 3
+INSERT 0 17
+ setval 
+--------
+      6
+(1 row)
+
+ setval 
+--------
+      3
+(1 row)
+
+ setval 
+--------
+     17
+(1 row)
+
+COMMIT
+         tabla         | registros 
+-----------------------+-----------
+ prq_automovil         |         6
+ prq_parqueo           |         3
+ prq_ingreso_automovil |        17
+(3 rows)
+
+ consecutivo | tipo  | nombre_provincia | fecha_hora_entrada  |  fecha_hora_salida  | minutos |  monto  
+-------------+-------+------------------+---------------------+---------------------+---------+---------
+           1 | sedán | San José         | 2026-10-01 07:45:00 | 2026-10-01 10:15:00 |  150.00 | 3125.00
+           2 | 4x4   | Heredia          | 2026-10-01 09:00:00 | 2026-10-01 09:45:00 |   45.00 |  600.00
+           3 | moto  | San José         | 2026-10-02 08:10:00 | 2026-10-02 08:40:00 |   30.00 |  625.00
+           4 | 4x4   | Cartago          | 2026-10-03 13:20:00 | 2026-10-03 16:05:00 |  165.00 | 1857.63
+           5 | sedán | Heredia          | 2026-10-04 10:00:00 | 2026-10-04 18:00:00 |  480.00 | 6400.00
+           6 | 4x4   | San José         | 2026-10-05 12:00:00 | 2026-10-05 13:20:00 |   80.00 | 1666.67
+           7 | moto  | Cartago          | 2026-10-06 07:00:00 | 2026-10-06 07:50:00 |   50.00 |  562.92
+           8 | sedán | Heredia          | 2026-10-07 15:30:00 | 2026-10-07 17:00:00 |   90.00 | 1200.00
+           9 | sedán | San José         | 2026-10-08 08:00:00 | 2026-10-08 12:30:00 |  270.00 | 5625.00
+          10 | moto  | Cartago          | 2026-10-09 18:15:00 | 2026-10-09 19:00:00 |   45.00 |  506.63
+          11 | 4x4   | Heredia          | 2026-10-10 09:40:00 | 2026-10-10 11:10:00 |   90.00 | 1200.00
+          12 | moto  | San José         | 2026-10-12 06:55:00 | 2026-10-12 07:25:00 |   30.00 |  625.00
+          13 | sedán | Cartago          | 2026-10-14 11:00:00 | 2026-10-14 14:00:00 |  180.00 | 2026.50
+          14 | moto  | Heredia          | 2026-10-15 16:45:00 | 2026-10-15 17:05:00 |   20.00 |  266.67
+          15 | 4x4   | San José         | 2026-10-16 10:30:00 | 2026-10-16 12:45:00 |  135.00 | 2812.50
+          16 | 4x4   | San José         | 2026-10-17 08:05:00 |                     |         |        
+          17 | sedán | Heredia          | 2026-10-17 09:20:00 |                     |         |        
+(17 rows)
+

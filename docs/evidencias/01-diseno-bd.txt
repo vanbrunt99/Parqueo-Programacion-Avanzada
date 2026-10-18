@@ -1,0 +1,46 @@
+# Entorno: contenedor Linux del agente (Ubuntu 24.04, .NET SDK 10.0.402, PostgreSQL 16.15 LOCAL,
+# base parqueo_local, usuario estudiante_prq). NO corresponde a la instancia en la nube del profesor.
+# Fecha de ejecución: 17 de octubre de 2026 (hora de Costa Rica). Salida real, sin editar; las contraseñas nunca se imprimen.
+# 1) Verificación del destino antes de ejecutar el script:
+#    psql -h 127.0.0.1 -U estudiante_prq -d parqueo_local -c "SELECT current_database(), current_schema(), current_user;"
+ current_database | current_schema |  current_user  
+------------------+----------------+----------------
+ parqueo_local    | public         | estudiante_prq
+(1 row)
+
+# 2) psql -h 127.0.0.1 -U estudiante_prq -d parqueo_local -v ON_ERROR_STOP=1 -f "BaseDatos/diseño-bd.sql"
+SET
+BEGIN
+CREATE TABLE
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+CREATE TABLE
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+CREATE TABLE
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+COMMENT
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+COMMIT
+# 3) Tablas creadas (\dt prq_*):
+                    List of relations
+ Schema |         Name          | Type  |     Owner      
+--------+-----------------------+-------+----------------
+ public | prq_automovil         | table | estudiante_prq
+ public | prq_ingreso_automovil | table | estudiante_prq
+ public | prq_parqueo           | table | estudiante_prq
+(3 rows)
+
