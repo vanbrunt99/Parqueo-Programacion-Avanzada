@@ -1,5 +1,33 @@
 # Parqueo — Programación Avanzada (BSI-19)
 
+## Verificación en la nube del curso el 19 de octubre de 2026
+
+Se ejecutaron los scripts y el scaffold contra la instancia PostgreSQL del profesor,
+usando exclusivamente el esquema propio del estudiante `user_13`. Las tres tablas
+contienen 6 automóviles, 3 parqueos y 17 ingresos, dos sin salida. El modelo generado
+incluye explícitamente el esquema `user_13` y no contiene contraseñas.
+
+La compilación terminó sin errores ni advertencias. Las **231 pruebas** pasaron contra
+la nube, sin omisiones, y la salida de las consultas coincide con JSON salvo el encabezado
+que identifica el origen. Evidencias: `docs/evidencias/11-verificacion-nube-2026-10-19.txt`.
+
+La conexión se configura en User Secrets con la clave `ConnectionStrings:ParqueoDb`.
+Para repetir el scaffold en este esquema, usar los nombres calificados
+`user_13.prq_automovil`, `user_13.prq_parqueo` y `user_13.prq_ingreso_automovil` en
+las tres opciones `--table` del comando de la sección 3. El proveedor puede incluir
+metadatos de ENUM ajenos aunque se limiten las tablas: se retiraron esos metadatos
+del contexto porque ninguna tabla PRQ usa ENUM.
+
+El repositorio de entrega es privado:
+https://github.com/vanbrunt99/Parqueo-Programacion-Avanzada
+El profesor necesita invitación de GitHub para abrirlo; también se entrega el ZIP y el
+bundle completos en una carpeta personal de OneDrive compartida únicamente con él.
+
+Las evidencias 01 a 10 corresponden a la ejecución local histórica de Claude. No deben
+confundirse con la nueva ejecución en la nube. El registro de Claude disponible contiene
+el prompt y un resumen; todavía debe incorporarse la conversación original completa
+al documento académico si se dispone de ella.
+
 Trabajo en Clase N.º 2: **Diseño de tablas en el motor default y clases de modelo repositorio en C#**.
 
 - Estudiante: Jonathan Van Brunt Valerio

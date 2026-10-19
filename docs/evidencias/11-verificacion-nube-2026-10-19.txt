@@ -1,0 +1,94 @@
+Verificación independiente en Windows — 19 de octubre de 2026
+Conexión PostgreSQL del profesor con cuenta propia y esquema user_13.
+TLS con verificación de certificado (VerifyFull). No se muestran contraseñas.
+
+1. Scripts SQL ejecutados en user_13
+Ejecutado diseño-bd.sql en user_13.
+Ejecutado insertar-registros.sql en user_13.
+automoviles: 6
+parqueos: 3
+ingresos: 17
+ingresos_sin_salida: 2
+
+2. Scaffold de las tres tablas calificadas con user_13
+Build started...
+Build succeeded.
+Se retiraron metadatos de ENUM de otros esquemas que el proveedor había incluido. Ninguna tabla PRQ usa ENUM.
+
+3. Compilación
+  Parqueo.Tests -> C:\Users\Usuario\OneDrive\Escritorio\Documentos\ChatGPT\Cuatrimestre III 2026\Revision-Programacion-Avanzada\Parqueo-Programacion-Avanzada\Parqueo.Tests\bin\Debug\net10.0\Parqueo.Tests.dll
+
+Compilación correcta.
+    0 Advertencia(s)
+    0 Errores
+
+Tiempo transcurrido 00:00:27.26
+
+4. Pruebas contra la nube
+1 archivos de prueba en total coincidieron con el patrón especificado.
+Archivo de resultados: C:\Users\Usuario\OneDrive\Escritorio\Documentos\ChatGPT\Cuatrimestre III 2026\Revision-Programacion-Avanzada\ResultadosPruebas\nube.trx
+
+Correctas! - Con error:     0, Superado:   231, Omitido:     0, Total:   231, Duración: 45 s - Parqueo.Tests.dll (net10.0)
+
+5. Consultas JSON y nube
+Comparación línea por línea sin el encabezado del origen: 0 diferencias.
+La consola contra PostgreSQL:
+Origen de datos: PostgreSQL (Host=postgresql-hecferme.postgres.database.azure.com; Database=advanced_programming; Username=user_13)
+
+=== Consulta por llave primaria ===
+Automóvil 1: #1 Rojo, 2019, Toyota, sedán; ingresos: 3
+Parqueo 3: #3 Parqueo Las Ruinas (Cartago) 675.50/h; ingresos: 4
+Ingreso 6: 2026-10-05 12:00 → 2026-10-05 13:20; minutos 80, horas 1.3333, monto 1666.67
+Automóvil 999: no existe (null)
+
+=== Automóviles por color, intervalo de año, fabricante y tipo (aproximados) ===
+Color ~ 'ro': 2 resultado(s)
+   #1 Rojo, 2019, Toyota, sedán
+   #3 Negro, 2015, Nissan, sedán
+Años 2015–2019: 3 resultado(s)
+   #1 Rojo, 2019, Toyota, sedán
+   #3 Negro, 2015, Nissan, sedán
+   #5 Gris, 2018, Mitsubishi, 4x4
+Fabricante ~ 'da': 2 resultado(s)
+   #2 Blanco, 2021, Hyundai, 4x4
+   #6 Verde, 2012, Honda, moto
+Tipo ~ 'sedan': 2 resultado(s)
+   #1 Rojo, 2019, Toyota, sedán
+   #3 Negro, 2015, Nissan, sedán
+Tipo ~ '4x4' y año ≥ 2019: 1 resultado(s)
+   #2 Blanco, 2021, Hyundai, 4x4
+
+=== Parqueos por provincia, nombre y rango de precio por hora ===
+Provincia ~ 'san jose': 1 resultado(s)
+   #1 Parqueo Central Avenida Segunda (San José) 1250.00/h
+Nombre ~ 'mercado': 1 resultado(s)
+   #2 Parqueo Mercado de Heredia (Heredia) 800.00/h
+Precio entre 700 y 1250: 2 resultado(s)
+   #1 Parqueo Central Avenida Segunda (San José) 1250.00/h
+   #2 Parqueo Mercado de Heredia (Heredia) 800.00/h
+
+=== ObtenerPrecioPorHoraPorParqueo ===
+Parqueo 1: 1250.00
+Parqueo 2: 800.00
+Parqueo 3: 675.50
+Parqueo 99: null (no existe)
+
+=== Automóviles tipo '4x4' que ingresaron entre 2026-10-01 00:00 y 2026-10-31 23:59 ===
+Consec. | Automóvil                          | Provincia | Entrada          | Salida           | Precio/h | Monto
+      2 | #2 Hyundai Blanco 2021 (4x4)       | Heredia   | 2026-10-01 09:00 | 2026-10-01 09:45 |   800.00 | 600.00
+      4 | #5 Mitsubishi Gris 2018 (4x4)      | Cartago   | 2026-10-03 13:20 | 2026-10-03 16:05 |   675.50 | 1857.63
+      6 | #2 Hyundai Blanco 2021 (4x4)       | San José  | 2026-10-05 12:00 | 2026-10-05 13:20 |  1250.00 | 1666.67
+     11 | #5 Mitsubishi Gris 2018 (4x4)      | Heredia   | 2026-10-10 09:40 | 2026-10-10 11:10 |   800.00 | 1200.00
+     15 | #5 Mitsubishi Gris 2018 (4x4)      | San José  | 2026-10-16 10:30 | 2026-10-16 12:45 |  1250.00 | 2812.50
+     16 | #2 Hyundai Blanco 2021 (4x4)       | San José  | 2026-10-17 08:05 | (en curso)       |  1250.00 | null
+Total de registros: 6; total facturado: 8136.80
+
+=== Automóviles en parqueos de 'Heredia' entre 2026-10-01 00:00 y 2026-10-31 23:59 ===
+Consec. | Automóvil                          | Provincia | Entrada          | Salida           | Precio/h | Monto
+      2 | #2 Hyundai Blanco 2021 (4x4)       | Heredia   | 2026-10-01 09:00 | 2026-10-01 09:45 |   800.00 | 600.00
+      5 | #3 Nissan Negro 2015 (sedán)       | Heredia   | 2026-10-04 10:00 | 2026-10-04 18:00 |   800.00 | 6400.00
+      8 | #1 Toyota Rojo 2019 (sedán)        | Heredia   | 2026-10-07 15:30 | 2026-10-07 17:00 |   800.00 | 1200.00
+     11 | #5 Mitsubishi Gris 2018 (4x4)      | Heredia   | 2026-10-10 09:40 | 2026-10-10 11:10 |   800.00 | 1200.00
+     14 | #4 Yamaha Azul 2023 (moto)         | Heredia   | 2026-10-15 16:45 | 2026-10-15 17:05 |   800.00 | 266.67
+     17 | #3 Nissan Negro 2015 (sedán)       | Heredia   | 2026-10-17 09:20 | (en curso)       |   800.00 | null
+Total de registros: 6; total facturado: 9666.67
