@@ -93,6 +93,7 @@ public abstract class CrudRepositoriosPruebasBase : IDisposable
     [InlineData("Café", 2022, "   ", "moto")]
     [InlineData("Café", 1800, "Kia", "4x4")]
     [InlineData("Café", 2999, "Kia", "4x4")]
+    [InlineData("Ca\u0000fé", 2022, "Kia", "4x4")]   // PostgreSQL no admite el carácter nulo
     public async Task Automovil_InsertarDatosInvalidos_LanzaArgumentExceptionYNoGuarda(string color, int anio, string fabricante, string tipo)
     {
         var invalido = new PrqAutomovil { Color = color, Anio = anio, Fabricante = fabricante, Tipo = tipo };
@@ -292,7 +293,9 @@ public abstract class CrudRepositoriosPruebasBase : IDisposable
     [SkippableTheory]
     [InlineData("2026-10-18T10:00:00", "2026-10-18T10:00:00")]
     [InlineData("2026-10-18T10:00:00", "2026-10-18T09:00:00")]
-    public async Task Ingreso_SalidaNoPosteriorALaEntrada_LanzaArgumentException(string entrada, string salida)
+    [InlineData("2026-10-18T10:00:00", "9999-12-31T18:00:00")]   // fuera del rango permitido
+    [InlineData("1999-12-31T10:00:00", "1999-12-31T11:00:00")]
+    public async Task Ingreso_FechasInvalidas_LanzaArgumentException(string entrada, string salida)
     {
         var invalido = new PrqIngresoAutomovil
         {

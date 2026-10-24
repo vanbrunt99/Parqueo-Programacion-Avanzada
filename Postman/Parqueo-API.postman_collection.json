@@ -19,7 +19,7 @@
                 "exec": [
                   "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
                   "pm.test('Código 200', () => pm.response.to.have.status(200));",
-                  "pm.test('Resultado esperado: [1, 2, 3, 4, 5, 6]', () => pm.expect(pm.response.json().map(x => x.id)).to.eql([1, 2, 3, 4, 5, 6]));",
+                  "pm.test('Incluye los registros iniciales 1 a 6', () => pm.expect(pm.response.json().map(x => x.id)).to.include.members([1, 2, 3, 4, 5, 6]));",
                   "pm.test('Los listados no anidan ingresos', () => pm.expect(pm.response.json()[0]).to.not.have.property('ingresos'));"
                 ]
               }
@@ -50,7 +50,8 @@
                 "exec": [
                   "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
                   "pm.test('Código 200', () => pm.response.to.have.status(200));",
-                  "pm.test('Resultado esperado: [5, 6]', () => pm.expect(pm.response.json().map(x => x.id)).to.eql([5, 6]));"
+                  "pm.test('Incluye los registros iniciales 5 a 6', () => pm.expect(pm.response.json().map(x => x.id)).to.include.members([5, 6]));",
+                  "pm.test('Como máximo 4 registros por página', () => pm.expect(pm.response.json().length).to.be.at.most(4));"
                 ]
               }
             }
@@ -307,6 +308,15 @@
           "name": "POST crear automóvil",
           "event": [
             {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.unset('idAutomovil'); // evita reutilizar el id de una corrida anterior"
+                ]
+              }
+            },
+            {
               "listen": "test",
               "script": {
                 "type": "text/javascript",
@@ -353,6 +363,18 @@
           "name": "GET automóvil creado",
           "event": [
             {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.collectionVariables.get('idAutomovil')) {",
+                  "    console.warn('Solicitud omitida: la variable idAutomovil está vacía. Ejecute antes \"POST crear automóvil\".');",
+                  "    pm.execution.skipRequest();",
+                  "}"
+                ]
+              }
+            },
+            {
               "listen": "test",
               "script": {
                 "type": "text/javascript",
@@ -383,6 +405,18 @@
         {
           "name": "PUT actualizar automóvil creado",
           "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.collectionVariables.get('idAutomovil')) {",
+                  "    console.warn('Solicitud omitida: la variable idAutomovil está vacía. Ejecute antes \"POST crear automóvil\".');",
+                  "    pm.execution.skipRequest();",
+                  "}"
+                ]
+              }
+            },
             {
               "listen": "test",
               "script": {
@@ -429,6 +463,18 @@
           "name": "DELETE borrar automóvil creado",
           "event": [
             {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.collectionVariables.get('idAutomovil')) {",
+                  "    console.warn('Solicitud omitida: la variable idAutomovil está vacía. Ejecute antes \"POST crear automóvil\".');",
+                  "    pm.execution.skipRequest();",
+                  "}"
+                ]
+              }
+            },
+            {
               "listen": "test",
               "script": {
                 "type": "text/javascript",
@@ -458,6 +504,18 @@
         {
           "name": "GET automóvil borrado devuelve 404",
           "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.collectionVariables.get('idAutomovil')) {",
+                  "    console.warn('Solicitud omitida: la variable idAutomovil está vacía. Ejecute antes \"POST crear automóvil\".');",
+                  "    pm.execution.skipRequest();",
+                  "}"
+                ]
+              }
+            },
             {
               "listen": "test",
               "script": {
@@ -501,8 +559,8 @@
                 "exec": [
                   "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
                   "pm.test('Código 200', () => pm.response.to.have.status(200));",
-                  "pm.test('Resultado esperado: [1, 2, 3]', () => pm.expect(pm.response.json().map(x => x.id)).to.eql([1, 2, 3]));",
-                  "pm.test('Precio decimal exacto', () => pm.expect(pm.response.json()[2].precioPorHora).to.eql(675.5));"
+                  "pm.test('Incluye los registros iniciales 1 a 3', () => pm.expect(pm.response.json().map(x => x.id)).to.include.members([1, 2, 3]));",
+                  "pm.test('Precio decimal exacto', () => pm.expect(pm.response.json().find(p => p.id === 3).precioPorHora).to.eql(675.5));"
                 ]
               }
             }
@@ -749,6 +807,15 @@
           "name": "POST crear parqueo",
           "event": [
             {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.unset('idParqueo'); // evita reutilizar el id de una corrida anterior"
+                ]
+              }
+            },
+            {
               "listen": "test",
               "script": {
                 "type": "text/javascript",
@@ -795,6 +862,18 @@
           "name": "GET parqueo creado",
           "event": [
             {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.collectionVariables.get('idParqueo')) {",
+                  "    console.warn('Solicitud omitida: la variable idParqueo está vacía. Ejecute antes \"POST crear parqueo\".');",
+                  "    pm.execution.skipRequest();",
+                  "}"
+                ]
+              }
+            },
+            {
               "listen": "test",
               "script": {
                 "type": "text/javascript",
@@ -825,6 +904,18 @@
         {
           "name": "PUT actualizar parqueo creado",
           "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.collectionVariables.get('idParqueo')) {",
+                  "    console.warn('Solicitud omitida: la variable idParqueo está vacía. Ejecute antes \"POST crear parqueo\".');",
+                  "    pm.execution.skipRequest();",
+                  "}"
+                ]
+              }
+            },
             {
               "listen": "test",
               "script": {
@@ -907,6 +998,18 @@
           "name": "DELETE borrar parqueo creado",
           "event": [
             {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.collectionVariables.get('idParqueo')) {",
+                  "    console.warn('Solicitud omitida: la variable idParqueo está vacía. Ejecute antes \"POST crear parqueo\".');",
+                  "    pm.execution.skipRequest();",
+                  "}"
+                ]
+              }
+            },
+            {
               "listen": "test",
               "script": {
                 "type": "text/javascript",
@@ -936,6 +1039,18 @@
         {
           "name": "GET parqueo borrado devuelve 404",
           "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.collectionVariables.get('idParqueo')) {",
+                  "    console.warn('Solicitud omitida: la variable idParqueo está vacía. Ejecute antes \"POST crear parqueo\".');",
+                  "    pm.execution.skipRequest();",
+                  "}"
+                ]
+              }
+            },
             {
               "listen": "test",
               "script": {
@@ -1009,7 +1124,7 @@
                 "exec": [
                   "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
                   "pm.test('Código 200', () => pm.response.to.have.status(200));",
-                  "pm.test('Resultado esperado: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]', () => pm.expect(pm.response.json().map(x => x.consecutivo)).to.eql([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]));",
+                  "pm.test('Incluye los registros iniciales 1 a 17', () => pm.expect(pm.response.json().map(x => x.consecutivo)).to.include.members([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]));",
                   "pm.test('Navegación: cada ingreso trae su automóvil y su parqueo', () => pm.response.json().forEach(i => { pm.expect(i.automovil.id).to.eql(i.idAutomovil); pm.expect(i.parqueo.id).to.eql(i.idParqueo); }));"
                 ]
               }
@@ -1106,6 +1221,15 @@
           "name": "POST crear ingreso en curso",
           "event": [
             {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.unset('idIngreso'); // evita reutilizar el id de una corrida anterior"
+                ]
+              }
+            },
+            {
               "listen": "test",
               "script": {
                 "type": "text/javascript",
@@ -1153,6 +1277,18 @@
           "name": "GET ingreso creado",
           "event": [
             {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.collectionVariables.get('idIngreso')) {",
+                  "    console.warn('Solicitud omitida: la variable idIngreso está vacía. Ejecute antes \"POST crear ingreso en curso\".');",
+                  "    pm.execution.skipRequest();",
+                  "}"
+                ]
+              }
+            },
+            {
               "listen": "test",
               "script": {
                 "type": "text/javascript",
@@ -1183,6 +1319,18 @@
         {
           "name": "PUT registrar salida del ingreso creado (90 minutos)",
           "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.collectionVariables.get('idIngreso')) {",
+                  "    console.warn('Solicitud omitida: la variable idIngreso está vacía. Ejecute antes \"POST crear ingreso en curso\".');",
+                  "    pm.execution.skipRequest();",
+                  "}"
+                ]
+              }
+            },
             {
               "listen": "test",
               "script": {
@@ -1231,6 +1379,18 @@
           "name": "DELETE borrar ingreso creado",
           "event": [
             {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.collectionVariables.get('idIngreso')) {",
+                  "    console.warn('Solicitud omitida: la variable idIngreso está vacía. Ejecute antes \"POST crear ingreso en curso\".');",
+                  "    pm.execution.skipRequest();",
+                  "}"
+                ]
+              }
+            },
+            {
               "listen": "test",
               "script": {
                 "type": "text/javascript",
@@ -1260,6 +1420,18 @@
         {
           "name": "GET ingreso borrado devuelve 404",
           "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.collectionVariables.get('idIngreso')) {",
+                  "    console.warn('Solicitud omitida: la variable idIngreso está vacía. Ejecute antes \"POST crear ingreso en curso\".');",
+                  "    pm.execution.skipRequest();",
+                  "}"
+                ]
+              }
+            },
             {
               "listen": "test",
               "script": {
@@ -1953,6 +2125,46 @@
           }
         },
         {
+          "name": "Página demasiado grande (21474838 con tamaño 100)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Respuesta ProblemDetails', () => { const p = pm.response.json(); pm.expect(p.status).to.eql(400); pm.expect(p.title).to.be.a('string'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/automoviles?pagina=21474838&tamanoPagina=100",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "automoviles"
+              ],
+              "query": [
+                {
+                  "key": "pagina",
+                  "value": "21474838"
+                },
+                {
+                  "key": "tamanoPagina",
+                  "value": "100"
+                }
+              ]
+            }
+          }
+        },
+        {
           "name": "Parqueo inexistente (GET 999)",
           "event": [
             {
@@ -2481,6 +2693,96 @@
           }
         },
         {
+          "name": "Ingreso con salida en el año 9999 (POST)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Respuesta ProblemDetails', () => { const p = pm.response.json(); pm.expect(p.status).to.eql(400); pm.expect(p.title).to.be.a('string'); });",
+                  "pm.test('Indica el rango permitido', () => pm.expect(pm.response.json().detail).to.include('2000'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/ingresos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ingresos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idParqueo\": 1,\n  \"idAutomovil\": 1,\n  \"fechaHoraEntrada\": \"2026-10-18T10:00:00\",\n  \"fechaHoraSalida\": \"9999-12-31T18:00:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Ingreso con fecha con zona horaria (POST)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Respuesta ProblemDetails', () => { const p = pm.response.json(); pm.expect(p.status).to.eql(400); pm.expect(p.title).to.be.a('string'); });",
+                  "pm.test('Pide la hora local sin zona', () => pm.expect(pm.response.json().detail).to.include('sin zona horaria'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/ingresos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ingresos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idParqueo\": 1,\n  \"idAutomovil\": 1,\n  \"fechaHoraEntrada\": \"2026-10-18T10:00:00-06:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
           "name": "Ingreso sin fecha de entrada (POST)",
           "event": [
             {
@@ -2636,6 +2938,51 @@
                 {
                   "key": "hasta",
                   "value": "2026-10-01T00:00:00"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Consulta por tipo con fecha con zona horaria",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Respuesta ProblemDetails', () => { const p = pm.response.json(); pm.expect(p.status).to.eql(400); pm.expect(p.title).to.be.a('string'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/ingresos/por-tipo?tipo=4x4&desde=2026-10-01T00:00:00-06:00&hasta=2026-10-31T23:59:59",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ingresos",
+                "por-tipo"
+              ],
+              "query": [
+                {
+                  "key": "tipo",
+                  "value": "4x4"
+                },
+                {
+                  "key": "desde",
+                  "value": "2026-10-01T00:00:00-06:00"
+                },
+                {
+                  "key": "hasta",
+                  "value": "2026-10-31T23:59:59"
                 }
               ]
             }

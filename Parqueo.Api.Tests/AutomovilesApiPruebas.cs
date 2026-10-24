@@ -90,6 +90,8 @@ public abstract class AutomovilesApiPruebasBase : ApiPruebasBase
         Assert.Equal(HttpStatusCode.Created, creado.StatusCode);
         var cuerpoCreado = await creado.LeerJsonAsync();
         int id = cuerpoCreado.GetProperty("id").GetInt32();
+        try
+        {
         Assert.True(id > 6);
         Assert.EndsWith($"{Ruta}/{id}", creado.Headers.Location!.ToString(), StringComparison.OrdinalIgnoreCase);
         Assert.Equal(0, cuerpoCreado.GetProperty("ingresos").GetArrayLength());
@@ -108,6 +110,21 @@ public abstract class AutomovilesApiPruebasBase : ApiPruebasBase
         // DELETE
         Assert.Equal(HttpStatusCode.NoContent, (await Cliente.DeleteAsync($"{Ruta}/{id}")).StatusCode);
         Assert.Equal(HttpStatusCode.NotFound, (await Cliente.GetAsync($"{Ruta}/{id}")).StatusCode);
+        }
+        finally
+        {
+            await Cliente.DeleteAsync($"{Ruta}/{id}"); // limpieza aunque falle una aserción
+        }
+    }
+
+    [SkippableFact]
+    public async Task Get_FiltroConCaracterDeControl_SeIgnoraIgualEnAmbosOrigenes()
+    {
+        var respuesta = await Cliente.GetAsync($"{Ruta}?color=%00");
+
+        Assert.Equal(HttpStatusCode.OK, respuesta.StatusCode);
+        var ids = (await respuesta.LeerJsonAsync()).Ids();
+        Assert.Equal([1, 2, 3, 4, 5, 6], ids);
     }
 
     [SkippableTheory]
@@ -116,6 +133,7 @@ public abstract class AutomovilesApiPruebasBase : ApiPruebasBase
     [InlineData("""{"color":"   ","anio":2022,"fabricante":"Kia","tipo":"moto"}""", "color")]
     [InlineData("""{"anio":2022}""", "obligatorio")]
     [InlineData("""{"color":"Café","anio":"dos mil","fabricante":"Kia","tipo":"moto"}""", "")]
+    [InlineData("""{"color":"Ca\u0000fé","anio":2022,"fabricante":"Kia","tipo":"moto"}""", "control")]
     public async Task Post_DatosInvalidos_Devuelve400SinGuardar(string json, string textoEsperado)
     {
         var respuesta = await Cliente.PostAsync(Ruta, new StringContent(json, System.Text.Encoding.UTF8, "application/json"));
@@ -140,6 +158,7 @@ public abstract class AutomovilesApiPruebasBase : ApiPruebasBase
     [InlineData("tamanoPagina=0")]
     [InlineData("pagina=0")]
     [InlineData("anioDesde=abc")]
+    [InlineData("pagina=21474838&tamanoPagina=100")]   // el desplazamiento no cabe en un int
     public async Task Get_ParametrosInvalidos_Devuelve400(string consulta)
     {
         Assert.Equal(HttpStatusCode.BadRequest, (await Cliente.GetAsync($"{Ruta}?{consulta}")).StatusCode);
@@ -158,10 +177,12 @@ public sealed class AutomovilesApiJsonPruebas : AutomovilesApiPruebasBase
     {
         var creado = await Cliente.PostAsJsonAsync("/api/automoviles", new { color = "Morado", anio = 2024, fabricante = "BYD", tipo = "sedán" });
         Assert.Equal(HttpStatusCode.Created, creado.StatusCode);
+        int id = (await creado.LeerJsonAsync()).GetProperty("id").GetInt32();
 
         string archivo = await File.ReadAllTextAsync(Path.Combine(Origen.CarpetaJson!, "automoviles.json"));
+        await Cliente.DeleteAsync($"/api/automoviles/{id}");
         Assert.Contains("\"fabricante\": \"BYD\"", archivo);
-        Assert.Equal(7, (await creado.LeerJsonAsync()).GetProperty("id").GetInt32());
+        Assert.Equal(7, id);
     }
 }
 

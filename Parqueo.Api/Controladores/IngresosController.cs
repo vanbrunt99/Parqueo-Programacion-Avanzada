@@ -61,7 +61,8 @@ public sealed class IngresosController : CrudControllerBase<PrqIngresoAutomovil,
         [FromQuery] ParametrosPaginacion paginacion,
         CancellationToken cancelacion)
     {
-        var resultado = await _ingresos.ListarPorTipoAsync(tipo!, desde!.Value, hasta!.Value, paginacion.ACriterio(), cancelacion);
+        var resultado = await _ingresos.ListarPorTipoAsync(
+            tipo!, Mapeos.FechaSinZona(desde!.Value, "desde"), Mapeos.FechaSinZona(hasta!.Value, "hasta"), paginacion.ACriterio(), cancelacion);
         return Ok(resultado.Select(r => r.ARespuesta()).ToList());
     }
 
@@ -81,7 +82,8 @@ public sealed class IngresosController : CrudControllerBase<PrqIngresoAutomovil,
         [FromQuery] ParametrosPaginacion paginacion,
         CancellationToken cancelacion)
     {
-        var resultado = await _ingresos.ListarPorProvinciaAsync(provincia!, desde!.Value, hasta!.Value, paginacion.ACriterio(), cancelacion);
+        var resultado = await _ingresos.ListarPorProvinciaAsync(
+            provincia!, Mapeos.FechaSinZona(desde!.Value, "desde"), Mapeos.FechaSinZona(hasta!.Value, "hasta"), paginacion.ACriterio(), cancelacion);
         return Ok(resultado.Select(r => r.ARespuesta()).ToList());
     }
 

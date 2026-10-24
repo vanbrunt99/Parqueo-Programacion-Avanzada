@@ -56,16 +56,17 @@ public sealed class BusquedaAproximada
 
             foreach (char caracter in palabras[indice])
             {
-                if (CharUnicodeInfo.GetUnicodeCategory(caracter) == UnicodeCategory.NonSpacingMark)
+                if (CharUnicodeInfo.GetUnicodeCategory(caracter) == UnicodeCategory.NonSpacingMark || char.IsControl(caracter))
                 {
-                    continue; // tilde suelta sin letra base: no aporta a la búsqueda
+                    continue; // tilde suelta o carácter de control: no aporta a la búsqueda
                 }
 
                 patron.Append(PatronDeCaracter(caracter));
             }
         }
 
-        return patron.ToString();
+        // Si solo había caracteres ignorados, no hay nada que buscar.
+        return patron.Length == 0 ? null : patron.ToString();
     }
 
     private static string PatronDeCaracter(char caracter)

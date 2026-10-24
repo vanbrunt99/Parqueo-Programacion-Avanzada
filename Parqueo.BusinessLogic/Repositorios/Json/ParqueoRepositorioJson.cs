@@ -38,7 +38,9 @@ public sealed class ParqueoRepositorioJson : RepositorioJsonBase<PrqParqueo>, IP
         foreach (var ingreso in parqueo.PrqIngresoAutomovils)
         {
             ingreso.IdParqueoNavigation = parqueo;
-            ingreso.IdAutomovilNavigation = automoviles.GetValueOrDefault(ingreso.IdAutomovil)!;
+            ingreso.IdAutomovilNavigation = automoviles.GetValueOrDefault(ingreso.IdAutomovil)
+                ?? throw new InvalidDataException(
+                    $"El ingreso {ingreso.Consecutivo} referencia al automóvil {ingreso.IdAutomovil}, que no existe en {FuenteDatosJson.ArchivoAutomoviles}.");
         }
     }
 

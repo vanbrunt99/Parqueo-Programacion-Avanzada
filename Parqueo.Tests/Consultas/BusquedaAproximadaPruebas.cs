@@ -41,6 +41,7 @@ public class BusquedaAproximadaPruebas
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
+    [InlineData("\u0000")]          // solo caracteres de control: no hay nada que buscar
     public void TextoVacio_NoGeneraPatron(string? texto)
     {
         Assert.Null(_busqueda.CrearPatron(texto));
@@ -51,5 +52,12 @@ public class BusquedaAproximadaPruebas
     {
         Assert.Equal(@"[sS][eéèëêEÉÈËÊ][dD][aáàäâAÁÀÄÂ][nN]", _busqueda.CrearPatron("sedán"));
         Assert.Equal(@"4[xX]4\.", _busqueda.CrearPatron("4x4."));
+    }
+
+    [Fact]
+    public void Paginacion_PaginaQueDesbordaElDesplazamiento_LanzaArgumentOutOfRange()
+    {
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Paginacion(21_474_838, 100));
+        Assert.Equal(2_147_483_600, new Paginacion(21_474_837, 100).Desplazamiento);
     }
 }

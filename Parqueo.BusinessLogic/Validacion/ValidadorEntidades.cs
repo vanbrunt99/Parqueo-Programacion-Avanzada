@@ -24,6 +24,15 @@ public sealed class ValidadorEntidades
 
     private const decimal PrecioMaximo = 99_999_999.99m; // numeric(10,2)
 
+    /// <summary>
+    /// Rango razonable de fechas para un ingreso. Evita valores extremos (por ejemplo, el
+    /// año 9999) que desbordan los cálculos de duración y monto o que no se pueden
+    /// leer de nuevo desde JSON.
+    /// </summary>
+    public static readonly DateTime FechaMinima = new(2000, 1, 1);
+
+    public static readonly DateTime FechaMaxima = new(2100, 12, 31, 23, 59, 59);
+
     public void Validar(PrqAutomovil automovil)
     {
         ArgumentNullException.ThrowIfNull(automovil);
@@ -83,6 +92,15 @@ public sealed class ValidadorEntidades
             throw new ArgumentException("Las fechas se registran en hora local de Costa Rica, no en UTC.");
         }
 
+        foreach (var (fecha, campo) in new[] { ((DateTime?)ingreso.FechaHoraEntrada, "entrada"), (ingreso.FechaHoraSalida, "salida") })
+        {
+            if (fecha is DateTime valor && (valor < FechaMinima || valor > FechaMaxima))
+            {
+                throw new ArgumentException(
+                    $"La fecha y hora de {campo} ({valor:yyyy-MM-dd HH:mm}) debe estar entre {FechaMinima:yyyy-MM-dd} y {FechaMaxima:yyyy-MM-dd}.");
+            }
+        }
+
         if (ingreso.FechaHoraSalida is DateTime salida && salida <= ingreso.FechaHoraEntrada)
         {
             throw new ArgumentException("La fecha y hora de salida debe ser posterior a la de entrada.");
@@ -115,6 +133,13 @@ public sealed class ValidadorEntidades
         if (valor.Length > longitudMaxima)
         {
             throw new ArgumentException($"El campo {campo} admite como máximo {longitudMaxima} caracteres.");
+        }
+
+        // PostgreSQL no admite el carácter nulo en texto; JSON sí. Se rechazan los
+        // caracteres de control para que ambos orígenes acepten los mismos datos.
+        if (valor.Any(char.IsControl))
+        {
+            throw new ArgumentException($"El campo {campo} contiene caracteres de control no permitidos.");
         }
     }
 }

@@ -53,6 +53,26 @@ public sealed class FuenteDatosJson
     public string Directorio { get; }
 
     /// <summary>
+    /// Ejecuta una operación de lectura-modificación-escritura sin que otra solicitud
+    /// escriba al mismo tiempo en los archivos de esta carpeta. Sin este bloqueo, dos
+    /// inserciones simultáneas leen la misma lista y una de ellas se pierde.
+    /// </summary>
+    public async Task<T> EjecutarExclusivoAsync<T>(Func<Task<T>> operacion, CancellationToken cancelacion = default)
+    {
+        await _escritura.WaitAsync(cancelacion);
+        try
+        {
+            return await operacion();
+        }
+        finally
+        {
+            _escritura.Release();
+        }
+    }
+
+    private readonly SemaphoreSlim _escritura = new(1, 1);
+
+    /// <summary>
     /// Lee todos los registros del archivo. Si el archivo no existe, devuelve una
     /// lista vacía (se creará en la primera escritura).
     /// </summary>
@@ -105,8 +125,17 @@ public sealed class FuenteDatosJson
     {
         private const string Formato = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.FFFFFFF";
 
-        public override DateTime Read(ref Utf8JsonReader lector, Type tipo, JsonSerializerOptions opciones) =>
-            DateTime.SpecifyKind(lector.GetDateTimeOffset().DateTime, DateTimeKind.Unspecified);
+        public override DateTime Read(ref Utf8JsonReader lector, Type tipo, JsonSerializerOptions opciones)
+        {
+            // Formato normal del archivo: sin zona horaria. Solo si el texto trae un
+            // desfase (archivo editado a mano) se toma la hora tal como está escrita.
+            if (lector.TryGetDateTime(out DateTime fecha) && fecha.Kind == DateTimeKind.Unspecified)
+            {
+                return fecha;
+            }
+
+            return DateTime.SpecifyKind(lector.GetDateTimeOffset().DateTime, DateTimeKind.Unspecified);
+        }
 
         public override void Write(Utf8JsonWriter escritor, DateTime valor, JsonSerializerOptions opciones) =>
             escritor.WriteStringValue(valor.ToString(Formato, CultureInfo.InvariantCulture));

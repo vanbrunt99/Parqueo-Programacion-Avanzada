@@ -1,0 +1,38 @@
+# Comprobación de la guardia de la colección: se ejecutan solo "GET automóvil creado" y "DELETE borrar automóvil creado"
+# sin ejecutar antes el POST (variable idAutomovil vacía). Resultado esperado: 0 solicitudes enviadas al API.
+# Fecha: 2026-10-24 17:55 (hora de Costa Rica). Salida real de Newman 6.2.3, sin editar.
+
+newman
+
+Parqueo API — Trabajo en Clase 03
+
+❏ guardia
+↳ GET automóvil creado
+  ┌
+  │ 'Solicitud omitida: la variable idAutomovil está vacía
+  │ . Ejecute antes "POST crear automóvil".'
+  └
+
+↳ DELETE borrar automóvil creado
+  ┌
+  │ 'Solicitud omitida: la variable idAutomovil está vacía
+  │ . Ejecute antes "POST crear automóvil".'
+  └
+
+┌─────────────────────────┬──────────┬──────────┐
+│                         │ executed │   failed │
+├─────────────────────────┼──────────┼──────────┤
+│              iterations │        1 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│                requests │        0 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│            test-scripts │        0 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│      prerequest-scripts │        2 │        0 │
+├─────────────────────────┼──────────┼──────────┤
+│              assertions │        0 │        0 │
+├─────────────────────────┴──────────┴──────────┤
+│ total run duration: 26ms                      │
+├───────────────────────────────────────────────┤
+│ total data received: 0B (approx)              │
+└───────────────────────────────────────────────┘

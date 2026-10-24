@@ -5,8 +5,9 @@ using Parqueo.BusinessLogic;
 var builder = WebApplication.CreateBuilder(args);
 
 // La cadena de conexión vive en User Secrets (ConnectionStrings:ParqueoDb), compartidos
-// con Parqueo.AppConsole. Se cargan también fuera del ambiente Development.
-builder.Configuration.AddUserSecrets<Program>(optional: true);
+// con Parqueo.AppConsole. CreateBuilder los carga en el ambiente Development (el que fija
+// el perfil "http" de launchSettings.json) con menor prioridad que las variables de
+// entorno y la línea de comandos, que pueden sobrescribir la cadena si hace falta.
 
 // Origen de datos de los repositorios: "Json" (predeterminado) o "BaseDatos".
 // Ejemplo: dotnet run --project Parqueo.Api -- --OrigenDatos=BaseDatos

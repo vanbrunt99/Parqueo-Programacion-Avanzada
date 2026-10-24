@@ -23,6 +23,11 @@ public sealed record Paginacion
                 nameof(tamanoPagina), tamanoPagina, $"El tamaño de página debe estar entre 1 y {TamanoMaximo}.");
         }
 
+        if ((long)(pagina - 1) * tamanoPagina > int.MaxValue)
+        {
+            throw new ArgumentOutOfRangeException(nameof(pagina), pagina, "La página solicitada es demasiado grande.");
+        }
+
         Pagina = pagina;
         TamanoPagina = tamanoPagina;
     }

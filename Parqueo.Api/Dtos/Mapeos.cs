@@ -51,7 +51,9 @@ public static class Mapeos
         Id = id,
         NombreProvincia = solicitud.NombreProvincia!,
         Nombre = solicitud.Nombre!,
-        PrecioPorHora = solicitud.PrecioPorHora!.Value,
+        // + 0.00m fija la escala en 2 decimales (500 -> 500.00), igual que numeric(10,2),
+        // para que JSON y PostgreSQL devuelvan el precio con el mismo formato.
+        PrecioPorHora = solicitud.PrecioPorHora!.Value + 0.00m,
     };
 
     /// <summary>Parqueo sin ingresos (listados).</summary>
@@ -85,9 +87,20 @@ public static class Mapeos
         Consecutivo = consecutivo,
         IdParqueo = solicitud.IdParqueo!.Value,
         IdAutomovil = solicitud.IdAutomovil!.Value,
-        FechaHoraEntrada = solicitud.FechaHoraEntrada!.Value,
-        FechaHoraSalida = solicitud.FechaHoraSalida,
+        FechaHoraEntrada = FechaSinZona(solicitud.FechaHoraEntrada!.Value, "fechaHoraEntrada"),
+        FechaHoraSalida = solicitud.FechaHoraSalida is DateTime salida ? FechaSinZona(salida, "fechaHoraSalida") : null,
     };
+
+    /// <summary>
+    /// Las fechas del API se manejan en hora local de Costa Rica sin zona horaria
+    /// ("2026-10-18T09:00:00"). Una fecha con zona ("Z" o "-06:00") llega convertida a la
+    /// hora del servidor y cada origen la trataría distinto, por eso se rechaza (400).
+    /// </summary>
+    public static DateTime FechaSinZona(DateTime fecha, string campo) =>
+        fecha.Kind == DateTimeKind.Unspecified
+            ? fecha
+            : throw new ArgumentException(
+                $"El campo {campo} debe enviarse sin zona horaria, en hora local de Costa Rica (ejemplo: 2026-10-18T09:00:00).");
 
     /// <summary>Requiere las navegaciones cargadas (los repositorios siempre las cargan).</summary>
     public static IngresoRespuesta ARespuesta(this PrqIngresoAutomovil ingreso) => new(

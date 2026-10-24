@@ -70,6 +70,24 @@ public abstract class RepositorioJsonBase<TEntidad> : IRepositorio<TEntidad> whe
     public virtual async Task<TEntidad> InsertarAsync(TEntidad entidad, CancellationToken cancelacion = default)
     {
         ArgumentNullException.ThrowIfNull(entidad);
+        int nuevaLlave = await Fuente.EjecutarExclusivoAsync(() => InsertarEnArchivoAsync(entidad, cancelacion), cancelacion);
+
+        // Se devuelve el registro leído del archivo, con sus propiedades de navegación.
+        return await ObtenerPorIdAsync(nuevaLlave, cancelacion)
+            ?? throw new InvalidOperationException($"No se pudo leer el registro insertado en {NombreTabla}.");
+    }
+
+    public virtual Task<bool> ActualizarAsync(TEntidad entidad, CancellationToken cancelacion = default)
+    {
+        ArgumentNullException.ThrowIfNull(entidad);
+        return Fuente.EjecutarExclusivoAsync(() => ActualizarEnArchivoAsync(entidad, cancelacion), cancelacion);
+    }
+
+    public virtual Task<bool> BorrarAsync(int id, CancellationToken cancelacion = default) =>
+        Fuente.EjecutarExclusivoAsync(() => BorrarDelArchivoAsync(id, cancelacion), cancelacion);
+
+    private async Task<int> InsertarEnArchivoAsync(TEntidad entidad, CancellationToken cancelacion)
+    {
         var registros = await LeerTodosAsync(cancelacion);
 
         int llave = ObtenerLlave(entidad);
@@ -88,15 +106,11 @@ public abstract class RepositorioJsonBase<TEntidad> : IRepositorio<TEntidad> whe
         AsignarLlave(entidad, nuevaLlave);
         registros.Add(entidad);
         await Fuente.GuardarAsync(Archivo, registros, cancelacion);
-
-        // Se devuelve el registro leído del archivo, con sus propiedades de navegación.
-        return await ObtenerPorIdAsync(nuevaLlave, cancelacion)
-            ?? throw new InvalidOperationException($"No se pudo leer el registro insertado en {NombreTabla}.");
+        return nuevaLlave;
     }
 
-    public virtual async Task<bool> ActualizarAsync(TEntidad entidad, CancellationToken cancelacion = default)
+    private async Task<bool> ActualizarEnArchivoAsync(TEntidad entidad, CancellationToken cancelacion)
     {
-        ArgumentNullException.ThrowIfNull(entidad);
         var registros = await LeerTodosAsync(cancelacion);
 
         int posicion = registros.FindIndex(registro => ObtenerLlave(registro) == ObtenerLlave(entidad));
@@ -113,7 +127,7 @@ public abstract class RepositorioJsonBase<TEntidad> : IRepositorio<TEntidad> whe
         return true;
     }
 
-    public virtual async Task<bool> BorrarAsync(int id, CancellationToken cancelacion = default)
+    private async Task<bool> BorrarDelArchivoAsync(int id, CancellationToken cancelacion)
     {
         var registros = await LeerTodosAsync(cancelacion);
 

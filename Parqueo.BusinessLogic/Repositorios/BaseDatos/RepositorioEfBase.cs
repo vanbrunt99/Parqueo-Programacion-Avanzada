@@ -154,10 +154,12 @@ public abstract class RepositorioEfBase<TEntidad> : IRepositorio<TEntidad> where
         {
             return await Contexto.SaveChangesAsync(cancelacion);
         }
-        catch (DbUpdateException error)
+        catch (DbUpdateException error) when (error.InnerException is Npgsql.PostgresException { SqlState: var codigo }
+                                              && codigo.StartsWith("23", StringComparison.Ordinal))
         {
-            string detalle = error.InnerException?.Message ?? error.Message;
-            throw new ReglaNegocioException($"PostgreSQL rechazó el cambio en {NombreTabla}: {detalle}", error);
+            // Clase 23 de PostgreSQL: violación de integridad (llave duplicada, llave
+            // foránea, CHECK). Es un conflicto con los datos, no un error interno.
+            throw new ReglaNegocioException($"PostgreSQL rechazó el cambio en {NombreTabla}: {error.InnerException.Message}", error);
         }
     }
 }

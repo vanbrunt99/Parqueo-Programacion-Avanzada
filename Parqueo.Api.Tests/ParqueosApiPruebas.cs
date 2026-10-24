@@ -80,6 +80,8 @@ public abstract class ParqueosApiPruebasBase : ApiPruebasBase
         Assert.Equal(HttpStatusCode.Created, creado.StatusCode);
         var cuerpoCreado = await creado.LeerJsonAsync();
         int id = cuerpoCreado.GetProperty("id").GetInt32();
+        try
+        {
         Assert.True(id > 3);
         Assert.Equal(950.25m, cuerpoCreado.GetProperty("precioPorHora").GetDecimal());
 
@@ -94,6 +96,23 @@ public abstract class ParqueosApiPruebasBase : ApiPruebasBase
 
         Assert.Equal(HttpStatusCode.NoContent, (await Cliente.DeleteAsync($"{Ruta}/{id}")).StatusCode);
         Assert.Equal(HttpStatusCode.NotFound, (await Cliente.GetAsync($"{Ruta}/{id}")).StatusCode);
+        }
+        finally
+        {
+            await Cliente.DeleteAsync($"{Ruta}/{id}");
+        }
+    }
+
+    [SkippableFact]
+    public async Task Post_PrecioEntero_SeDevuelveConDosDecimalesEnAmbosOrigenes()
+    {
+        var creado = await Cliente.PostAsJsonAsync(Ruta, new { nombreProvincia = "Puntarenas", nombre = "Parqueo del Muelle", precioPorHora = 500 });
+        string texto = await creado.Content.ReadAsStringAsync();
+        int id = (await creado.LeerJsonAsync()).GetProperty("id").GetInt32();
+        await Cliente.DeleteAsync($"{Ruta}/{id}");
+
+        Assert.Equal(HttpStatusCode.Created, creado.StatusCode);
+        Assert.Contains("\"precioPorHora\":500.00", texto);
     }
 
     [SkippableTheory]

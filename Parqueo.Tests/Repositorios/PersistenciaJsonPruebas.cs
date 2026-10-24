@@ -119,4 +119,30 @@ public sealed class PersistenciaJsonPruebas : IDisposable
 
         await Assert.ThrowsAsync<InvalidDataException>(() => new IngresoAutomovilRepositorioJson(_carpeta.Fuente).ObtenerPorIdAsync(7));
     }
+
+    [Fact]
+    public async Task InsercionesSimultaneas_NoSePierdenRegistros()
+    {
+        var repositorio = new AutomovilRepositorioJson(_carpeta.Fuente);
+
+        var tareas = Enumerable.Range(0, 40).Select(n => repositorio.InsertarAsync(
+            new PrqAutomovil { Color = "Gris", Anio = 2020, Fabricante = $"Concurrencia {n}", Tipo = "sedán" }));
+        var insertados = await Task.WhenAll(tareas);
+
+        Assert.Equal(40, insertados.Select(a => a.Id).Distinct().Count());
+        Assert.Equal(46, (await new AutomovilRepositorioJson(new FuenteDatosJson(_carpeta.Ruta)).BuscarAsync(new(), new(1, 100))).Count);
+    }
+
+    [Fact]
+    public async Task FechaConDesfaseEnElArchivo_SeLeeComoHoraEscrita()
+    {
+        string ruta = _carpeta.RutaArchivo(FuenteDatosJson.ArchivoIngresos);
+        await File.WriteAllTextAsync(ruta, (await File.ReadAllTextAsync(ruta))
+            .Replace("\"2026-10-17T09:20:00\"", "\"2026-10-17T09:20:00-06:00\""));
+
+        var ingreso = await new IngresoAutomovilRepositorioJson(_carpeta.Fuente).ObtenerPorIdAsync(17);
+
+        Assert.Equal(new DateTime(2026, 10, 17, 9, 20, 0), ingreso!.FechaHoraEntrada);
+        Assert.Equal(DateTimeKind.Unspecified, ingreso.FechaHoraEntrada.Kind);
+    }
 }

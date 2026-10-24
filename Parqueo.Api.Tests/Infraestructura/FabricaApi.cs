@@ -43,7 +43,9 @@ public sealed class FabricaApi : WebApplicationFactory<Program>
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.UseEnvironment("Development");
+        // Ambiente propio de pruebas: no se cargan los User Secrets del desarrollador, así
+        // que el API usa exactamente la configuración que indica cada prueba.
+        builder.UseEnvironment("Pruebas");
         foreach (var (clave, valor) in _configuracion)
         {
             builder.UseSetting(clave, valor);

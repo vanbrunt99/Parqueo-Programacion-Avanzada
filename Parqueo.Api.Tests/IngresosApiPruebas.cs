@@ -120,6 +120,8 @@ public abstract class IngresosApiPruebasBase : ApiPruebasBase
         Assert.Equal(HttpStatusCode.Created, creado.StatusCode);
         var cuerpo = await creado.LeerJsonAsync();
         int id = cuerpo.GetProperty("consecutivo").GetInt32();
+        try
+        {
         Assert.True(id > 17);
         Assert.Null(cuerpo.DecimalONulo("montoTotalAPagar"));
         Assert.Equal("Honda", cuerpo.GetProperty("automovil").GetProperty("fabricante").GetString());
@@ -136,6 +138,11 @@ public abstract class IngresosApiPruebasBase : ApiPruebasBase
         // DELETE
         Assert.Equal(HttpStatusCode.NoContent, (await Cliente.DeleteAsync($"{Ruta}/{id}")).StatusCode);
         Assert.Equal(HttpStatusCode.NotFound, (await Cliente.GetAsync($"{Ruta}/{id}")).StatusCode);
+        }
+        finally
+        {
+            await Cliente.DeleteAsync($"{Ruta}/{id}");
+        }
     }
 
     [SkippableFact]
@@ -159,12 +166,26 @@ public abstract class IngresosApiPruebasBase : ApiPruebasBase
     [InlineData("""{"idParqueo":1,"idAutomovil":1,"fechaHoraEntrada":"2026-10-18T16:00:00Z"}""", HttpStatusCode.BadRequest)]
     [InlineData("""{"idParqueo":1,"idAutomovil":1,"fechaHoraEntrada":"2026-13-40T25:00:00"}""", HttpStatusCode.BadRequest)]
     [InlineData("""{"idParqueo":1,"idAutomovil":1}""", HttpStatusCode.BadRequest)]
+    [InlineData("""{"idParqueo":1,"idAutomovil":1,"fechaHoraEntrada":"2026-10-18T10:00:00-06:00"}""", HttpStatusCode.BadRequest)]
+    [InlineData("""{"idParqueo":1,"idAutomovil":1,"fechaHoraEntrada":"2026-10-18T10:00:00","fechaHoraSalida":"9999-12-31T18:00:00"}""", HttpStatusCode.BadRequest)]
     public async Task Post_DatosInvalidosOReferenciasInexistentes_NoGuarda(string json, HttpStatusCode esperado)
     {
         var respuesta = await Cliente.PostAsync(Ruta, new StringContent(json, System.Text.Encoding.UTF8, "application/json"));
 
         Assert.Equal(esperado, respuesta.StatusCode);
         Assert.Equal(17, (await (await Cliente.GetAsync($"{Ruta}?tamanoPagina=100")).LeerJsonAsync()).GetArrayLength());
+    }
+
+    [SkippableFact]
+    public async Task Put_FechaFueraDeRango_Devuelve400YNoDañaLosDatos()
+    {
+        var respuesta = await Cliente.PutAsJsonAsync($"{Ruta}/17",
+            new { idParqueo = 2, idAutomovil = 3, fechaHoraEntrada = "2026-10-17T09:20:00", fechaHoraSalida = "9999-12-31T18:00:00" });
+
+        Assert.Equal(HttpStatusCode.BadRequest, respuesta.StatusCode);
+        var ingreso = await (await Cliente.GetAsync($"{Ruta}/17")).LeerJsonAsync();
+        Assert.Equal(JsonValueKind.Null, ingreso.GetProperty("fechaHoraSalida").ValueKind);
+        Assert.Equal(HttpStatusCode.OK, (await Cliente.GetAsync("/api/automoviles/3")).StatusCode);
     }
 
     [SkippableFact]
@@ -182,6 +203,8 @@ public abstract class IngresosApiPruebasBase : ApiPruebasBase
     [InlineData("/por-tipo?tipo=4x4&desde=2026-10-31T00:00:00&hasta=2026-10-01T00:00:00")]    // intervalo invertido
     [InlineData("/por-provincia?provincia=heredia&desde=ayer&hasta=2026-10-31T00:00:00")]      // fecha inválida
     [InlineData("/por-provincia?provincia=heredia&hasta=2026-10-31T00:00:00")]                 // falta desde
+    [InlineData("/por-tipo?tipo=4x4&desde=2026-10-01T09:00:00-06:00&hasta=2026-10-31T00:00:00")] // fecha con zona horaria
+    [InlineData("/por-tipo?tipo=%00&desde=2026-10-01T00:00:00&hasta=2026-10-31T00:00:00")]     // tipo vacío tras limpiar
     public async Task Consultas_ParametrosInvalidos_Devuelve400(string consulta)
     {
         Assert.Equal(HttpStatusCode.BadRequest, (await Cliente.GetAsync($"{Ruta}{consulta}")).StatusCode);
