@@ -90,15 +90,15 @@ public sealed class ValidadorEntidades
     }
 
     /// <summary>Error de llave foránea: el registro referenciado no existe.</summary>
-    public InvalidOperationException ReferenciaInexistente(string tabla, int id) =>
+    public ReglaNegocioException ReferenciaInexistente(string tabla, int id) =>
         new($"No existe el registro {id} en {tabla}; no se puede guardar el ingreso.");
 
     /// <summary>Error de borrado: el registro tiene ingresos que lo referencian.</summary>
-    public InvalidOperationException RegistroConIngresos(string tabla, int id) =>
+    public ReglaNegocioException RegistroConIngresos(string tabla, int id) =>
         new($"No se puede borrar el registro {id} de {tabla} porque tiene ingresos registrados.");
 
     /// <summary>Error de inserción con llave primaria repetida.</summary>
-    public InvalidOperationException LlaveDuplicada(string tabla, int id) =>
+    public ReglaNegocioException LlaveDuplicada(string tabla, int id) =>
         new($"Ya existe un registro con la llave {id} en {tabla}.");
 
     /// <summary>La llave la asigna el origen de datos (identidad o consecutivo).</summary>

@@ -1,4 +1,5 @@
 using Parqueo.BusinessLogic.Consultas;
+using Parqueo.BusinessLogic.Validacion;
 using Parqueo.Model.Entidades;
 
 namespace Parqueo.Tests.Repositorios;
@@ -68,11 +69,11 @@ public abstract class CrudRepositoriosPruebasBase : IDisposable
     }
 
     [SkippableFact]
-    public async Task Automovil_InsertarConLlaveExistente_LanzaInvalidOperationException()
+    public async Task Automovil_InsertarConLlaveExistente_LanzaReglaNegocioException()
     {
         var duplicado = new PrqAutomovil { Id = 1, Color = "Café", Anio = 2022, Fabricante = "Kia", Tipo = "sedán" };
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => Repos.Automoviles.InsertarAsync(duplicado));
+        await Assert.ThrowsAsync<ReglaNegocioException>(() => Repos.Automoviles.InsertarAsync(duplicado));
         Assert.Equal("Rojo", (await Verificacion.Automoviles.ObtenerPorIdAsync(1))!.Color);
     }
 
@@ -152,9 +153,9 @@ public abstract class CrudRepositoriosPruebasBase : IDisposable
     }
 
     [SkippableFact]
-    public async Task Automovil_BorrarConIngresos_LanzaInvalidOperationExceptionYNoBorra()
+    public async Task Automovil_BorrarConIngresos_LanzaReglaNegocioExceptionYNoBorra()
     {
-        await Assert.ThrowsAsync<InvalidOperationException>(() => Repos.Automoviles.BorrarAsync(1));
+        await Assert.ThrowsAsync<ReglaNegocioException>(() => Repos.Automoviles.BorrarAsync(1));
         Assert.NotNull(await Verificacion.Automoviles.ObtenerPorIdAsync(1));
     }
 
@@ -217,7 +218,7 @@ public abstract class CrudRepositoriosPruebasBase : IDisposable
     [SkippableFact]
     public async Task Parqueo_Borrar_RespetaLaIntegridadReferencial()
     {
-        await Assert.ThrowsAsync<InvalidOperationException>(() => Repos.Parqueos.BorrarAsync(1));
+        await Assert.ThrowsAsync<ReglaNegocioException>(() => Repos.Parqueos.BorrarAsync(1));
         Assert.NotNull(await Verificacion.Parqueos.ObtenerPorIdAsync(1));
 
         var nuevo = await Repos.Parqueos.InsertarAsync(
@@ -277,13 +278,13 @@ public abstract class CrudRepositoriosPruebasBase : IDisposable
     }
 
     [SkippableFact]
-    public async Task Ingreso_InsertarConReferenciasInexistentes_LanzaInvalidOperationException()
+    public async Task Ingreso_InsertarConReferenciasInexistentes_LanzaReglaNegocioException()
     {
         var sinParqueo = new PrqIngresoAutomovil { IdParqueo = 99, IdAutomovil = 1, FechaHoraEntrada = new DateTime(2026, 10, 18, 8, 0, 0) };
         var sinAutomovil = new PrqIngresoAutomovil { IdParqueo = 1, IdAutomovil = 99, FechaHoraEntrada = new DateTime(2026, 10, 18, 8, 0, 0) };
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => Repos.Ingresos.InsertarAsync(sinParqueo));
-        await Assert.ThrowsAsync<InvalidOperationException>(() => Repos.Ingresos.InsertarAsync(sinAutomovil));
+        await Assert.ThrowsAsync<ReglaNegocioException>(() => Repos.Ingresos.InsertarAsync(sinParqueo));
+        await Assert.ThrowsAsync<ReglaNegocioException>(() => Repos.Ingresos.InsertarAsync(sinAutomovil));
         var todos = await Verificacion.Ingresos.ListarPorProvinciaAsync("a", new DateTime(2026, 1, 1), new DateTime(2026, 12, 31));
         Assert.Equal(17, todos.Count);
     }
@@ -323,7 +324,7 @@ public abstract class CrudRepositoriosPruebasBase : IDisposable
         var ingreso = await Repos.Ingresos.ObtenerPorIdAsync(1);
         ingreso!.IdParqueo = 99;
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => Repos.Ingresos.ActualizarAsync(ingreso));
+        await Assert.ThrowsAsync<ReglaNegocioException>(() => Repos.Ingresos.ActualizarAsync(ingreso));
         Assert.Equal(1, (await Verificacion.Ingresos.ObtenerPorIdAsync(1))!.IdParqueo);
     }
 
@@ -331,7 +332,7 @@ public abstract class CrudRepositoriosPruebasBase : IDisposable
     public async Task Ingreso_BorrarIngresosPermiteLuegoBorrarElAutomovil()
     {
         // El automóvil 6 tiene los ingresos 7 y 12.
-        await Assert.ThrowsAsync<InvalidOperationException>(() => Repos.Automoviles.BorrarAsync(6));
+        await Assert.ThrowsAsync<ReglaNegocioException>(() => Repos.Automoviles.BorrarAsync(6));
 
         Assert.True(await Repos.Ingresos.BorrarAsync(7));
         Assert.True(await Repos.Ingresos.BorrarAsync(12));

@@ -1,0 +1,450 @@
+[
+  {
+    "solicitud": "GET listado de automóviles (página 1, 10 por página)",
+    "metodo": "GET",
+    "ruta": "/api/automoviles",
+    "estado": 200,
+    "origen": "Json",
+    "cuerpo": [
+      {
+        "id": 1,
+        "color": "Rojo",
+        "anio": 2019,
+        "fabricante": "Toyota",
+        "tipo": "sedán"
+      },
+      {
+        "id": 2,
+        "color": "Blanco",
+        "anio": 2021,
+        "fabricante": "Hyundai",
+        "tipo": "4x4"
+      },
+      {
+        "id": 3,
+        "color": "Negro",
+        "anio": 2015,
+        "fabricante": "Nissan",
+        "tipo": "sedán"
+      },
+      {
+        "id": 4,
+        "color": "Azul",
+        "anio": 2023,
+        "fabricante": "Yamaha",
+        "tipo": "moto"
+      },
+      {
+        "id": 5,
+        "color": "Gris",
+        "anio": 2018,
+        "fabricante": "Mitsubishi",
+        "tipo": "4x4"
+      },
+      {
+        "id": 6,
+        "color": "Verde",
+        "anio": 2012,
+        "fabricante": "Honda",
+        "tipo": "moto"
+      }
+    ]
+  },
+  {
+    "solicitud": "GET listado paginado (página 2, tamaño 4)",
+    "metodo": "GET",
+    "ruta": "/api/automoviles?pagina=2&tamanoPagina=4",
+    "estado": 200,
+    "origen": "Json",
+    "cuerpo": [
+      {
+        "id": 5,
+        "color": "Gris",
+        "anio": 2018,
+        "fabricante": "Mitsubishi",
+        "tipo": "4x4"
+      },
+      {
+        "id": 6,
+        "color": "Verde",
+        "anio": 2012,
+        "fabricante": "Honda",
+        "tipo": "moto"
+      }
+    ]
+  },
+  {
+    "solicitud": "GET automóvil por id con navegación (id 1)",
+    "metodo": "GET",
+    "ruta": "/api/automoviles/1",
+    "estado": 200,
+    "origen": "Json",
+    "cuerpo": {
+      "id": 1,
+      "color": "Rojo",
+      "anio": 2019,
+      "fabricante": "Toyota",
+      "tipo": "sedán",
+      "ingresos": [
+        {
+          "consecutivo": 1,
+          "fechaHoraEntrada": "2026-10-01T07:45:00",
+          "fechaHoraSalida": "2026-10-01T10:15:00",
+          "duracionEstadiaMinutos": 150,
+          "duracionEstadiaHoras": 2.5,
+          "montoTotalAPagar": 3125.0,
+          "parqueo": {
+            "id": 1,
+            "nombreProvincia": "San José",
+            "nombre": "Parqueo Central Avenida Segunda",
+            "precioPorHora": 1250.0
+          }
+        },
+        {
+          "consecutivo": 8,
+          "fechaHoraEntrada": "2026-10-07T15:30:00",
+          "fechaHoraSalida": "2026-10-07T17:00:00",
+          "duracionEstadiaMinutos": 90,
+          "duracionEstadiaHoras": 1.5,
+          "montoTotalAPagar": 1200.0,
+          "parqueo": {
+            "id": 2,
+            "nombreProvincia": "Heredia",
+            "nombre": "Parqueo Mercado de Heredia",
+            "precioPorHora": 800.0
+          }
+        },
+        {
+          "consecutivo": 13,
+          "fechaHoraEntrada": "2026-10-14T11:00:00",
+          "fechaHoraSalida": "2026-10-14T14:00:00",
+          "duracionEstadiaMinutos": 180,
+          "duracionEstadiaHoras": 3,
+          "montoTotalAPagar": 2026.5,
+          "parqueo": {
+            "id": 3,
+            "nombreProvincia": "Cartago",
+            "nombre": "Parqueo Las Ruinas",
+            "precioPorHora": 675.5
+          }
+        }
+      ]
+    }
+  },
+  {
+    "solicitud": "GET filtro por color aproximado (ro)",
+    "metodo": "GET",
+    "ruta": "/api/automoviles?color=ro",
+    "estado": 200,
+    "origen": "Json",
+    "cuerpo": [
+      {
+        "id": 1,
+        "color": "Rojo",
+        "anio": 2019,
+        "fabricante": "Toyota",
+        "tipo": "sedán"
+      },
+      {
+        "id": 3,
+        "color": "Negro",
+        "anio": 2015,
+        "fabricante": "Nissan",
+        "tipo": "sedán"
+      }
+    ]
+  },
+  {
+    "solicitud": "GET filtro por intervalo de años (2015-2019, extremos incluidos)",
+    "metodo": "GET",
+    "ruta": "/api/automoviles?anioDesde=2015&anioHasta=2019",
+    "estado": 200,
+    "origen": "Json",
+    "cuerpo": [
+      {
+        "id": 1,
+        "color": "Rojo",
+        "anio": 2019,
+        "fabricante": "Toyota",
+        "tipo": "sedán"
+      },
+      {
+        "id": 3,
+        "color": "Negro",
+        "anio": 2015,
+        "fabricante": "Nissan",
+        "tipo": "sedán"
+      },
+      {
+        "id": 5,
+        "color": "Gris",
+        "anio": 2018,
+        "fabricante": "Mitsubishi",
+        "tipo": "4x4"
+      }
+    ]
+  },
+  {
+    "solicitud": "GET filtro por fabricante aproximado (da)",
+    "metodo": "GET",
+    "ruta": "/api/automoviles?fabricante=da",
+    "estado": 200,
+    "origen": "Json",
+    "cuerpo": [
+      {
+        "id": 2,
+        "color": "Blanco",
+        "anio": 2021,
+        "fabricante": "Hyundai",
+        "tipo": "4x4"
+      },
+      {
+        "id": 6,
+        "color": "Verde",
+        "anio": 2012,
+        "fabricante": "Honda",
+        "tipo": "moto"
+      }
+    ]
+  },
+  {
+    "solicitud": "GET filtro por tipo sin tilde (sedan)",
+    "metodo": "GET",
+    "ruta": "/api/automoviles?tipo=sedan",
+    "estado": 200,
+    "origen": "Json",
+    "cuerpo": [
+      {
+        "id": 1,
+        "color": "Rojo",
+        "anio": 2019,
+        "fabricante": "Toyota",
+        "tipo": "sedán"
+      },
+      {
+        "id": 3,
+        "color": "Negro",
+        "anio": 2015,
+        "fabricante": "Nissan",
+        "tipo": "sedán"
+      }
+    ]
+  },
+  {
+    "solicitud": "GET filtros combinados (tipo 4x4 y año desde 2019)",
+    "metodo": "GET",
+    "ruta": "/api/automoviles?tipo=4x4&anioDesde=2019",
+    "estado": 200,
+    "origen": "Json",
+    "cuerpo": [
+      {
+        "id": 2,
+        "color": "Blanco",
+        "anio": 2021,
+        "fabricante": "Hyundai",
+        "tipo": "4x4"
+      }
+    ]
+  },
+  {
+    "solicitud": "POST crear automóvil",
+    "metodo": "POST",
+    "ruta": "/api/automoviles",
+    "estado": 201,
+    "origen": "Json",
+    "cuerpo": {
+      "id": 7,
+      "color": "Café",
+      "anio": 2022,
+      "fabricante": "Kia",
+      "tipo": "sedán",
+      "ingresos": []
+    }
+  },
+  {
+    "solicitud": "GET automóvil creado",
+    "metodo": "GET",
+    "ruta": "/api/automoviles/7",
+    "estado": 200,
+    "origen": "Json",
+    "cuerpo": {
+      "id": 7,
+      "color": "Café",
+      "anio": 2022,
+      "fabricante": "Kia",
+      "tipo": "sedán",
+      "ingresos": []
+    }
+  },
+  {
+    "solicitud": "PUT actualizar automóvil creado",
+    "metodo": "PUT",
+    "ruta": "/api/automoviles/7",
+    "estado": 200,
+    "origen": "Json",
+    "cuerpo": {
+      "id": 7,
+      "color": "Café oscuro",
+      "anio": 2023,
+      "fabricante": "Kia",
+      "tipo": "4x4",
+      "ingresos": []
+    }
+  },
+  {
+    "solicitud": "DELETE borrar automóvil creado",
+    "metodo": "DELETE",
+    "ruta": "/api/automoviles/7",
+    "estado": 204,
+    "origen": "Json",
+    "cuerpo": ""
+  },
+  {
+    "solicitud": "GET automóvil borrado devuelve 404",
+    "metodo": "GET",
+    "ruta": "/api/automoviles/7",
+    "estado": 404,
+    "origen": "Json",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+      "title": "Registro no encontrado",
+      "status": 404,
+      "detail": "No existe el automóvil con id 7.",
+      "traceId": "00-b027d33a55571073455fb8d8c584c854-450a93932cb46845-00"
+    }
+  },
+  {
+    "solicitud": "Automóvil inexistente (GET 999)",
+    "metodo": "GET",
+    "ruta": "/api/automoviles/999",
+    "estado": 404,
+    "origen": "Json",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+      "title": "Registro no encontrado",
+      "status": 404,
+      "detail": "No existe el automóvil con id 999.",
+      "traceId": "00-28e0dd0e268ed3c9e8c7d34c75a911de-8bd3c11f2444190c-00"
+    }
+  },
+  {
+    "solicitud": "Automóvil con tipo inválido (POST)",
+    "metodo": "POST",
+    "ruta": "/api/automoviles",
+    "estado": 400,
+    "origen": "Json",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+      "title": "Datos inválidos",
+      "status": 400,
+      "detail": "El tipo 'camión' no es válido. Valores permitidos: sedán, 4x4, moto.",
+      "traceId": "00-9daf131898b107bf993ba6102d1d3b0a-bf9abf76d836b51f-00"
+    }
+  },
+  {
+    "solicitud": "Automóvil sin campos obligatorios (POST)",
+    "metodo": "POST",
+    "ruta": "/api/automoviles",
+    "estado": 400,
+    "origen": "Json",
+    "cuerpo": {
+      "title": "Datos inválidos",
+      "status": 400,
+      "errors": {
+        "Tipo": [
+          "El tipo es obligatorio (sedán, 4x4 o moto)."
+        ],
+        "Color": [
+          "El color es obligatorio."
+        ],
+        "Fabricante": [
+          "El fabricante es obligatorio."
+        ]
+      }
+    }
+  },
+  {
+    "solicitud": "Automóvil con año fuera de rango (POST 1800)",
+    "metodo": "POST",
+    "ruta": "/api/automoviles",
+    "estado": 400,
+    "origen": "Json",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+      "title": "Datos inválidos",
+      "status": 400,
+      "detail": "El año debe estar entre 1886 y 2100; se recibió 1800.",
+      "traceId": "00-081b465bceda657ab7349a4fc5315d69-17d625a450f1c4c9-00"
+    }
+  },
+  {
+    "solicitud": "Actualizar automóvil inexistente (PUT 999)",
+    "metodo": "PUT",
+    "ruta": "/api/automoviles/999",
+    "estado": 404,
+    "origen": "Json",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+      "title": "Registro no encontrado",
+      "status": 404,
+      "detail": "No existe el automóvil con id 999.",
+      "traceId": "00-5f504d4a67b7c2d69ada1407658b5b19-a6f9de548f92cbdd-00"
+    }
+  },
+  {
+    "solicitud": "Borrar automóvil inexistente (DELETE 999)",
+    "metodo": "DELETE",
+    "ruta": "/api/automoviles/999",
+    "estado": 404,
+    "origen": "Json",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+      "title": "Registro no encontrado",
+      "status": 404,
+      "detail": "No existe el automóvil con id 999.",
+      "traceId": "00-5326a0cf9be0d7032ce64d335acfae18-35eed1c9aaaae1ad-00"
+    }
+  },
+  {
+    "solicitud": "Borrar automóvil con ingresos (DELETE 1) devuelve 409",
+    "metodo": "DELETE",
+    "ruta": "/api/automoviles/1",
+    "estado": 409,
+    "origen": "Json",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.10",
+      "title": "Conflicto con los datos existentes",
+      "status": 409,
+      "detail": "No se puede borrar el registro 1 de prq_automovil porque tiene ingresos registrados.",
+      "traceId": "00-4da0b057cb6c591775eb49d2ededc4ca-f3d30b34295bc86e-00"
+    }
+  },
+  {
+    "solicitud": "Intervalo de años invertido (2020-2010)",
+    "metodo": "GET",
+    "ruta": "/api/automoviles?anioDesde=2020&anioHasta=2010",
+    "estado": 400,
+    "origen": "Json",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+      "title": "Datos inválidos",
+      "status": 400,
+      "detail": "El intervalo de años es inválido: el año inicial (2020) es mayor que el final (2010).",
+      "traceId": "00-c41eaefcb1b51b0bc221a396234ab638-79328f7d00fa4e81-00"
+    }
+  },
+  {
+    "solicitud": "Tamaño de página inválido (0)",
+    "metodo": "GET",
+    "ruta": "/api/automoviles?tamanoPagina=0",
+    "estado": 400,
+    "origen": "Json",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+      "title": "Datos inválidos",
+      "status": 400,
+      "detail": "El tamaño de página debe estar entre 1 y 100. (Parameter 'tamanoPagina')\nActual value was 0.",
+      "traceId": "00-d30caee6598ae9e9521867741e41eff9-0bd6544142d4600a-00"
+    }
+  }
+]

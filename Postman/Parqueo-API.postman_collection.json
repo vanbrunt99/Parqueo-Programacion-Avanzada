@@ -1,0 +1,858 @@
+{
+  "info": {
+    "_postman_id": "a250acf9-df77-5944-a32f-2279fe1359d8",
+    "name": "Parqueo API — Trabajo en Clase 03",
+    "description": "Pruebas del API de Parqueo (BSI-19 Programación Avanzada). Ejecute las carpetas en orden: cada POST guarda el id creado en una variable de colección que usan el GET, PUT y DELETE siguientes, y al final el registro se borra (los datos quedan como estaban). El encabezado X-Origen-Datos de cada respuesta indica si respondió el origen Json o BaseDatos.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Automóviles",
+      "item": [
+        {
+          "name": "GET listado de automóviles (página 1, 10 por página)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Resultado esperado: [1, 2, 3, 4, 5, 6]', () => pm.expect(pm.response.json().map(x => x.id)).to.eql([1, 2, 3, 4, 5, 6]));",
+                  "pm.test('Los listados no anidan ingresos', () => pm.expect(pm.response.json()[0]).to.not.have.property('ingresos'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/automoviles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "automoviles"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET listado paginado (página 2, tamaño 4)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Resultado esperado: [5, 6]', () => pm.expect(pm.response.json().map(x => x.id)).to.eql([5, 6]));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/automoviles?pagina=2&tamanoPagina=4",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "automoviles"
+              ],
+              "query": [
+                {
+                  "key": "pagina",
+                  "value": "2"
+                },
+                {
+                  "key": "tamanoPagina",
+                  "value": "4"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET automóvil por id con navegación (id 1)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 200', () => pm.response.to.have.status(200));",
+                  "const a = pm.response.json();",
+                  "pm.test('Datos del automóvil', () => { pm.expect(a.fabricante).to.eql('Toyota'); pm.expect(a.tipo).to.eql('sedán'); });",
+                  "pm.test('Navegación: 3 ingresos con su parqueo', () => { pm.expect(a.ingresos.map(i => i.consecutivo)).to.eql([1, 8, 13]); a.ingresos.forEach(i => pm.expect(i.parqueo.nombre).to.be.a('string')); });",
+                  "pm.test('Campos calculados del ingreso 1', () => { const i = a.ingresos[0]; pm.expect(i.duracionEstadiaMinutos).to.eql(150); pm.expect(i.duracionEstadiaHoras).to.eql(2.5); pm.expect(i.montoTotalAPagar).to.eql(3125); });",
+                  "pm.test('Sin referencia circular (el ingreso no repite el automóvil)', () => pm.expect(a.ingresos[0]).to.not.have.property('automovil'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/automoviles/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "automoviles",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET filtro por color aproximado (ro)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Resultado esperado: [1, 3]', () => pm.expect(pm.response.json().map(x => x.id)).to.eql([1, 3]));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/automoviles?color=ro",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "automoviles"
+              ],
+              "query": [
+                {
+                  "key": "color",
+                  "value": "ro"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET filtro por intervalo de años (2015-2019, extremos incluidos)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Resultado esperado: [1, 3, 5]', () => pm.expect(pm.response.json().map(x => x.id)).to.eql([1, 3, 5]));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/automoviles?anioDesde=2015&anioHasta=2019",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "automoviles"
+              ],
+              "query": [
+                {
+                  "key": "anioDesde",
+                  "value": "2015"
+                },
+                {
+                  "key": "anioHasta",
+                  "value": "2019"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET filtro por fabricante aproximado (da)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Resultado esperado: [2, 6]', () => pm.expect(pm.response.json().map(x => x.id)).to.eql([2, 6]));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/automoviles?fabricante=da",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "automoviles"
+              ],
+              "query": [
+                {
+                  "key": "fabricante",
+                  "value": "da"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET filtro por tipo sin tilde (sedan)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Resultado esperado: [1, 3]', () => pm.expect(pm.response.json().map(x => x.id)).to.eql([1, 3]));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/automoviles?tipo=sedan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "automoviles"
+              ],
+              "query": [
+                {
+                  "key": "tipo",
+                  "value": "sedan"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET filtros combinados (tipo 4x4 y año desde 2019)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Resultado esperado: [2]', () => pm.expect(pm.response.json().map(x => x.id)).to.eql([2]));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/automoviles?tipo=4x4&anioDesde=2019",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "automoviles"
+              ],
+              "query": [
+                {
+                  "key": "tipo",
+                  "value": "4x4"
+                },
+                {
+                  "key": "anioDesde",
+                  "value": "2019"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST crear automóvil",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 201', () => pm.response.to.have.status(201));",
+                  "const a = pm.response.json();",
+                  "pm.test('Devuelve el id asignado y la ubicación', () => { pm.expect(a.id).to.be.above(6); pm.expect(pm.response.headers.get('Location')).to.include('/api/automoviles/' + a.id); });",
+                  "pm.collectionVariables.set('idAutomovil', a.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/automoviles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "automoviles"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"color\": \"Café\",\n  \"anio\": 2022,\n  \"fabricante\": \"Kia\",\n  \"tipo\": \"sedán\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "GET automóvil creado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Sin ingresos todavía', () => pm.expect(pm.response.json().ingresos).to.eql([]));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/automoviles/{{idAutomovil}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "automoviles",
+                "{{idAutomovil}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PUT actualizar automóvil creado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Datos actualizados', () => { const a = pm.response.json(); pm.expect(a.color).to.eql('Café oscuro'); pm.expect(a.anio).to.eql(2023); pm.expect(a.tipo).to.eql('4x4'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/automoviles/{{idAutomovil}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "automoviles",
+                "{{idAutomovil}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"color\": \"Café oscuro\",\n  \"anio\": 2023,\n  \"fabricante\": \"Kia\",\n  \"tipo\": \"4x4\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "DELETE borrar automóvil creado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 204', () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/automoviles/{{idAutomovil}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "automoviles",
+                "{{idAutomovil}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET automóvil borrado devuelve 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 404', () => pm.response.to.have.status(404));",
+                  "pm.test('Respuesta ProblemDetails', () => { const p = pm.response.json(); pm.expect(p.status).to.eql(404); pm.expect(p.title).to.be.a('string'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/automoviles/{{idAutomovil}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "automoviles",
+                "{{idAutomovil}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Pruebas negativas y de borde",
+      "item": [
+        {
+          "name": "Automóvil inexistente (GET 999)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 404', () => pm.response.to.have.status(404));",
+                  "pm.test('Respuesta ProblemDetails', () => { const p = pm.response.json(); pm.expect(p.status).to.eql(404); pm.expect(p.title).to.be.a('string'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/automoviles/999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "automoviles",
+                "999"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Automóvil con tipo inválido (POST)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Respuesta ProblemDetails', () => { const p = pm.response.json(); pm.expect(p.status).to.eql(400); pm.expect(p.title).to.be.a('string'); });",
+                  "pm.test('Indica los tipos permitidos', () => pm.expect(pm.response.json().detail).to.include('sedán, 4x4, moto'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/automoviles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "automoviles"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"color\": \"Café\",\n  \"anio\": 2022,\n  \"fabricante\": \"Kia\",\n  \"tipo\": \"camión\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Automóvil sin campos obligatorios (POST)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Lista los campos faltantes', () => { const e = pm.response.json().errors; pm.expect(e).to.have.property('Color'); pm.expect(e).to.have.property('Tipo'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/automoviles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "automoviles"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"anio\": 2022\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Automóvil con año fuera de rango (POST 1800)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Respuesta ProblemDetails', () => { const p = pm.response.json(); pm.expect(p.status).to.eql(400); pm.expect(p.title).to.be.a('string'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/automoviles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "automoviles"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"color\": \"Café\",\n  \"anio\": 1800,\n  \"fabricante\": \"Kia\",\n  \"tipo\": \"moto\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Actualizar automóvil inexistente (PUT 999)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 404', () => pm.response.to.have.status(404));",
+                  "pm.test('Respuesta ProblemDetails', () => { const p = pm.response.json(); pm.expect(p.status).to.eql(404); pm.expect(p.title).to.be.a('string'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/automoviles/999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "automoviles",
+                "999"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"color\": \"Gris\",\n  \"anio\": 2020,\n  \"fabricante\": \"Kia\",\n  \"tipo\": \"sedán\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Borrar automóvil inexistente (DELETE 999)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 404', () => pm.response.to.have.status(404));",
+                  "pm.test('Respuesta ProblemDetails', () => { const p = pm.response.json(); pm.expect(p.status).to.eql(404); pm.expect(p.title).to.be.a('string'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/automoviles/999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "automoviles",
+                "999"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Borrar automóvil con ingresos (DELETE 1) devuelve 409",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 409', () => pm.response.to.have.status(409));",
+                  "pm.test('Respuesta ProblemDetails', () => { const p = pm.response.json(); pm.expect(p.status).to.eql(409); pm.expect(p.title).to.be.a('string'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/automoviles/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "automoviles",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Intervalo de años invertido (2020-2010)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Respuesta ProblemDetails', () => { const p = pm.response.json(); pm.expect(p.status).to.eql(400); pm.expect(p.title).to.be.a('string'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/automoviles?anioDesde=2020&anioHasta=2010",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "automoviles"
+              ],
+              "query": [
+                {
+                  "key": "anioDesde",
+                  "value": "2020"
+                },
+                {
+                  "key": "anioHasta",
+                  "value": "2010"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Tamaño de página inválido (0)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Respuesta ProblemDetails', () => { const p = pm.response.json(); pm.expect(p.status).to.eql(400); pm.expect(p.title).to.be.a('string'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/automoviles?tamanoPagina=0",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "automoviles"
+              ],
+              "query": [
+                {
+                  "key": "tamanoPagina",
+                  "value": "0"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "idAutomovil",
+      "value": ""
+    },
+    {
+      "key": "idParqueo",
+      "value": ""
+    },
+    {
+      "key": "idIngreso",
+      "value": ""
+    }
+  ]
+}

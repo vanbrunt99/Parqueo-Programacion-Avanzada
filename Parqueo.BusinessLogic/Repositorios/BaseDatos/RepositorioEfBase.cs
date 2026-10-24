@@ -157,7 +157,7 @@ public abstract class RepositorioEfBase<TEntidad> : IRepositorio<TEntidad> where
         catch (DbUpdateException error)
         {
             string detalle = error.InnerException?.Message ?? error.Message;
-            throw new InvalidOperationException($"PostgreSQL rechazó el cambio en {NombreTabla}: {detalle}", error);
+            throw new ReglaNegocioException($"PostgreSQL rechazó el cambio en {NombreTabla}: {detalle}", error);
         }
     }
 }

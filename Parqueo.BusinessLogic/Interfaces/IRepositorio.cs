@@ -20,7 +20,7 @@ public interface IRepositorio<TEntidad> where TEntidad : class
     /// sus propiedades de navegación.
     /// </summary>
     /// <exception cref="ArgumentException">Datos inválidos o llave enviada por el llamador.</exception>
-    /// <exception cref="InvalidOperationException">Llave duplicada o referencia inexistente.</exception>
+    /// <exception cref="Validacion.ReglaNegocioException">Llave duplicada o referencia inexistente.</exception>
     Task<TEntidad> InsertarAsync(TEntidad entidad, CancellationToken cancelacion = default);
 
     /// <summary>
@@ -28,12 +28,12 @@ public interface IRepositorio<TEntidad> where TEntidad : class
     /// existe (no se modifica nada).
     /// </summary>
     /// <exception cref="ArgumentException">Datos inválidos.</exception>
-    /// <exception cref="InvalidOperationException">Referencia inexistente.</exception>
+    /// <exception cref="Validacion.ReglaNegocioException">Referencia inexistente.</exception>
     Task<bool> ActualizarAsync(TEntidad entidad, CancellationToken cancelacion = default);
 
     /// <summary>
     /// Borra el registro por llave primaria. Devuelve <c>false</c> si no existe.
     /// </summary>
-    /// <exception cref="InvalidOperationException">El registro tiene ingresos que lo referencian.</exception>
+    /// <exception cref="Validacion.ReglaNegocioException">El registro tiene ingresos que lo referencian.</exception>
     Task<bool> BorrarAsync(int id, CancellationToken cancelacion = default);
 }
