@@ -46,6 +46,16 @@ public sealed class IngresoAutomovilRepositorioJson : RepositorioJsonBase<PrqIng
         return parqueos.FirstOrDefault(p => p.Id == idParqueo)?.PrecioPorHora;
     }
 
+    public async Task<IReadOnlyList<PrqIngresoAutomovil>> ListarAsync(
+        Paginacion? paginacion = null, CancellationToken cancelacion = default)
+    {
+        var ingresos = await LeerIngresosConNavegacionAsync(cancelacion);
+        return ingresos.AsQueryable()
+            .OrderBy(i => i.Consecutivo)
+            .Paginar(paginacion)
+            .ToList();
+    }
+
     public async Task<IReadOnlyList<IngresoAutomovilResumen>> ListarPorTipoAsync(
         string tipo, DateTime desde, DateTime hasta, Paginacion? paginacion = null, CancellationToken cancelacion = default)
     {

@@ -1,0 +1,14 @@
+# Entorno: contenedor Linux del agente (Ubuntu 24.04, .NET SDK 10.0.402, PostgreSQL 16.15 LOCAL).
+# Fecha: 2026-10-24 17:32 (hora de Costa Rica). Salida real, sin editar.
+# 1) dotnet build Parqueo.slnx --no-incremental
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+# 2) dotnet test Parqueo.slnx   (sin PARQUEO_PRUEBAS_BD: las pruebas de PostgreSQL se omiten)
+Passed!  - Failed:     0, Passed:   139, Skipped:    96, Total:   235, Duration: 4 s - Parqueo.Tests.dll (net10.0)
+Passed!  - Failed:     0, Passed:    77, Skipped:    76, Total:   153, Duration: 6 s - Parqueo.Api.Tests.dll (net10.0)
+
+# 3) dotnet test Parqueo.slnx   (con PARQUEO_PRUEBAS_BD apuntando a la base PostgreSQL local parqueo_local)
+Passed!  - Failed:     0, Passed:   235, Skipped:     0, Total:   235, Duration: 6 s - Parqueo.Tests.dll (net10.0)
+Passed!  - Failed:     0, Passed:   153, Skipped:     0, Total:   153, Duration: 11 s - Parqueo.Api.Tests.dll (net10.0)

@@ -1,3 +1,4 @@
+using Parqueo.BusinessLogic.Consultas;
 using Parqueo.Model.Entidades;
 
 namespace Parqueo.Api.Dtos;
@@ -76,6 +77,43 @@ public static class Mapeos
 
     public static ParqueoResumen AResumen(this PrqParqueo parqueo) =>
         new(parqueo.Id, parqueo.NombreProvincia, parqueo.Nombre, parqueo.PrecioPorHora);
+
+    // ------------------------------------------------------------------ ingresos
+
+    public static PrqIngresoAutomovil AEntidad(this IngresoSolicitud solicitud, int consecutivo) => new()
+    {
+        Consecutivo = consecutivo,
+        IdParqueo = solicitud.IdParqueo!.Value,
+        IdAutomovil = solicitud.IdAutomovil!.Value,
+        FechaHoraEntrada = solicitud.FechaHoraEntrada!.Value,
+        FechaHoraSalida = solicitud.FechaHoraSalida,
+    };
+
+    /// <summary>Requiere las navegaciones cargadas (los repositorios siempre las cargan).</summary>
+    public static IngresoRespuesta ARespuesta(this PrqIngresoAutomovil ingreso) => new(
+        ingreso.Consecutivo,
+        ingreso.IdParqueo,
+        ingreso.IdAutomovil,
+        ingreso.FechaHoraEntrada,
+        ingreso.FechaHoraSalida,
+        Minutos(ingreso.DuracionEstadiaMinutos),
+        Horas(ingreso.DuracionEstadiaHoras),
+        ingreso.MontoTotalAPagar,
+        ingreso.IdAutomovilNavigation.AResumen(),
+        ingreso.IdParqueoNavigation.AResumen());
+
+    public static IngresoListadoRespuesta ARespuesta(this IngresoAutomovilResumen resumen) => new(
+        resumen.Consecutivo,
+        new AutomovilResumen(resumen.IdAutomovil, resumen.Color, resumen.Anio, resumen.Fabricante, resumen.Tipo),
+        resumen.IdParqueo,
+        resumen.NombreParqueo,
+        resumen.NombreProvincia,
+        resumen.FechaHoraEntrada,
+        resumen.FechaHoraSalida,
+        Minutos(resumen.DuracionEstadiaMinutos),
+        Horas(resumen.DuracionEstadiaHoras),
+        resumen.PrecioPorHora,
+        resumen.MontoACancelar);
 
     // ------------------------------------------------------------------ campos calculados
 

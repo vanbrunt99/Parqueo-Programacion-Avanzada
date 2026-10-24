@@ -18,6 +18,15 @@ public interface IIngresoAutomovilRepositorio : IRepositorio<PrqIngresoAutomovil
     Task<decimal?> ObtenerPrecioPorHoraPorParqueo(int idParqueo, CancellationToken cancelacion = default);
 
     /// <summary>
+    /// Todos los ingresos ordenados por consecutivo, cada uno con su automóvil y su
+    /// parqueo (propiedades de navegación), de modo que los campos calculados quedan
+    /// disponibles. Admite paginación.
+    /// </summary>
+    Task<IReadOnlyList<PrqIngresoAutomovil>> ListarAsync(
+        Paginacion? paginacion = null,
+        CancellationToken cancelacion = default);
+
+    /// <summary>
     /// Automóviles de un tipo (búsqueda aproximada) que ingresaron dentro del
     /// intervalo [desde, hasta] (ambos extremos incluidos, según la fecha y hora de
     /// entrada). Incluye entrada, salida y monto a cancelar, calculado con

@@ -45,6 +45,15 @@ public sealed class IngresoAutomovilRepositorioEf : RepositorioEfBase<PrqIngreso
             .FirstOrDefaultAsync(cancelacion);
     }
 
+    public async Task<IReadOnlyList<PrqIngresoAutomovil>> ListarAsync(
+        Paginacion? paginacion = null, CancellationToken cancelacion = default)
+    {
+        return await IngresosConNavegacion()
+            .OrderBy(i => i.Consecutivo)
+            .Paginar(paginacion)
+            .ToListAsync(cancelacion);
+    }
+
     public async Task<IReadOnlyList<IngresoAutomovilResumen>> ListarPorTipoAsync(
         string tipo, DateTime desde, DateTime hasta, Paginacion? paginacion = null, CancellationToken cancelacion = default)
     {

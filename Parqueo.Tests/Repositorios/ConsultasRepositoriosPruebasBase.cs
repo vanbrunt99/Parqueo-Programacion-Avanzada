@@ -260,6 +260,28 @@ public abstract class ConsultasRepositoriosPruebasBase : IDisposable
     }
 
     [SkippableFact]
+    public async Task Ingreso_Listar_DevuelveTodosConAutomovilYParqueo()
+    {
+        var ingresos = await Repos.Ingresos.ListarAsync();
+
+        Assert.Equal(Enumerable.Range(1, 17), ingresos.Select(i => i.Consecutivo));
+        Assert.All(ingresos, i =>
+        {
+            Assert.Equal(i.IdAutomovil, i.IdAutomovilNavigation.Id);
+            Assert.Equal(i.IdParqueo, i.IdParqueoNavigation.Id);
+        });
+        Assert.Equal(1666.67m, ingresos.Single(i => i.Consecutivo == 6).MontoTotalAPagar);
+        Assert.Null(ingresos.Single(i => i.Consecutivo == 17).MontoTotalAPagar);
+    }
+
+    [SkippableFact]
+    public async Task Ingreso_ListarPaginado()
+    {
+        var pagina2 = await Repos.Ingresos.ListarAsync(new Paginacion(2, 5));
+        Assert.Equal([6, 7, 8, 9, 10], pagina2.Select(i => i.Consecutivo));
+    }
+
+    [SkippableFact]
     public async Task Ingreso_ObtenerPorIdInexistente_DevuelveNull()
     {
         Assert.Null(await Repos.Ingresos.ObtenerPorIdAsync(999));

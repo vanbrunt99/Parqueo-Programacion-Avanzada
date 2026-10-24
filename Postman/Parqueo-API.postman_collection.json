@@ -967,6 +967,642 @@
       ]
     },
     {
+      "name": "3. Ingresos",
+      "item": [
+        {
+          "name": "GET listado de ingresos (página 1, 10 por página)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Resultado esperado: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]', () => pm.expect(pm.response.json().map(x => x.consecutivo)).to.eql([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/ingresos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ingresos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET listado completo de ingresos con navegación (tamaño 100)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Resultado esperado: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]', () => pm.expect(pm.response.json().map(x => x.consecutivo)).to.eql([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]));",
+                  "pm.test('Navegación: cada ingreso trae su automóvil y su parqueo', () => pm.response.json().forEach(i => { pm.expect(i.automovil.id).to.eql(i.idAutomovil); pm.expect(i.parqueo.id).to.eql(i.idParqueo); }));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/ingresos?tamanoPagina=100",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ingresos"
+              ],
+              "query": [
+                {
+                  "key": "tamanoPagina",
+                  "value": "100"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET ingreso finalizado por id con campos calculados (id 6)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 200', () => pm.response.to.have.status(200));",
+                  "const i = pm.response.json();",
+                  "pm.test('Duración: 80 minutos = 1.3333 horas', () => { pm.expect(i.duracionEstadiaMinutos).to.eql(80); pm.expect(i.duracionEstadiaHoras).to.eql(1.3333); });",
+                  "pm.test('Monto: 80 min a 1250/h = 1666.67', () => pm.expect(i.montoTotalAPagar).to.eql(1666.67));",
+                  "pm.test('Navegación: automóvil y parqueo', () => { pm.expect(i.automovil.fabricante).to.eql('Hyundai'); pm.expect(i.parqueo.nombreProvincia).to.eql('San José'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/ingresos/6",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ingresos",
+                "6"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET ingreso en curso por id: campos calculados en null (id 16)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 200', () => pm.response.to.have.status(200));",
+                  "const i = pm.response.json();",
+                  "pm.test('Sin salida: minutos, horas y monto son null (no 0)', () => { pm.expect(i.fechaHoraSalida).to.eql(null); pm.expect(i.duracionEstadiaMinutos).to.eql(null); pm.expect(i.duracionEstadiaHoras).to.eql(null); pm.expect(i.montoTotalAPagar).to.eql(null); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/ingresos/16",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ingresos",
+                "16"
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST crear ingreso en curso",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 201', () => pm.response.to.have.status(201));",
+                  "const i = pm.response.json();",
+                  "pm.test('Consecutivo asignado y navegación cargada', () => { pm.expect(i.consecutivo).to.be.above(17); pm.expect(i.automovil.fabricante).to.eql('Honda'); pm.expect(i.parqueo.nombre).to.eql('Parqueo Las Ruinas'); });",
+                  "pm.test('Sin salida: campos calculados en null', () => pm.expect(i.montoTotalAPagar).to.eql(null));",
+                  "pm.collectionVariables.set('idIngreso', i.consecutivo);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/ingresos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ingresos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idParqueo\": 3,\n  \"idAutomovil\": 6,\n  \"fechaHoraEntrada\": \"2026-10-18T10:00:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "GET ingreso creado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Sigue en curso', () => pm.expect(pm.response.json().fechaHoraSalida).to.eql(null));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/ingresos/{{idIngreso}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ingresos",
+                "{{idIngreso}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PUT registrar salida del ingreso creado (90 minutos)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 200', () => pm.response.to.have.status(200));",
+                  "const i = pm.response.json();",
+                  "pm.test('Duración 90 min = 1.5 h', () => { pm.expect(i.duracionEstadiaMinutos).to.eql(90); pm.expect(i.duracionEstadiaHoras).to.eql(1.5); });",
+                  "pm.test('Monto: 1.5 h a 675.50/h = 1013.25', () => pm.expect(i.montoTotalAPagar).to.eql(1013.25));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/ingresos/{{idIngreso}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ingresos",
+                "{{idIngreso}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idParqueo\": 3,\n  \"idAutomovil\": 6,\n  \"fechaHoraEntrada\": \"2026-10-18T10:00:00\",\n  \"fechaHoraSalida\": \"2026-10-18T11:30:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "DELETE borrar ingreso creado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 204', () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/ingresos/{{idIngreso}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ingresos",
+                "{{idIngreso}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET ingreso borrado devuelve 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 404', () => pm.response.to.have.status(404));",
+                  "pm.test('Respuesta ProblemDetails', () => { const p = pm.response.json(); pm.expect(p.status).to.eql(404); pm.expect(p.title).to.be.a('string'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/ingresos/{{idIngreso}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ingresos",
+                "{{idIngreso}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Consultas especializadas",
+      "item": [
+        {
+          "name": "Automóviles tipo 4x4 que ingresaron en octubre",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Resultado esperado: [2, 4, 6, 11, 15, 16]', () => pm.expect(pm.response.json().map(x => x.consecutivo)).to.eql([2, 4, 6, 11, 15, 16]));",
+                  "const r = pm.response.json();",
+                  "pm.test('Todos son 4x4 e incluyen datos del automóvil', () => r.forEach(x => { pm.expect(x.automovil.tipo).to.eql('4x4'); pm.expect(x.automovil.fabricante).to.be.a('string'); }));",
+                  "pm.test('Incluye hora de entrada, de salida y monto', () => { pm.expect(r[0].fechaHoraEntrada).to.eql('2026-10-01T09:00:00'); pm.expect(r[0].fechaHoraSalida).to.eql('2026-10-01T09:45:00'); pm.expect(r.map(x => x.montoACancelar)).to.eql([600, 1857.63, 1666.67, 1200, 2812.5, null]); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/ingresos/por-tipo?tipo=4x4&desde=2026-10-01T00:00:00&hasta=2026-10-31T23:59:59",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ingresos",
+                "por-tipo"
+              ],
+              "query": [
+                {
+                  "key": "tipo",
+                  "value": "4x4"
+                },
+                {
+                  "key": "desde",
+                  "value": "2026-10-01T00:00:00"
+                },
+                {
+                  "key": "hasta",
+                  "value": "2026-10-31T23:59:59"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Automóviles tipo sedan (sin tilde) del 4 al 8 de octubre",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Resultado esperado: [5, 8, 9]', () => pm.expect(pm.response.json().map(x => x.consecutivo)).to.eql([5, 8, 9]));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/ingresos/por-tipo?tipo=sedan&desde=2026-10-04T00:00:00&hasta=2026-10-08T23:59:59",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ingresos",
+                "por-tipo"
+              ],
+              "query": [
+                {
+                  "key": "tipo",
+                  "value": "sedan"
+                },
+                {
+                  "key": "desde",
+                  "value": "2026-10-04T00:00:00"
+                },
+                {
+                  "key": "hasta",
+                  "value": "2026-10-08T23:59:59"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Automóviles tipo moto con extremos exactos del intervalo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Resultado esperado: [3, 7, 10]', () => pm.expect(pm.response.json().map(x => x.consecutivo)).to.eql([3, 7, 10]));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/ingresos/por-tipo?tipo=moto&desde=2026-10-02T08:10:00&hasta=2026-10-09T18:15:00",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ingresos",
+                "por-tipo"
+              ],
+              "query": [
+                {
+                  "key": "tipo",
+                  "value": "moto"
+                },
+                {
+                  "key": "desde",
+                  "value": "2026-10-02T08:10:00"
+                },
+                {
+                  "key": "hasta",
+                  "value": "2026-10-09T18:15:00"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Automóviles en parqueos de San José en octubre",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Resultado esperado: [1, 3, 6, 9, 12, 15, 16]', () => pm.expect(pm.response.json().map(x => x.consecutivo)).to.eql([1, 3, 6, 9, 12, 15, 16]));",
+                  "pm.test('Todos en San José con tarifa 1250', () => pm.response.json().forEach(x => { pm.expect(x.nombreProvincia).to.eql('San José'); pm.expect(x.precioPorHora).to.eql(1250); }));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/ingresos/por-provincia?provincia=san jose&desde=2026-10-01T00:00:00&hasta=2026-10-31T23:59:59",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ingresos",
+                "por-provincia"
+              ],
+              "query": [
+                {
+                  "key": "provincia",
+                  "value": "san jose"
+                },
+                {
+                  "key": "desde",
+                  "value": "2026-10-01T00:00:00"
+                },
+                {
+                  "key": "hasta",
+                  "value": "2026-10-31T23:59:59"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Automóviles en parqueos de Heredia del 15 al 17 de octubre",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Resultado esperado: [14, 17]', () => pm.expect(pm.response.json().map(x => x.consecutivo)).to.eql([14, 17]));",
+                  "pm.test('Monto 266.67 y null para la estadía en curso', () => pm.expect(pm.response.json().map(x => x.montoACancelar)).to.eql([266.67, null]));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/ingresos/por-provincia?provincia=heredia&desde=2026-10-15T00:00:00&hasta=2026-10-17T23:59:59",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ingresos",
+                "por-provincia"
+              ],
+              "query": [
+                {
+                  "key": "provincia",
+                  "value": "heredia"
+                },
+                {
+                  "key": "desde",
+                  "value": "2026-10-15T00:00:00"
+                },
+                {
+                  "key": "hasta",
+                  "value": "2026-10-17T23:59:59"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Provincia sin parqueos (Limón) devuelve lista vacía",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Lista vacía', () => pm.expect(pm.response.json()).to.eql([]));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/ingresos/por-provincia?provincia=Limón&desde=2026-10-01T00:00:00&hasta=2026-10-31T23:59:59",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ingresos",
+                "por-provincia"
+              ],
+              "query": [
+                {
+                  "key": "provincia",
+                  "value": "Limón"
+                },
+                {
+                  "key": "desde",
+                  "value": "2026-10-01T00:00:00"
+                },
+                {
+                  "key": "hasta",
+                  "value": "2026-10-31T23:59:59"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Precio por hora del parqueo 3 (ObtenerPrecioPorHoraPorParqueo)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 200', () => pm.response.to.have.status(200));",
+                  "pm.test('675.50 por hora', () => pm.expect(pm.response.json().precioPorHora).to.eql(675.5));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/ingresos/precio-por-hora/3",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ingresos",
+                "precio-por-hora",
+                "3"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "5. Pruebas negativas y de borde",
       "item": [
         {
@@ -1590,6 +2226,492 @@
                   "key": "precioMaximo",
                   "value": "500"
                 }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Ingreso inexistente (GET 999)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 404', () => pm.response.to.have.status(404));",
+                  "pm.test('Respuesta ProblemDetails', () => { const p = pm.response.json(); pm.expect(p.status).to.eql(404); pm.expect(p.title).to.be.a('string'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/ingresos/999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ingresos",
+                "999"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Ingreso con parqueo inexistente (POST) devuelve 409",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 409', () => pm.response.to.have.status(409));",
+                  "pm.test('Respuesta ProblemDetails', () => { const p = pm.response.json(); pm.expect(p.status).to.eql(409); pm.expect(p.title).to.be.a('string'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/ingresos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ingresos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idParqueo\": 999,\n  \"idAutomovil\": 1,\n  \"fechaHoraEntrada\": \"2026-10-18T08:00:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Ingreso con automóvil inexistente (POST) devuelve 409",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 409', () => pm.response.to.have.status(409));",
+                  "pm.test('Respuesta ProblemDetails', () => { const p = pm.response.json(); pm.expect(p.status).to.eql(409); pm.expect(p.title).to.be.a('string'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/ingresos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ingresos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idParqueo\": 1,\n  \"idAutomovil\": 999,\n  \"fechaHoraEntrada\": \"2026-10-18T08:00:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Ingreso con salida igual a la entrada (POST)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Respuesta ProblemDetails', () => { const p = pm.response.json(); pm.expect(p.status).to.eql(400); pm.expect(p.title).to.be.a('string'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/ingresos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ingresos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idParqueo\": 1,\n  \"idAutomovil\": 1,\n  \"fechaHoraEntrada\": \"2026-10-18T10:00:00\",\n  \"fechaHoraSalida\": \"2026-10-18T10:00:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Ingreso con salida anterior a la entrada (POST)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Respuesta ProblemDetails', () => { const p = pm.response.json(); pm.expect(p.status).to.eql(400); pm.expect(p.title).to.be.a('string'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/ingresos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ingresos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idParqueo\": 1,\n  \"idAutomovil\": 1,\n  \"fechaHoraEntrada\": \"2026-10-18T10:00:00\",\n  \"fechaHoraSalida\": \"2026-10-18T09:00:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Ingreso con fecha inválida (POST)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 400', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/ingresos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ingresos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idParqueo\": 1,\n  \"idAutomovil\": 1,\n  \"fechaHoraEntrada\": \"2026-13-40T25:00:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Ingreso sin fecha de entrada (POST)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Indica el campo faltante', () => pm.expect(pm.response.json().errors).to.have.property('FechaHoraEntrada'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/ingresos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ingresos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idParqueo\": 1,\n  \"idAutomovil\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Precio por hora de parqueo inexistente (999)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 404', () => pm.response.to.have.status(404));",
+                  "pm.test('Respuesta ProblemDetails', () => { const p = pm.response.json(); pm.expect(p.status).to.eql(404); pm.expect(p.title).to.be.a('string'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/ingresos/precio-por-hora/999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ingresos",
+                "precio-por-hora",
+                "999"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Consulta por tipo sin el tipo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 400', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/ingresos/por-tipo?desde=2026-10-01T00:00:00&hasta=2026-10-31T23:59:59",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ingresos",
+                "por-tipo"
+              ],
+              "query": [
+                {
+                  "key": "desde",
+                  "value": "2026-10-01T00:00:00"
+                },
+                {
+                  "key": "hasta",
+                  "value": "2026-10-31T23:59:59"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Consulta por tipo con intervalo invertido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Respuesta ProblemDetails', () => { const p = pm.response.json(); pm.expect(p.status).to.eql(400); pm.expect(p.title).to.be.a('string'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/ingresos/por-tipo?tipo=4x4&desde=2026-10-31T00:00:00&hasta=2026-10-01T00:00:00",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ingresos",
+                "por-tipo"
+              ],
+              "query": [
+                {
+                  "key": "tipo",
+                  "value": "4x4"
+                },
+                {
+                  "key": "desde",
+                  "value": "2026-10-31T00:00:00"
+                },
+                {
+                  "key": "hasta",
+                  "value": "2026-10-01T00:00:00"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Consulta por provincia con fecha inválida",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 400', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/ingresos/por-provincia?provincia=heredia&desde=ayer&hasta=2026-10-31T00:00:00",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ingresos",
+                "por-provincia"
+              ],
+              "query": [
+                {
+                  "key": "provincia",
+                  "value": "heredia"
+                },
+                {
+                  "key": "desde",
+                  "value": "ayer"
+                },
+                {
+                  "key": "hasta",
+                  "value": "2026-10-31T00:00:00"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Borrar ingreso inexistente (DELETE 999)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 404', () => pm.response.to.have.status(404));",
+                  "pm.test('Respuesta ProblemDetails', () => { const p = pm.response.json(); pm.expect(p.status).to.eql(404); pm.expect(p.title).to.be.a('string'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/ingresos/999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "ingresos",
+                "999"
               ]
             }
           }

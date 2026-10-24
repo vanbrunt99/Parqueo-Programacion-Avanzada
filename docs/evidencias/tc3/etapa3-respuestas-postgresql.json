@@ -1,0 +1,2269 @@
+[
+  {
+    "solicitud": "GET listado de automóviles (página 1, 10 por página)",
+    "metodo": "GET",
+    "ruta": "/api/automoviles",
+    "estado": 200,
+    "origen": "BaseDatos",
+    "cuerpo": [
+      {
+        "id": 1,
+        "color": "Rojo",
+        "anio": 2019,
+        "fabricante": "Toyota",
+        "tipo": "sedán"
+      },
+      {
+        "id": 2,
+        "color": "Blanco",
+        "anio": 2021,
+        "fabricante": "Hyundai",
+        "tipo": "4x4"
+      },
+      {
+        "id": 3,
+        "color": "Negro",
+        "anio": 2015,
+        "fabricante": "Nissan",
+        "tipo": "sedán"
+      },
+      {
+        "id": 4,
+        "color": "Azul",
+        "anio": 2023,
+        "fabricante": "Yamaha",
+        "tipo": "moto"
+      },
+      {
+        "id": 5,
+        "color": "Gris",
+        "anio": 2018,
+        "fabricante": "Mitsubishi",
+        "tipo": "4x4"
+      },
+      {
+        "id": 6,
+        "color": "Verde",
+        "anio": 2012,
+        "fabricante": "Honda",
+        "tipo": "moto"
+      }
+    ]
+  },
+  {
+    "solicitud": "GET listado paginado (página 2, tamaño 4)",
+    "metodo": "GET",
+    "ruta": "/api/automoviles?pagina=2&tamanoPagina=4",
+    "estado": 200,
+    "origen": "BaseDatos",
+    "cuerpo": [
+      {
+        "id": 5,
+        "color": "Gris",
+        "anio": 2018,
+        "fabricante": "Mitsubishi",
+        "tipo": "4x4"
+      },
+      {
+        "id": 6,
+        "color": "Verde",
+        "anio": 2012,
+        "fabricante": "Honda",
+        "tipo": "moto"
+      }
+    ]
+  },
+  {
+    "solicitud": "GET automóvil por id con navegación (id 1)",
+    "metodo": "GET",
+    "ruta": "/api/automoviles/1",
+    "estado": 200,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "id": 1,
+      "color": "Rojo",
+      "anio": 2019,
+      "fabricante": "Toyota",
+      "tipo": "sedán",
+      "ingresos": [
+        {
+          "consecutivo": 1,
+          "fechaHoraEntrada": "2026-10-01T07:45:00",
+          "fechaHoraSalida": "2026-10-01T10:15:00",
+          "duracionEstadiaMinutos": 150,
+          "duracionEstadiaHoras": 2.5,
+          "montoTotalAPagar": 3125.0,
+          "parqueo": {
+            "id": 1,
+            "nombreProvincia": "San José",
+            "nombre": "Parqueo Central Avenida Segunda",
+            "precioPorHora": 1250.0
+          }
+        },
+        {
+          "consecutivo": 8,
+          "fechaHoraEntrada": "2026-10-07T15:30:00",
+          "fechaHoraSalida": "2026-10-07T17:00:00",
+          "duracionEstadiaMinutos": 90,
+          "duracionEstadiaHoras": 1.5,
+          "montoTotalAPagar": 1200.0,
+          "parqueo": {
+            "id": 2,
+            "nombreProvincia": "Heredia",
+            "nombre": "Parqueo Mercado de Heredia",
+            "precioPorHora": 800.0
+          }
+        },
+        {
+          "consecutivo": 13,
+          "fechaHoraEntrada": "2026-10-14T11:00:00",
+          "fechaHoraSalida": "2026-10-14T14:00:00",
+          "duracionEstadiaMinutos": 180,
+          "duracionEstadiaHoras": 3,
+          "montoTotalAPagar": 2026.5,
+          "parqueo": {
+            "id": 3,
+            "nombreProvincia": "Cartago",
+            "nombre": "Parqueo Las Ruinas",
+            "precioPorHora": 675.5
+          }
+        }
+      ]
+    }
+  },
+  {
+    "solicitud": "GET filtro por color aproximado (ro)",
+    "metodo": "GET",
+    "ruta": "/api/automoviles?color=ro",
+    "estado": 200,
+    "origen": "BaseDatos",
+    "cuerpo": [
+      {
+        "id": 1,
+        "color": "Rojo",
+        "anio": 2019,
+        "fabricante": "Toyota",
+        "tipo": "sedán"
+      },
+      {
+        "id": 3,
+        "color": "Negro",
+        "anio": 2015,
+        "fabricante": "Nissan",
+        "tipo": "sedán"
+      }
+    ]
+  },
+  {
+    "solicitud": "GET filtro por intervalo de años (2015-2019, extremos incluidos)",
+    "metodo": "GET",
+    "ruta": "/api/automoviles?anioDesde=2015&anioHasta=2019",
+    "estado": 200,
+    "origen": "BaseDatos",
+    "cuerpo": [
+      {
+        "id": 1,
+        "color": "Rojo",
+        "anio": 2019,
+        "fabricante": "Toyota",
+        "tipo": "sedán"
+      },
+      {
+        "id": 3,
+        "color": "Negro",
+        "anio": 2015,
+        "fabricante": "Nissan",
+        "tipo": "sedán"
+      },
+      {
+        "id": 5,
+        "color": "Gris",
+        "anio": 2018,
+        "fabricante": "Mitsubishi",
+        "tipo": "4x4"
+      }
+    ]
+  },
+  {
+    "solicitud": "GET filtro por fabricante aproximado (da)",
+    "metodo": "GET",
+    "ruta": "/api/automoviles?fabricante=da",
+    "estado": 200,
+    "origen": "BaseDatos",
+    "cuerpo": [
+      {
+        "id": 2,
+        "color": "Blanco",
+        "anio": 2021,
+        "fabricante": "Hyundai",
+        "tipo": "4x4"
+      },
+      {
+        "id": 6,
+        "color": "Verde",
+        "anio": 2012,
+        "fabricante": "Honda",
+        "tipo": "moto"
+      }
+    ]
+  },
+  {
+    "solicitud": "GET filtro por tipo sin tilde (sedan)",
+    "metodo": "GET",
+    "ruta": "/api/automoviles?tipo=sedan",
+    "estado": 200,
+    "origen": "BaseDatos",
+    "cuerpo": [
+      {
+        "id": 1,
+        "color": "Rojo",
+        "anio": 2019,
+        "fabricante": "Toyota",
+        "tipo": "sedán"
+      },
+      {
+        "id": 3,
+        "color": "Negro",
+        "anio": 2015,
+        "fabricante": "Nissan",
+        "tipo": "sedán"
+      }
+    ]
+  },
+  {
+    "solicitud": "GET filtros combinados (tipo 4x4 y año desde 2019)",
+    "metodo": "GET",
+    "ruta": "/api/automoviles?tipo=4x4&anioDesde=2019",
+    "estado": 200,
+    "origen": "BaseDatos",
+    "cuerpo": [
+      {
+        "id": 2,
+        "color": "Blanco",
+        "anio": 2021,
+        "fabricante": "Hyundai",
+        "tipo": "4x4"
+      }
+    ]
+  },
+  {
+    "solicitud": "POST crear automóvil",
+    "metodo": "POST",
+    "ruta": "/api/automoviles",
+    "estado": 201,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "id": 57,
+      "color": "Café",
+      "anio": 2022,
+      "fabricante": "Kia",
+      "tipo": "sedán",
+      "ingresos": []
+    }
+  },
+  {
+    "solicitud": "GET automóvil creado",
+    "metodo": "GET",
+    "ruta": "/api/automoviles/57",
+    "estado": 200,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "id": 57,
+      "color": "Café",
+      "anio": 2022,
+      "fabricante": "Kia",
+      "tipo": "sedán",
+      "ingresos": []
+    }
+  },
+  {
+    "solicitud": "PUT actualizar automóvil creado",
+    "metodo": "PUT",
+    "ruta": "/api/automoviles/57",
+    "estado": 200,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "id": 57,
+      "color": "Café oscuro",
+      "anio": 2023,
+      "fabricante": "Kia",
+      "tipo": "4x4",
+      "ingresos": []
+    }
+  },
+  {
+    "solicitud": "DELETE borrar automóvil creado",
+    "metodo": "DELETE",
+    "ruta": "/api/automoviles/57",
+    "estado": 204,
+    "origen": "BaseDatos",
+    "cuerpo": ""
+  },
+  {
+    "solicitud": "GET automóvil borrado devuelve 404",
+    "metodo": "GET",
+    "ruta": "/api/automoviles/57",
+    "estado": 404,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+      "title": "Registro no encontrado",
+      "status": 404,
+      "detail": "No existe el automóvil con id 57.",
+      "traceId": "00-9f658dcb568880b85e937ba580e7495a-e69389d6bf08900b-00"
+    }
+  },
+  {
+    "solicitud": "GET listado de parqueos",
+    "metodo": "GET",
+    "ruta": "/api/parqueos",
+    "estado": 200,
+    "origen": "BaseDatos",
+    "cuerpo": [
+      {
+        "id": 1,
+        "nombreProvincia": "San José",
+        "nombre": "Parqueo Central Avenida Segunda",
+        "precioPorHora": 1250.0
+      },
+      {
+        "id": 2,
+        "nombreProvincia": "Heredia",
+        "nombre": "Parqueo Mercado de Heredia",
+        "precioPorHora": 800.0
+      },
+      {
+        "id": 3,
+        "nombreProvincia": "Cartago",
+        "nombre": "Parqueo Las Ruinas",
+        "precioPorHora": 675.5
+      }
+    ]
+  },
+  {
+    "solicitud": "GET parqueo por id con navegación (id 3)",
+    "metodo": "GET",
+    "ruta": "/api/parqueos/3",
+    "estado": 200,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "id": 3,
+      "nombreProvincia": "Cartago",
+      "nombre": "Parqueo Las Ruinas",
+      "precioPorHora": 675.5,
+      "ingresos": [
+        {
+          "consecutivo": 4,
+          "fechaHoraEntrada": "2026-10-03T13:20:00",
+          "fechaHoraSalida": "2026-10-03T16:05:00",
+          "duracionEstadiaMinutos": 165,
+          "duracionEstadiaHoras": 2.75,
+          "montoTotalAPagar": 1857.63,
+          "automovil": {
+            "id": 5,
+            "color": "Gris",
+            "anio": 2018,
+            "fabricante": "Mitsubishi",
+            "tipo": "4x4"
+          }
+        },
+        {
+          "consecutivo": 7,
+          "fechaHoraEntrada": "2026-10-06T07:00:00",
+          "fechaHoraSalida": "2026-10-06T07:50:00",
+          "duracionEstadiaMinutos": 50,
+          "duracionEstadiaHoras": 0.8333,
+          "montoTotalAPagar": 562.92,
+          "automovil": {
+            "id": 6,
+            "color": "Verde",
+            "anio": 2012,
+            "fabricante": "Honda",
+            "tipo": "moto"
+          }
+        },
+        {
+          "consecutivo": 10,
+          "fechaHoraEntrada": "2026-10-09T18:15:00",
+          "fechaHoraSalida": "2026-10-09T19:00:00",
+          "duracionEstadiaMinutos": 45,
+          "duracionEstadiaHoras": 0.75,
+          "montoTotalAPagar": 506.63,
+          "automovil": {
+            "id": 4,
+            "color": "Azul",
+            "anio": 2023,
+            "fabricante": "Yamaha",
+            "tipo": "moto"
+          }
+        },
+        {
+          "consecutivo": 13,
+          "fechaHoraEntrada": "2026-10-14T11:00:00",
+          "fechaHoraSalida": "2026-10-14T14:00:00",
+          "duracionEstadiaMinutos": 180,
+          "duracionEstadiaHoras": 3,
+          "montoTotalAPagar": 2026.5,
+          "automovil": {
+            "id": 1,
+            "color": "Rojo",
+            "anio": 2019,
+            "fabricante": "Toyota",
+            "tipo": "sedán"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "solicitud": "GET filtro por provincia sin tilde (san jose)",
+    "metodo": "GET",
+    "ruta": "/api/parqueos?provincia=san%20jose",
+    "estado": 200,
+    "origen": "BaseDatos",
+    "cuerpo": [
+      {
+        "id": 1,
+        "nombreProvincia": "San José",
+        "nombre": "Parqueo Central Avenida Segunda",
+        "precioPorHora": 1250.0
+      }
+    ]
+  },
+  {
+    "solicitud": "GET filtro por nombre aproximado (mercado)",
+    "metodo": "GET",
+    "ruta": "/api/parqueos?nombre=mercado",
+    "estado": 200,
+    "origen": "BaseDatos",
+    "cuerpo": [
+      {
+        "id": 2,
+        "nombreProvincia": "Heredia",
+        "nombre": "Parqueo Mercado de Heredia",
+        "precioPorHora": 800.0
+      }
+    ]
+  },
+  {
+    "solicitud": "GET filtro por rango de precio (700 a 1250, extremos incluidos)",
+    "metodo": "GET",
+    "ruta": "/api/parqueos?precioMinimo=700&precioMaximo=1250",
+    "estado": 200,
+    "origen": "BaseDatos",
+    "cuerpo": [
+      {
+        "id": 1,
+        "nombreProvincia": "San José",
+        "nombre": "Parqueo Central Avenida Segunda",
+        "precioPorHora": 1250.0
+      },
+      {
+        "id": 2,
+        "nombreProvincia": "Heredia",
+        "nombre": "Parqueo Mercado de Heredia",
+        "precioPorHora": 800.0
+      }
+    ]
+  },
+  {
+    "solicitud": "GET filtro por precio máximo exacto (675.50)",
+    "metodo": "GET",
+    "ruta": "/api/parqueos?precioMaximo=675.50",
+    "estado": 200,
+    "origen": "BaseDatos",
+    "cuerpo": [
+      {
+        "id": 3,
+        "nombreProvincia": "Cartago",
+        "nombre": "Parqueo Las Ruinas",
+        "precioPorHora": 675.5
+      }
+    ]
+  },
+  {
+    "solicitud": "GET filtros combinados (nombre parqueo y precio hasta 1000)",
+    "metodo": "GET",
+    "ruta": "/api/parqueos?nombre=parqueo&precioMaximo=1000",
+    "estado": 200,
+    "origen": "BaseDatos",
+    "cuerpo": [
+      {
+        "id": 2,
+        "nombreProvincia": "Heredia",
+        "nombre": "Parqueo Mercado de Heredia",
+        "precioPorHora": 800.0
+      },
+      {
+        "id": 3,
+        "nombreProvincia": "Cartago",
+        "nombre": "Parqueo Las Ruinas",
+        "precioPorHora": 675.5
+      }
+    ]
+  },
+  {
+    "solicitud": "POST crear parqueo",
+    "metodo": "POST",
+    "ruta": "/api/parqueos",
+    "estado": 201,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "id": 37,
+      "nombreProvincia": "Limón",
+      "nombre": "Parqueo del Puerto",
+      "precioPorHora": 950.25,
+      "ingresos": []
+    }
+  },
+  {
+    "solicitud": "GET parqueo creado",
+    "metodo": "GET",
+    "ruta": "/api/parqueos/37",
+    "estado": 200,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "id": 37,
+      "nombreProvincia": "Limón",
+      "nombre": "Parqueo del Puerto",
+      "precioPorHora": 950.25,
+      "ingresos": []
+    }
+  },
+  {
+    "solicitud": "PUT actualizar parqueo creado",
+    "metodo": "PUT",
+    "ruta": "/api/parqueos/37",
+    "estado": 200,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "id": 37,
+      "nombreProvincia": "Limón",
+      "nombre": "Parqueo del Puerto Moín",
+      "precioPorHora": 1000.0,
+      "ingresos": []
+    }
+  },
+  {
+    "solicitud": "GET filtro por provincia encuentra el parqueo actualizado (limon)",
+    "metodo": "GET",
+    "ruta": "/api/parqueos?provincia=limon",
+    "estado": 200,
+    "origen": "BaseDatos",
+    "cuerpo": [
+      {
+        "id": 37,
+        "nombreProvincia": "Limón",
+        "nombre": "Parqueo del Puerto Moín",
+        "precioPorHora": 1000.0
+      }
+    ]
+  },
+  {
+    "solicitud": "DELETE borrar parqueo creado",
+    "metodo": "DELETE",
+    "ruta": "/api/parqueos/37",
+    "estado": 204,
+    "origen": "BaseDatos",
+    "cuerpo": ""
+  },
+  {
+    "solicitud": "GET parqueo borrado devuelve 404",
+    "metodo": "GET",
+    "ruta": "/api/parqueos/37",
+    "estado": 404,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+      "title": "Registro no encontrado",
+      "status": 404,
+      "detail": "No existe el parqueo con id 37.",
+      "traceId": "00-a2755b4d20dceba94644c4d1daa604f1-81a63e6bd7abd413-00"
+    }
+  },
+  {
+    "solicitud": "GET listado de ingresos (página 1, 10 por página)",
+    "metodo": "GET",
+    "ruta": "/api/ingresos",
+    "estado": 200,
+    "origen": "BaseDatos",
+    "cuerpo": [
+      {
+        "consecutivo": 1,
+        "idParqueo": 1,
+        "idAutomovil": 1,
+        "fechaHoraEntrada": "2026-10-01T07:45:00",
+        "fechaHoraSalida": "2026-10-01T10:15:00",
+        "duracionEstadiaMinutos": 150,
+        "duracionEstadiaHoras": 2.5,
+        "montoTotalAPagar": 3125.0,
+        "automovil": {
+          "id": 1,
+          "color": "Rojo",
+          "anio": 2019,
+          "fabricante": "Toyota",
+          "tipo": "sedán"
+        },
+        "parqueo": {
+          "id": 1,
+          "nombreProvincia": "San José",
+          "nombre": "Parqueo Central Avenida Segunda",
+          "precioPorHora": 1250.0
+        }
+      },
+      {
+        "consecutivo": 2,
+        "idParqueo": 2,
+        "idAutomovil": 2,
+        "fechaHoraEntrada": "2026-10-01T09:00:00",
+        "fechaHoraSalida": "2026-10-01T09:45:00",
+        "duracionEstadiaMinutos": 45,
+        "duracionEstadiaHoras": 0.75,
+        "montoTotalAPagar": 600.0,
+        "automovil": {
+          "id": 2,
+          "color": "Blanco",
+          "anio": 2021,
+          "fabricante": "Hyundai",
+          "tipo": "4x4"
+        },
+        "parqueo": {
+          "id": 2,
+          "nombreProvincia": "Heredia",
+          "nombre": "Parqueo Mercado de Heredia",
+          "precioPorHora": 800.0
+        }
+      },
+      {
+        "consecutivo": 3,
+        "idParqueo": 1,
+        "idAutomovil": 4,
+        "fechaHoraEntrada": "2026-10-02T08:10:00",
+        "fechaHoraSalida": "2026-10-02T08:40:00",
+        "duracionEstadiaMinutos": 30,
+        "duracionEstadiaHoras": 0.5,
+        "montoTotalAPagar": 625.0,
+        "automovil": {
+          "id": 4,
+          "color": "Azul",
+          "anio": 2023,
+          "fabricante": "Yamaha",
+          "tipo": "moto"
+        },
+        "parqueo": {
+          "id": 1,
+          "nombreProvincia": "San José",
+          "nombre": "Parqueo Central Avenida Segunda",
+          "precioPorHora": 1250.0
+        }
+      },
+      {
+        "consecutivo": 4,
+        "idParqueo": 3,
+        "idAutomovil": 5,
+        "fechaHoraEntrada": "2026-10-03T13:20:00",
+        "fechaHoraSalida": "2026-10-03T16:05:00",
+        "duracionEstadiaMinutos": 165,
+        "duracionEstadiaHoras": 2.75,
+        "montoTotalAPagar": 1857.63,
+        "automovil": {
+          "id": 5,
+          "color": "Gris",
+          "anio": 2018,
+          "fabricante": "Mitsubishi",
+          "tipo": "4x4"
+        },
+        "parqueo": {
+          "id": 3,
+          "nombreProvincia": "Cartago",
+          "nombre": "Parqueo Las Ruinas",
+          "precioPorHora": 675.5
+        }
+      },
+      {
+        "consecutivo": 5,
+        "idParqueo": 2,
+        "idAutomovil": 3,
+        "fechaHoraEntrada": "2026-10-04T10:00:00",
+        "fechaHoraSalida": "2026-10-04T18:00:00",
+        "duracionEstadiaMinutos": 480,
+        "duracionEstadiaHoras": 8,
+        "montoTotalAPagar": 6400.0,
+        "automovil": {
+          "id": 3,
+          "color": "Negro",
+          "anio": 2015,
+          "fabricante": "Nissan",
+          "tipo": "sedán"
+        },
+        "parqueo": {
+          "id": 2,
+          "nombreProvincia": "Heredia",
+          "nombre": "Parqueo Mercado de Heredia",
+          "precioPorHora": 800.0
+        }
+      },
+      {
+        "consecutivo": 6,
+        "idParqueo": 1,
+        "idAutomovil": 2,
+        "fechaHoraEntrada": "2026-10-05T12:00:00",
+        "fechaHoraSalida": "2026-10-05T13:20:00",
+        "duracionEstadiaMinutos": 80,
+        "duracionEstadiaHoras": 1.3333,
+        "montoTotalAPagar": 1666.67,
+        "automovil": {
+          "id": 2,
+          "color": "Blanco",
+          "anio": 2021,
+          "fabricante": "Hyundai",
+          "tipo": "4x4"
+        },
+        "parqueo": {
+          "id": 1,
+          "nombreProvincia": "San José",
+          "nombre": "Parqueo Central Avenida Segunda",
+          "precioPorHora": 1250.0
+        }
+      },
+      {
+        "consecutivo": 7,
+        "idParqueo": 3,
+        "idAutomovil": 6,
+        "fechaHoraEntrada": "2026-10-06T07:00:00",
+        "fechaHoraSalida": "2026-10-06T07:50:00",
+        "duracionEstadiaMinutos": 50,
+        "duracionEstadiaHoras": 0.8333,
+        "montoTotalAPagar": 562.92,
+        "automovil": {
+          "id": 6,
+          "color": "Verde",
+          "anio": 2012,
+          "fabricante": "Honda",
+          "tipo": "moto"
+        },
+        "parqueo": {
+          "id": 3,
+          "nombreProvincia": "Cartago",
+          "nombre": "Parqueo Las Ruinas",
+          "precioPorHora": 675.5
+        }
+      },
+      {
+        "consecutivo": 8,
+        "idParqueo": 2,
+        "idAutomovil": 1,
+        "fechaHoraEntrada": "2026-10-07T15:30:00",
+        "fechaHoraSalida": "2026-10-07T17:00:00",
+        "duracionEstadiaMinutos": 90,
+        "duracionEstadiaHoras": 1.5,
+        "montoTotalAPagar": 1200.0,
+        "automovil": {
+          "id": 1,
+          "color": "Rojo",
+          "anio": 2019,
+          "fabricante": "Toyota",
+          "tipo": "sedán"
+        },
+        "parqueo": {
+          "id": 2,
+          "nombreProvincia": "Heredia",
+          "nombre": "Parqueo Mercado de Heredia",
+          "precioPorHora": 800.0
+        }
+      },
+      {
+        "consecutivo": 9,
+        "idParqueo": 1,
+        "idAutomovil": 3,
+        "fechaHoraEntrada": "2026-10-08T08:00:00",
+        "fechaHoraSalida": "2026-10-08T12:30:00",
+        "duracionEstadiaMinutos": 270,
+        "duracionEstadiaHoras": 4.5,
+        "montoTotalAPagar": 5625.0,
+        "automovil": {
+          "id": 3,
+          "color": "Negro",
+          "anio": 2015,
+          "fabricante": "Nissan",
+          "tipo": "sedán"
+        },
+        "parqueo": {
+          "id": 1,
+          "nombreProvincia": "San José",
+          "nombre": "Parqueo Central Avenida Segunda",
+          "precioPorHora": 1250.0
+        }
+      },
+      {
+        "consecutivo": 10,
+        "idParqueo": 3,
+        "idAutomovil": 4,
+        "fechaHoraEntrada": "2026-10-09T18:15:00",
+        "fechaHoraSalida": "2026-10-09T19:00:00",
+        "duracionEstadiaMinutos": 45,
+        "duracionEstadiaHoras": 0.75,
+        "montoTotalAPagar": 506.63,
+        "automovil": {
+          "id": 4,
+          "color": "Azul",
+          "anio": 2023,
+          "fabricante": "Yamaha",
+          "tipo": "moto"
+        },
+        "parqueo": {
+          "id": 3,
+          "nombreProvincia": "Cartago",
+          "nombre": "Parqueo Las Ruinas",
+          "precioPorHora": 675.5
+        }
+      }
+    ]
+  },
+  {
+    "solicitud": "GET listado completo de ingresos con navegación (tamaño 100)",
+    "metodo": "GET",
+    "ruta": "/api/ingresos?tamanoPagina=100",
+    "estado": 200,
+    "origen": "BaseDatos",
+    "cuerpo": [
+      {
+        "consecutivo": 1,
+        "idParqueo": 1,
+        "idAutomovil": 1,
+        "fechaHoraEntrada": "2026-10-01T07:45:00",
+        "fechaHoraSalida": "2026-10-01T10:15:00",
+        "duracionEstadiaMinutos": 150,
+        "duracionEstadiaHoras": 2.5,
+        "montoTotalAPagar": 3125.0,
+        "automovil": {
+          "id": 1,
+          "color": "Rojo",
+          "anio": 2019,
+          "fabricante": "Toyota",
+          "tipo": "sedán"
+        },
+        "parqueo": {
+          "id": 1,
+          "nombreProvincia": "San José",
+          "nombre": "Parqueo Central Avenida Segunda",
+          "precioPorHora": 1250.0
+        }
+      },
+      {
+        "consecutivo": 2,
+        "idParqueo": 2,
+        "idAutomovil": 2,
+        "fechaHoraEntrada": "2026-10-01T09:00:00",
+        "fechaHoraSalida": "2026-10-01T09:45:00",
+        "duracionEstadiaMinutos": 45,
+        "duracionEstadiaHoras": 0.75,
+        "montoTotalAPagar": 600.0,
+        "automovil": {
+          "id": 2,
+          "color": "Blanco",
+          "anio": 2021,
+          "fabricante": "Hyundai",
+          "tipo": "4x4"
+        },
+        "parqueo": {
+          "id": 2,
+          "nombreProvincia": "Heredia",
+          "nombre": "Parqueo Mercado de Heredia",
+          "precioPorHora": 800.0
+        }
+      },
+      {
+        "consecutivo": 3,
+        "idParqueo": 1,
+        "idAutomovil": 4,
+        "fechaHoraEntrada": "2026-10-02T08:10:00",
+        "fechaHoraSalida": "2026-10-02T08:40:00",
+        "duracionEstadiaMinutos": 30,
+        "duracionEstadiaHoras": 0.5,
+        "montoTotalAPagar": 625.0,
+        "automovil": {
+          "id": 4,
+          "color": "Azul",
+          "anio": 2023,
+          "fabricante": "Yamaha",
+          "tipo": "moto"
+        },
+        "parqueo": {
+          "id": 1,
+          "nombreProvincia": "San José",
+          "nombre": "Parqueo Central Avenida Segunda",
+          "precioPorHora": 1250.0
+        }
+      },
+      {
+        "consecutivo": 4,
+        "idParqueo": 3,
+        "idAutomovil": 5,
+        "fechaHoraEntrada": "2026-10-03T13:20:00",
+        "fechaHoraSalida": "2026-10-03T16:05:00",
+        "duracionEstadiaMinutos": 165,
+        "duracionEstadiaHoras": 2.75,
+        "montoTotalAPagar": 1857.63,
+        "automovil": {
+          "id": 5,
+          "color": "Gris",
+          "anio": 2018,
+          "fabricante": "Mitsubishi",
+          "tipo": "4x4"
+        },
+        "parqueo": {
+          "id": 3,
+          "nombreProvincia": "Cartago",
+          "nombre": "Parqueo Las Ruinas",
+          "precioPorHora": 675.5
+        }
+      },
+      {
+        "consecutivo": 5,
+        "idParqueo": 2,
+        "idAutomovil": 3,
+        "fechaHoraEntrada": "2026-10-04T10:00:00",
+        "fechaHoraSalida": "2026-10-04T18:00:00",
+        "duracionEstadiaMinutos": 480,
+        "duracionEstadiaHoras": 8,
+        "montoTotalAPagar": 6400.0,
+        "automovil": {
+          "id": 3,
+          "color": "Negro",
+          "anio": 2015,
+          "fabricante": "Nissan",
+          "tipo": "sedán"
+        },
+        "parqueo": {
+          "id": 2,
+          "nombreProvincia": "Heredia",
+          "nombre": "Parqueo Mercado de Heredia",
+          "precioPorHora": 800.0
+        }
+      },
+      {
+        "consecutivo": 6,
+        "idParqueo": 1,
+        "idAutomovil": 2,
+        "fechaHoraEntrada": "2026-10-05T12:00:00",
+        "fechaHoraSalida": "2026-10-05T13:20:00",
+        "duracionEstadiaMinutos": 80,
+        "duracionEstadiaHoras": 1.3333,
+        "montoTotalAPagar": 1666.67,
+        "automovil": {
+          "id": 2,
+          "color": "Blanco",
+          "anio": 2021,
+          "fabricante": "Hyundai",
+          "tipo": "4x4"
+        },
+        "parqueo": {
+          "id": 1,
+          "nombreProvincia": "San José",
+          "nombre": "Parqueo Central Avenida Segunda",
+          "precioPorHora": 1250.0
+        }
+      },
+      {
+        "consecutivo": 7,
+        "idParqueo": 3,
+        "idAutomovil": 6,
+        "fechaHoraEntrada": "2026-10-06T07:00:00",
+        "fechaHoraSalida": "2026-10-06T07:50:00",
+        "duracionEstadiaMinutos": 50,
+        "duracionEstadiaHoras": 0.8333,
+        "montoTotalAPagar": 562.92,
+        "automovil": {
+          "id": 6,
+          "color": "Verde",
+          "anio": 2012,
+          "fabricante": "Honda",
+          "tipo": "moto"
+        },
+        "parqueo": {
+          "id": 3,
+          "nombreProvincia": "Cartago",
+          "nombre": "Parqueo Las Ruinas",
+          "precioPorHora": 675.5
+        }
+      },
+      {
+        "consecutivo": 8,
+        "idParqueo": 2,
+        "idAutomovil": 1,
+        "fechaHoraEntrada": "2026-10-07T15:30:00",
+        "fechaHoraSalida": "2026-10-07T17:00:00",
+        "duracionEstadiaMinutos": 90,
+        "duracionEstadiaHoras": 1.5,
+        "montoTotalAPagar": 1200.0,
+        "automovil": {
+          "id": 1,
+          "color": "Rojo",
+          "anio": 2019,
+          "fabricante": "Toyota",
+          "tipo": "sedán"
+        },
+        "parqueo": {
+          "id": 2,
+          "nombreProvincia": "Heredia",
+          "nombre": "Parqueo Mercado de Heredia",
+          "precioPorHora": 800.0
+        }
+      },
+      {
+        "consecutivo": 9,
+        "idParqueo": 1,
+        "idAutomovil": 3,
+        "fechaHoraEntrada": "2026-10-08T08:00:00",
+        "fechaHoraSalida": "2026-10-08T12:30:00",
+        "duracionEstadiaMinutos": 270,
+        "duracionEstadiaHoras": 4.5,
+        "montoTotalAPagar": 5625.0,
+        "automovil": {
+          "id": 3,
+          "color": "Negro",
+          "anio": 2015,
+          "fabricante": "Nissan",
+          "tipo": "sedán"
+        },
+        "parqueo": {
+          "id": 1,
+          "nombreProvincia": "San José",
+          "nombre": "Parqueo Central Avenida Segunda",
+          "precioPorHora": 1250.0
+        }
+      },
+      {
+        "consecutivo": 10,
+        "idParqueo": 3,
+        "idAutomovil": 4,
+        "fechaHoraEntrada": "2026-10-09T18:15:00",
+        "fechaHoraSalida": "2026-10-09T19:00:00",
+        "duracionEstadiaMinutos": 45,
+        "duracionEstadiaHoras": 0.75,
+        "montoTotalAPagar": 506.63,
+        "automovil": {
+          "id": 4,
+          "color": "Azul",
+          "anio": 2023,
+          "fabricante": "Yamaha",
+          "tipo": "moto"
+        },
+        "parqueo": {
+          "id": 3,
+          "nombreProvincia": "Cartago",
+          "nombre": "Parqueo Las Ruinas",
+          "precioPorHora": 675.5
+        }
+      },
+      {
+        "consecutivo": 11,
+        "idParqueo": 2,
+        "idAutomovil": 5,
+        "fechaHoraEntrada": "2026-10-10T09:40:00",
+        "fechaHoraSalida": "2026-10-10T11:10:00",
+        "duracionEstadiaMinutos": 90,
+        "duracionEstadiaHoras": 1.5,
+        "montoTotalAPagar": 1200.0,
+        "automovil": {
+          "id": 5,
+          "color": "Gris",
+          "anio": 2018,
+          "fabricante": "Mitsubishi",
+          "tipo": "4x4"
+        },
+        "parqueo": {
+          "id": 2,
+          "nombreProvincia": "Heredia",
+          "nombre": "Parqueo Mercado de Heredia",
+          "precioPorHora": 800.0
+        }
+      },
+      {
+        "consecutivo": 12,
+        "idParqueo": 1,
+        "idAutomovil": 6,
+        "fechaHoraEntrada": "2026-10-12T06:55:00",
+        "fechaHoraSalida": "2026-10-12T07:25:00",
+        "duracionEstadiaMinutos": 30,
+        "duracionEstadiaHoras": 0.5,
+        "montoTotalAPagar": 625.0,
+        "automovil": {
+          "id": 6,
+          "color": "Verde",
+          "anio": 2012,
+          "fabricante": "Honda",
+          "tipo": "moto"
+        },
+        "parqueo": {
+          "id": 1,
+          "nombreProvincia": "San José",
+          "nombre": "Parqueo Central Avenida Segunda",
+          "precioPorHora": 1250.0
+        }
+      },
+      {
+        "consecutivo": 13,
+        "idParqueo": 3,
+        "idAutomovil": 1,
+        "fechaHoraEntrada": "2026-10-14T11:00:00",
+        "fechaHoraSalida": "2026-10-14T14:00:00",
+        "duracionEstadiaMinutos": 180,
+        "duracionEstadiaHoras": 3,
+        "montoTotalAPagar": 2026.5,
+        "automovil": {
+          "id": 1,
+          "color": "Rojo",
+          "anio": 2019,
+          "fabricante": "Toyota",
+          "tipo": "sedán"
+        },
+        "parqueo": {
+          "id": 3,
+          "nombreProvincia": "Cartago",
+          "nombre": "Parqueo Las Ruinas",
+          "precioPorHora": 675.5
+        }
+      },
+      {
+        "consecutivo": 14,
+        "idParqueo": 2,
+        "idAutomovil": 4,
+        "fechaHoraEntrada": "2026-10-15T16:45:00",
+        "fechaHoraSalida": "2026-10-15T17:05:00",
+        "duracionEstadiaMinutos": 20,
+        "duracionEstadiaHoras": 0.3333,
+        "montoTotalAPagar": 266.67,
+        "automovil": {
+          "id": 4,
+          "color": "Azul",
+          "anio": 2023,
+          "fabricante": "Yamaha",
+          "tipo": "moto"
+        },
+        "parqueo": {
+          "id": 2,
+          "nombreProvincia": "Heredia",
+          "nombre": "Parqueo Mercado de Heredia",
+          "precioPorHora": 800.0
+        }
+      },
+      {
+        "consecutivo": 15,
+        "idParqueo": 1,
+        "idAutomovil": 5,
+        "fechaHoraEntrada": "2026-10-16T10:30:00",
+        "fechaHoraSalida": "2026-10-16T12:45:00",
+        "duracionEstadiaMinutos": 135,
+        "duracionEstadiaHoras": 2.25,
+        "montoTotalAPagar": 2812.5,
+        "automovil": {
+          "id": 5,
+          "color": "Gris",
+          "anio": 2018,
+          "fabricante": "Mitsubishi",
+          "tipo": "4x4"
+        },
+        "parqueo": {
+          "id": 1,
+          "nombreProvincia": "San José",
+          "nombre": "Parqueo Central Avenida Segunda",
+          "precioPorHora": 1250.0
+        }
+      },
+      {
+        "consecutivo": 16,
+        "idParqueo": 1,
+        "idAutomovil": 2,
+        "fechaHoraEntrada": "2026-10-17T08:05:00",
+        "fechaHoraSalida": null,
+        "duracionEstadiaMinutos": null,
+        "duracionEstadiaHoras": null,
+        "montoTotalAPagar": null,
+        "automovil": {
+          "id": 2,
+          "color": "Blanco",
+          "anio": 2021,
+          "fabricante": "Hyundai",
+          "tipo": "4x4"
+        },
+        "parqueo": {
+          "id": 1,
+          "nombreProvincia": "San José",
+          "nombre": "Parqueo Central Avenida Segunda",
+          "precioPorHora": 1250.0
+        }
+      },
+      {
+        "consecutivo": 17,
+        "idParqueo": 2,
+        "idAutomovil": 3,
+        "fechaHoraEntrada": "2026-10-17T09:20:00",
+        "fechaHoraSalida": null,
+        "duracionEstadiaMinutos": null,
+        "duracionEstadiaHoras": null,
+        "montoTotalAPagar": null,
+        "automovil": {
+          "id": 3,
+          "color": "Negro",
+          "anio": 2015,
+          "fabricante": "Nissan",
+          "tipo": "sedán"
+        },
+        "parqueo": {
+          "id": 2,
+          "nombreProvincia": "Heredia",
+          "nombre": "Parqueo Mercado de Heredia",
+          "precioPorHora": 800.0
+        }
+      }
+    ]
+  },
+  {
+    "solicitud": "GET ingreso finalizado por id con campos calculados (id 6)",
+    "metodo": "GET",
+    "ruta": "/api/ingresos/6",
+    "estado": 200,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "consecutivo": 6,
+      "idParqueo": 1,
+      "idAutomovil": 2,
+      "fechaHoraEntrada": "2026-10-05T12:00:00",
+      "fechaHoraSalida": "2026-10-05T13:20:00",
+      "duracionEstadiaMinutos": 80,
+      "duracionEstadiaHoras": 1.3333,
+      "montoTotalAPagar": 1666.67,
+      "automovil": {
+        "id": 2,
+        "color": "Blanco",
+        "anio": 2021,
+        "fabricante": "Hyundai",
+        "tipo": "4x4"
+      },
+      "parqueo": {
+        "id": 1,
+        "nombreProvincia": "San José",
+        "nombre": "Parqueo Central Avenida Segunda",
+        "precioPorHora": 1250.0
+      }
+    }
+  },
+  {
+    "solicitud": "GET ingreso en curso por id: campos calculados en null (id 16)",
+    "metodo": "GET",
+    "ruta": "/api/ingresos/16",
+    "estado": 200,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "consecutivo": 16,
+      "idParqueo": 1,
+      "idAutomovil": 2,
+      "fechaHoraEntrada": "2026-10-17T08:05:00",
+      "fechaHoraSalida": null,
+      "duracionEstadiaMinutos": null,
+      "duracionEstadiaHoras": null,
+      "montoTotalAPagar": null,
+      "automovil": {
+        "id": 2,
+        "color": "Blanco",
+        "anio": 2021,
+        "fabricante": "Hyundai",
+        "tipo": "4x4"
+      },
+      "parqueo": {
+        "id": 1,
+        "nombreProvincia": "San José",
+        "nombre": "Parqueo Central Avenida Segunda",
+        "precioPorHora": 1250.0
+      }
+    }
+  },
+  {
+    "solicitud": "POST crear ingreso en curso",
+    "metodo": "POST",
+    "ruta": "/api/ingresos",
+    "estado": 201,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "consecutivo": 51,
+      "idParqueo": 3,
+      "idAutomovil": 6,
+      "fechaHoraEntrada": "2026-10-18T10:00:00",
+      "fechaHoraSalida": null,
+      "duracionEstadiaMinutos": null,
+      "duracionEstadiaHoras": null,
+      "montoTotalAPagar": null,
+      "automovil": {
+        "id": 6,
+        "color": "Verde",
+        "anio": 2012,
+        "fabricante": "Honda",
+        "tipo": "moto"
+      },
+      "parqueo": {
+        "id": 3,
+        "nombreProvincia": "Cartago",
+        "nombre": "Parqueo Las Ruinas",
+        "precioPorHora": 675.5
+      }
+    }
+  },
+  {
+    "solicitud": "GET ingreso creado",
+    "metodo": "GET",
+    "ruta": "/api/ingresos/51",
+    "estado": 200,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "consecutivo": 51,
+      "idParqueo": 3,
+      "idAutomovil": 6,
+      "fechaHoraEntrada": "2026-10-18T10:00:00",
+      "fechaHoraSalida": null,
+      "duracionEstadiaMinutos": null,
+      "duracionEstadiaHoras": null,
+      "montoTotalAPagar": null,
+      "automovil": {
+        "id": 6,
+        "color": "Verde",
+        "anio": 2012,
+        "fabricante": "Honda",
+        "tipo": "moto"
+      },
+      "parqueo": {
+        "id": 3,
+        "nombreProvincia": "Cartago",
+        "nombre": "Parqueo Las Ruinas",
+        "precioPorHora": 675.5
+      }
+    }
+  },
+  {
+    "solicitud": "PUT registrar salida del ingreso creado (90 minutos)",
+    "metodo": "PUT",
+    "ruta": "/api/ingresos/51",
+    "estado": 200,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "consecutivo": 51,
+      "idParqueo": 3,
+      "idAutomovil": 6,
+      "fechaHoraEntrada": "2026-10-18T10:00:00",
+      "fechaHoraSalida": "2026-10-18T11:30:00",
+      "duracionEstadiaMinutos": 90,
+      "duracionEstadiaHoras": 1.5,
+      "montoTotalAPagar": 1013.25,
+      "automovil": {
+        "id": 6,
+        "color": "Verde",
+        "anio": 2012,
+        "fabricante": "Honda",
+        "tipo": "moto"
+      },
+      "parqueo": {
+        "id": 3,
+        "nombreProvincia": "Cartago",
+        "nombre": "Parqueo Las Ruinas",
+        "precioPorHora": 675.5
+      }
+    }
+  },
+  {
+    "solicitud": "DELETE borrar ingreso creado",
+    "metodo": "DELETE",
+    "ruta": "/api/ingresos/51",
+    "estado": 204,
+    "origen": "BaseDatos",
+    "cuerpo": ""
+  },
+  {
+    "solicitud": "GET ingreso borrado devuelve 404",
+    "metodo": "GET",
+    "ruta": "/api/ingresos/51",
+    "estado": 404,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+      "title": "Registro no encontrado",
+      "status": 404,
+      "detail": "No existe el ingreso con id 51.",
+      "traceId": "00-9cf8635ed0f6510815276ba2400324cf-8f779716a9552017-00"
+    }
+  },
+  {
+    "solicitud": "Automóviles tipo 4x4 que ingresaron en octubre",
+    "metodo": "GET",
+    "ruta": "/api/ingresos/por-tipo?tipo=4x4&desde=2026-10-01T00:00:00&hasta=2026-10-31T23:59:59",
+    "estado": 200,
+    "origen": "BaseDatos",
+    "cuerpo": [
+      {
+        "consecutivo": 2,
+        "automovil": {
+          "id": 2,
+          "color": "Blanco",
+          "anio": 2021,
+          "fabricante": "Hyundai",
+          "tipo": "4x4"
+        },
+        "idParqueo": 2,
+        "nombreParqueo": "Parqueo Mercado de Heredia",
+        "nombreProvincia": "Heredia",
+        "fechaHoraEntrada": "2026-10-01T09:00:00",
+        "fechaHoraSalida": "2026-10-01T09:45:00",
+        "duracionEstadiaMinutos": 45,
+        "duracionEstadiaHoras": 0.75,
+        "precioPorHora": 800.0,
+        "montoACancelar": 600.0
+      },
+      {
+        "consecutivo": 4,
+        "automovil": {
+          "id": 5,
+          "color": "Gris",
+          "anio": 2018,
+          "fabricante": "Mitsubishi",
+          "tipo": "4x4"
+        },
+        "idParqueo": 3,
+        "nombreParqueo": "Parqueo Las Ruinas",
+        "nombreProvincia": "Cartago",
+        "fechaHoraEntrada": "2026-10-03T13:20:00",
+        "fechaHoraSalida": "2026-10-03T16:05:00",
+        "duracionEstadiaMinutos": 165,
+        "duracionEstadiaHoras": 2.75,
+        "precioPorHora": 675.5,
+        "montoACancelar": 1857.63
+      },
+      {
+        "consecutivo": 6,
+        "automovil": {
+          "id": 2,
+          "color": "Blanco",
+          "anio": 2021,
+          "fabricante": "Hyundai",
+          "tipo": "4x4"
+        },
+        "idParqueo": 1,
+        "nombreParqueo": "Parqueo Central Avenida Segunda",
+        "nombreProvincia": "San José",
+        "fechaHoraEntrada": "2026-10-05T12:00:00",
+        "fechaHoraSalida": "2026-10-05T13:20:00",
+        "duracionEstadiaMinutos": 80,
+        "duracionEstadiaHoras": 1.3333,
+        "precioPorHora": 1250.0,
+        "montoACancelar": 1666.67
+      },
+      {
+        "consecutivo": 11,
+        "automovil": {
+          "id": 5,
+          "color": "Gris",
+          "anio": 2018,
+          "fabricante": "Mitsubishi",
+          "tipo": "4x4"
+        },
+        "idParqueo": 2,
+        "nombreParqueo": "Parqueo Mercado de Heredia",
+        "nombreProvincia": "Heredia",
+        "fechaHoraEntrada": "2026-10-10T09:40:00",
+        "fechaHoraSalida": "2026-10-10T11:10:00",
+        "duracionEstadiaMinutos": 90,
+        "duracionEstadiaHoras": 1.5,
+        "precioPorHora": 800.0,
+        "montoACancelar": 1200.0
+      },
+      {
+        "consecutivo": 15,
+        "automovil": {
+          "id": 5,
+          "color": "Gris",
+          "anio": 2018,
+          "fabricante": "Mitsubishi",
+          "tipo": "4x4"
+        },
+        "idParqueo": 1,
+        "nombreParqueo": "Parqueo Central Avenida Segunda",
+        "nombreProvincia": "San José",
+        "fechaHoraEntrada": "2026-10-16T10:30:00",
+        "fechaHoraSalida": "2026-10-16T12:45:00",
+        "duracionEstadiaMinutos": 135,
+        "duracionEstadiaHoras": 2.25,
+        "precioPorHora": 1250.0,
+        "montoACancelar": 2812.5
+      },
+      {
+        "consecutivo": 16,
+        "automovil": {
+          "id": 2,
+          "color": "Blanco",
+          "anio": 2021,
+          "fabricante": "Hyundai",
+          "tipo": "4x4"
+        },
+        "idParqueo": 1,
+        "nombreParqueo": "Parqueo Central Avenida Segunda",
+        "nombreProvincia": "San José",
+        "fechaHoraEntrada": "2026-10-17T08:05:00",
+        "fechaHoraSalida": null,
+        "duracionEstadiaMinutos": null,
+        "duracionEstadiaHoras": null,
+        "precioPorHora": 1250.0,
+        "montoACancelar": null
+      }
+    ]
+  },
+  {
+    "solicitud": "Automóviles tipo sedan (sin tilde) del 4 al 8 de octubre",
+    "metodo": "GET",
+    "ruta": "/api/ingresos/por-tipo?tipo=sedan&desde=2026-10-04T00:00:00&hasta=2026-10-08T23:59:59",
+    "estado": 200,
+    "origen": "BaseDatos",
+    "cuerpo": [
+      {
+        "consecutivo": 5,
+        "automovil": {
+          "id": 3,
+          "color": "Negro",
+          "anio": 2015,
+          "fabricante": "Nissan",
+          "tipo": "sedán"
+        },
+        "idParqueo": 2,
+        "nombreParqueo": "Parqueo Mercado de Heredia",
+        "nombreProvincia": "Heredia",
+        "fechaHoraEntrada": "2026-10-04T10:00:00",
+        "fechaHoraSalida": "2026-10-04T18:00:00",
+        "duracionEstadiaMinutos": 480,
+        "duracionEstadiaHoras": 8,
+        "precioPorHora": 800.0,
+        "montoACancelar": 6400.0
+      },
+      {
+        "consecutivo": 8,
+        "automovil": {
+          "id": 1,
+          "color": "Rojo",
+          "anio": 2019,
+          "fabricante": "Toyota",
+          "tipo": "sedán"
+        },
+        "idParqueo": 2,
+        "nombreParqueo": "Parqueo Mercado de Heredia",
+        "nombreProvincia": "Heredia",
+        "fechaHoraEntrada": "2026-10-07T15:30:00",
+        "fechaHoraSalida": "2026-10-07T17:00:00",
+        "duracionEstadiaMinutos": 90,
+        "duracionEstadiaHoras": 1.5,
+        "precioPorHora": 800.0,
+        "montoACancelar": 1200.0
+      },
+      {
+        "consecutivo": 9,
+        "automovil": {
+          "id": 3,
+          "color": "Negro",
+          "anio": 2015,
+          "fabricante": "Nissan",
+          "tipo": "sedán"
+        },
+        "idParqueo": 1,
+        "nombreParqueo": "Parqueo Central Avenida Segunda",
+        "nombreProvincia": "San José",
+        "fechaHoraEntrada": "2026-10-08T08:00:00",
+        "fechaHoraSalida": "2026-10-08T12:30:00",
+        "duracionEstadiaMinutos": 270,
+        "duracionEstadiaHoras": 4.5,
+        "precioPorHora": 1250.0,
+        "montoACancelar": 5625.0
+      }
+    ]
+  },
+  {
+    "solicitud": "Automóviles tipo moto con extremos exactos del intervalo",
+    "metodo": "GET",
+    "ruta": "/api/ingresos/por-tipo?tipo=moto&desde=2026-10-02T08:10:00&hasta=2026-10-09T18:15:00",
+    "estado": 200,
+    "origen": "BaseDatos",
+    "cuerpo": [
+      {
+        "consecutivo": 3,
+        "automovil": {
+          "id": 4,
+          "color": "Azul",
+          "anio": 2023,
+          "fabricante": "Yamaha",
+          "tipo": "moto"
+        },
+        "idParqueo": 1,
+        "nombreParqueo": "Parqueo Central Avenida Segunda",
+        "nombreProvincia": "San José",
+        "fechaHoraEntrada": "2026-10-02T08:10:00",
+        "fechaHoraSalida": "2026-10-02T08:40:00",
+        "duracionEstadiaMinutos": 30,
+        "duracionEstadiaHoras": 0.5,
+        "precioPorHora": 1250.0,
+        "montoACancelar": 625.0
+      },
+      {
+        "consecutivo": 7,
+        "automovil": {
+          "id": 6,
+          "color": "Verde",
+          "anio": 2012,
+          "fabricante": "Honda",
+          "tipo": "moto"
+        },
+        "idParqueo": 3,
+        "nombreParqueo": "Parqueo Las Ruinas",
+        "nombreProvincia": "Cartago",
+        "fechaHoraEntrada": "2026-10-06T07:00:00",
+        "fechaHoraSalida": "2026-10-06T07:50:00",
+        "duracionEstadiaMinutos": 50,
+        "duracionEstadiaHoras": 0.8333,
+        "precioPorHora": 675.5,
+        "montoACancelar": 562.92
+      },
+      {
+        "consecutivo": 10,
+        "automovil": {
+          "id": 4,
+          "color": "Azul",
+          "anio": 2023,
+          "fabricante": "Yamaha",
+          "tipo": "moto"
+        },
+        "idParqueo": 3,
+        "nombreParqueo": "Parqueo Las Ruinas",
+        "nombreProvincia": "Cartago",
+        "fechaHoraEntrada": "2026-10-09T18:15:00",
+        "fechaHoraSalida": "2026-10-09T19:00:00",
+        "duracionEstadiaMinutos": 45,
+        "duracionEstadiaHoras": 0.75,
+        "precioPorHora": 675.5,
+        "montoACancelar": 506.63
+      }
+    ]
+  },
+  {
+    "solicitud": "Automóviles en parqueos de San José en octubre",
+    "metodo": "GET",
+    "ruta": "/api/ingresos/por-provincia?provincia=san%20jose&desde=2026-10-01T00:00:00&hasta=2026-10-31T23:59:59",
+    "estado": 200,
+    "origen": "BaseDatos",
+    "cuerpo": [
+      {
+        "consecutivo": 1,
+        "automovil": {
+          "id": 1,
+          "color": "Rojo",
+          "anio": 2019,
+          "fabricante": "Toyota",
+          "tipo": "sedán"
+        },
+        "idParqueo": 1,
+        "nombreParqueo": "Parqueo Central Avenida Segunda",
+        "nombreProvincia": "San José",
+        "fechaHoraEntrada": "2026-10-01T07:45:00",
+        "fechaHoraSalida": "2026-10-01T10:15:00",
+        "duracionEstadiaMinutos": 150,
+        "duracionEstadiaHoras": 2.5,
+        "precioPorHora": 1250.0,
+        "montoACancelar": 3125.0
+      },
+      {
+        "consecutivo": 3,
+        "automovil": {
+          "id": 4,
+          "color": "Azul",
+          "anio": 2023,
+          "fabricante": "Yamaha",
+          "tipo": "moto"
+        },
+        "idParqueo": 1,
+        "nombreParqueo": "Parqueo Central Avenida Segunda",
+        "nombreProvincia": "San José",
+        "fechaHoraEntrada": "2026-10-02T08:10:00",
+        "fechaHoraSalida": "2026-10-02T08:40:00",
+        "duracionEstadiaMinutos": 30,
+        "duracionEstadiaHoras": 0.5,
+        "precioPorHora": 1250.0,
+        "montoACancelar": 625.0
+      },
+      {
+        "consecutivo": 6,
+        "automovil": {
+          "id": 2,
+          "color": "Blanco",
+          "anio": 2021,
+          "fabricante": "Hyundai",
+          "tipo": "4x4"
+        },
+        "idParqueo": 1,
+        "nombreParqueo": "Parqueo Central Avenida Segunda",
+        "nombreProvincia": "San José",
+        "fechaHoraEntrada": "2026-10-05T12:00:00",
+        "fechaHoraSalida": "2026-10-05T13:20:00",
+        "duracionEstadiaMinutos": 80,
+        "duracionEstadiaHoras": 1.3333,
+        "precioPorHora": 1250.0,
+        "montoACancelar": 1666.67
+      },
+      {
+        "consecutivo": 9,
+        "automovil": {
+          "id": 3,
+          "color": "Negro",
+          "anio": 2015,
+          "fabricante": "Nissan",
+          "tipo": "sedán"
+        },
+        "idParqueo": 1,
+        "nombreParqueo": "Parqueo Central Avenida Segunda",
+        "nombreProvincia": "San José",
+        "fechaHoraEntrada": "2026-10-08T08:00:00",
+        "fechaHoraSalida": "2026-10-08T12:30:00",
+        "duracionEstadiaMinutos": 270,
+        "duracionEstadiaHoras": 4.5,
+        "precioPorHora": 1250.0,
+        "montoACancelar": 5625.0
+      },
+      {
+        "consecutivo": 12,
+        "automovil": {
+          "id": 6,
+          "color": "Verde",
+          "anio": 2012,
+          "fabricante": "Honda",
+          "tipo": "moto"
+        },
+        "idParqueo": 1,
+        "nombreParqueo": "Parqueo Central Avenida Segunda",
+        "nombreProvincia": "San José",
+        "fechaHoraEntrada": "2026-10-12T06:55:00",
+        "fechaHoraSalida": "2026-10-12T07:25:00",
+        "duracionEstadiaMinutos": 30,
+        "duracionEstadiaHoras": 0.5,
+        "precioPorHora": 1250.0,
+        "montoACancelar": 625.0
+      },
+      {
+        "consecutivo": 15,
+        "automovil": {
+          "id": 5,
+          "color": "Gris",
+          "anio": 2018,
+          "fabricante": "Mitsubishi",
+          "tipo": "4x4"
+        },
+        "idParqueo": 1,
+        "nombreParqueo": "Parqueo Central Avenida Segunda",
+        "nombreProvincia": "San José",
+        "fechaHoraEntrada": "2026-10-16T10:30:00",
+        "fechaHoraSalida": "2026-10-16T12:45:00",
+        "duracionEstadiaMinutos": 135,
+        "duracionEstadiaHoras": 2.25,
+        "precioPorHora": 1250.0,
+        "montoACancelar": 2812.5
+      },
+      {
+        "consecutivo": 16,
+        "automovil": {
+          "id": 2,
+          "color": "Blanco",
+          "anio": 2021,
+          "fabricante": "Hyundai",
+          "tipo": "4x4"
+        },
+        "idParqueo": 1,
+        "nombreParqueo": "Parqueo Central Avenida Segunda",
+        "nombreProvincia": "San José",
+        "fechaHoraEntrada": "2026-10-17T08:05:00",
+        "fechaHoraSalida": null,
+        "duracionEstadiaMinutos": null,
+        "duracionEstadiaHoras": null,
+        "precioPorHora": 1250.0,
+        "montoACancelar": null
+      }
+    ]
+  },
+  {
+    "solicitud": "Automóviles en parqueos de Heredia del 15 al 17 de octubre",
+    "metodo": "GET",
+    "ruta": "/api/ingresos/por-provincia?provincia=heredia&desde=2026-10-15T00:00:00&hasta=2026-10-17T23:59:59",
+    "estado": 200,
+    "origen": "BaseDatos",
+    "cuerpo": [
+      {
+        "consecutivo": 14,
+        "automovil": {
+          "id": 4,
+          "color": "Azul",
+          "anio": 2023,
+          "fabricante": "Yamaha",
+          "tipo": "moto"
+        },
+        "idParqueo": 2,
+        "nombreParqueo": "Parqueo Mercado de Heredia",
+        "nombreProvincia": "Heredia",
+        "fechaHoraEntrada": "2026-10-15T16:45:00",
+        "fechaHoraSalida": "2026-10-15T17:05:00",
+        "duracionEstadiaMinutos": 20,
+        "duracionEstadiaHoras": 0.3333,
+        "precioPorHora": 800.0,
+        "montoACancelar": 266.67
+      },
+      {
+        "consecutivo": 17,
+        "automovil": {
+          "id": 3,
+          "color": "Negro",
+          "anio": 2015,
+          "fabricante": "Nissan",
+          "tipo": "sedán"
+        },
+        "idParqueo": 2,
+        "nombreParqueo": "Parqueo Mercado de Heredia",
+        "nombreProvincia": "Heredia",
+        "fechaHoraEntrada": "2026-10-17T09:20:00",
+        "fechaHoraSalida": null,
+        "duracionEstadiaMinutos": null,
+        "duracionEstadiaHoras": null,
+        "precioPorHora": 800.0,
+        "montoACancelar": null
+      }
+    ]
+  },
+  {
+    "solicitud": "Provincia sin parqueos (Limón) devuelve lista vacía",
+    "metodo": "GET",
+    "ruta": "/api/ingresos/por-provincia?provincia=Lim%C3%B3n&desde=2026-10-01T00:00:00&hasta=2026-10-31T23:59:59",
+    "estado": 200,
+    "origen": "BaseDatos",
+    "cuerpo": []
+  },
+  {
+    "solicitud": "Precio por hora del parqueo 3 (ObtenerPrecioPorHoraPorParqueo)",
+    "metodo": "GET",
+    "ruta": "/api/ingresos/precio-por-hora/3",
+    "estado": 200,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "idParqueo": 3,
+      "precioPorHora": 675.5
+    }
+  },
+  {
+    "solicitud": "Automóvil inexistente (GET 999)",
+    "metodo": "GET",
+    "ruta": "/api/automoviles/999",
+    "estado": 404,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+      "title": "Registro no encontrado",
+      "status": 404,
+      "detail": "No existe el automóvil con id 999.",
+      "traceId": "00-9b9c450b8094ea987263383b76ea53f7-abb53f159c774989-00"
+    }
+  },
+  {
+    "solicitud": "Automóvil con tipo inválido (POST)",
+    "metodo": "POST",
+    "ruta": "/api/automoviles",
+    "estado": 400,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+      "title": "Datos inválidos",
+      "status": 400,
+      "detail": "El tipo 'camión' no es válido. Valores permitidos: sedán, 4x4, moto.",
+      "traceId": "00-ab6fbd723fd866b5170f100a419b7a69-e570b74d498000db-00"
+    }
+  },
+  {
+    "solicitud": "Automóvil sin campos obligatorios (POST)",
+    "metodo": "POST",
+    "ruta": "/api/automoviles",
+    "estado": 400,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "title": "Datos inválidos",
+      "status": 400,
+      "errors": {
+        "Tipo": [
+          "El tipo es obligatorio (sedán, 4x4 o moto)."
+        ],
+        "Color": [
+          "El color es obligatorio."
+        ],
+        "Fabricante": [
+          "El fabricante es obligatorio."
+        ]
+      }
+    }
+  },
+  {
+    "solicitud": "Automóvil con año fuera de rango (POST 1800)",
+    "metodo": "POST",
+    "ruta": "/api/automoviles",
+    "estado": 400,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+      "title": "Datos inválidos",
+      "status": 400,
+      "detail": "El año debe estar entre 1886 y 2100; se recibió 1800.",
+      "traceId": "00-694f8004dec51342448a2feb3ce672ba-c146f525bf39ff5c-00"
+    }
+  },
+  {
+    "solicitud": "Actualizar automóvil inexistente (PUT 999)",
+    "metodo": "PUT",
+    "ruta": "/api/automoviles/999",
+    "estado": 404,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+      "title": "Registro no encontrado",
+      "status": 404,
+      "detail": "No existe el automóvil con id 999.",
+      "traceId": "00-e3eba80792bf95acb8e6f24c22c99899-6e41f033c9106bce-00"
+    }
+  },
+  {
+    "solicitud": "Borrar automóvil inexistente (DELETE 999)",
+    "metodo": "DELETE",
+    "ruta": "/api/automoviles/999",
+    "estado": 404,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+      "title": "Registro no encontrado",
+      "status": 404,
+      "detail": "No existe el automóvil con id 999.",
+      "traceId": "00-3b21c120dfed04fb9694c05d907f9900-90cedea2aecd0c54-00"
+    }
+  },
+  {
+    "solicitud": "Borrar automóvil con ingresos (DELETE 1) devuelve 409",
+    "metodo": "DELETE",
+    "ruta": "/api/automoviles/1",
+    "estado": 409,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.10",
+      "title": "Conflicto con los datos existentes",
+      "status": 409,
+      "detail": "No se puede borrar el registro 1 de prq_automovil porque tiene ingresos registrados.",
+      "traceId": "00-763efb388a715410a9c8da990572b1d0-e0d74cdc92e61bb9-00"
+    }
+  },
+  {
+    "solicitud": "Intervalo de años invertido (2020-2010)",
+    "metodo": "GET",
+    "ruta": "/api/automoviles?anioDesde=2020&anioHasta=2010",
+    "estado": 400,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+      "title": "Datos inválidos",
+      "status": 400,
+      "detail": "El intervalo de años es inválido: el año inicial (2020) es mayor que el final (2010).",
+      "traceId": "00-d8dcb40f190a64c329e8dc83acf4f2a8-3fd11798e53dce82-00"
+    }
+  },
+  {
+    "solicitud": "Tamaño de página inválido (0)",
+    "metodo": "GET",
+    "ruta": "/api/automoviles?tamanoPagina=0",
+    "estado": 400,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+      "title": "Datos inválidos",
+      "status": 400,
+      "detail": "El tamaño de página debe estar entre 1 y 100. (Parameter 'tamanoPagina')\nActual value was 0.",
+      "traceId": "00-be74286bb5d66c279d262f5eb0e49b76-05cc976ed047e698-00"
+    }
+  },
+  {
+    "solicitud": "Parqueo inexistente (GET 999)",
+    "metodo": "GET",
+    "ruta": "/api/parqueos/999",
+    "estado": 404,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+      "title": "Registro no encontrado",
+      "status": 404,
+      "detail": "No existe el parqueo con id 999.",
+      "traceId": "00-45682956e5e85f077c3e600c9c73c388-f3ca8494f8a4aa53-00"
+    }
+  },
+  {
+    "solicitud": "Parqueo con provincia inválida (POST)",
+    "metodo": "POST",
+    "ruta": "/api/parqueos",
+    "estado": 400,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+      "title": "Datos inválidos",
+      "status": 400,
+      "detail": "La provincia 'Panamá' no es válida. Valores permitidos: San José, Alajuela, Cartago, Heredia, Guanacaste, Puntarenas, Limón.",
+      "traceId": "00-d08ba46f3a9ce7b5ecf3a8585625d175-178003dcd34318fc-00"
+    }
+  },
+  {
+    "solicitud": "Parqueo con precio cero (POST)",
+    "metodo": "POST",
+    "ruta": "/api/parqueos",
+    "estado": 400,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+      "title": "Datos inválidos",
+      "status": 400,
+      "detail": "El precio por hora debe ser mayor que 0 y menor o igual a 99999999.99.",
+      "traceId": "00-83152df10002932ab0db18d35ec91748-8f63c2ce33fab20d-00"
+    }
+  },
+  {
+    "solicitud": "Parqueo con precio negativo (POST)",
+    "metodo": "POST",
+    "ruta": "/api/parqueos",
+    "estado": 400,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+      "title": "Datos inválidos",
+      "status": 400,
+      "detail": "El precio por hora debe ser mayor que 0 y menor o igual a 99999999.99.",
+      "traceId": "00-cd92c2a7996f7d9fffde805e018f8526-1d3c83823905a320-00"
+    }
+  },
+  {
+    "solicitud": "Parqueo con más de 2 decimales en el precio (POST)",
+    "metodo": "POST",
+    "ruta": "/api/parqueos",
+    "estado": 400,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+      "title": "Datos inválidos",
+      "status": 400,
+      "detail": "El precio por hora admite como máximo 2 decimales.",
+      "traceId": "00-6f681f60c49a6be53dda1e6444488e03-e4ce1cfbfa8885df-00"
+    }
+  },
+  {
+    "solicitud": "Borrar parqueo con ingresos (DELETE 1) devuelve 409",
+    "metodo": "DELETE",
+    "ruta": "/api/parqueos/1",
+    "estado": 409,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.10",
+      "title": "Conflicto con los datos existentes",
+      "status": 409,
+      "detail": "No se puede borrar el registro 1 de prq_parqueo porque tiene ingresos registrados.",
+      "traceId": "00-60d7133c88c46f627978fa81e7791485-58b249abd0fc5642-00"
+    }
+  },
+  {
+    "solicitud": "Rango de precios invertido (1000 a 500)",
+    "metodo": "GET",
+    "ruta": "/api/parqueos?precioMinimo=1000&precioMaximo=500",
+    "estado": 400,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+      "title": "Datos inválidos",
+      "status": 400,
+      "detail": "El rango de precios es inválido: el mínimo (1000) es mayor que el máximo (500).",
+      "traceId": "00-3eb232f8fdce4843fedb66a1a2755d2b-3539aaac6160b8c8-00"
+    }
+  },
+  {
+    "solicitud": "Ingreso inexistente (GET 999)",
+    "metodo": "GET",
+    "ruta": "/api/ingresos/999",
+    "estado": 404,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+      "title": "Registro no encontrado",
+      "status": 404,
+      "detail": "No existe el ingreso con id 999.",
+      "traceId": "00-096375d72e88fe25747945fef8238eed-5f64b88beb8f151d-00"
+    }
+  },
+  {
+    "solicitud": "Ingreso con parqueo inexistente (POST) devuelve 409",
+    "metodo": "POST",
+    "ruta": "/api/ingresos",
+    "estado": 409,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.10",
+      "title": "Conflicto con los datos existentes",
+      "status": 409,
+      "detail": "No existe el registro 999 en prq_parqueo; no se puede guardar el ingreso.",
+      "traceId": "00-8be1094453245d883dbee656f9e5104b-496e6eaa7424672d-00"
+    }
+  },
+  {
+    "solicitud": "Ingreso con automóvil inexistente (POST) devuelve 409",
+    "metodo": "POST",
+    "ruta": "/api/ingresos",
+    "estado": 409,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.10",
+      "title": "Conflicto con los datos existentes",
+      "status": 409,
+      "detail": "No existe el registro 999 en prq_automovil; no se puede guardar el ingreso.",
+      "traceId": "00-be44b30aff88a8ec5cb24d0de727c912-408424b885d51028-00"
+    }
+  },
+  {
+    "solicitud": "Ingreso con salida igual a la entrada (POST)",
+    "metodo": "POST",
+    "ruta": "/api/ingresos",
+    "estado": 400,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+      "title": "Datos inválidos",
+      "status": 400,
+      "detail": "La fecha y hora de salida debe ser posterior a la de entrada.",
+      "traceId": "00-fd587b5373a420ba7ff582e0d873ff04-32a3fb36e1d26c76-00"
+    }
+  },
+  {
+    "solicitud": "Ingreso con salida anterior a la entrada (POST)",
+    "metodo": "POST",
+    "ruta": "/api/ingresos",
+    "estado": 400,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+      "title": "Datos inválidos",
+      "status": 400,
+      "detail": "La fecha y hora de salida debe ser posterior a la de entrada.",
+      "traceId": "00-922c6f6e09e33525d3761365cdbfaeb3-13d5850790863a39-00"
+    }
+  },
+  {
+    "solicitud": "Ingreso con fecha inválida (POST)",
+    "metodo": "POST",
+    "ruta": "/api/ingresos",
+    "estado": 400,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "title": "Datos inválidos",
+      "status": 400,
+      "errors": {
+        "solicitud": [
+          "The solicitud field is required."
+        ],
+        "$.fechaHoraEntrada": [
+          "The JSON value could not be converted to System.Nullable`1[System.DateTime]. Path: $.fechaHoraEntrada | LineNumber: 3 | BytePositionInLine: 43."
+        ]
+      }
+    }
+  },
+  {
+    "solicitud": "Ingreso sin fecha de entrada (POST)",
+    "metodo": "POST",
+    "ruta": "/api/ingresos",
+    "estado": 400,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "title": "Datos inválidos",
+      "status": 400,
+      "errors": {
+        "FechaHoraEntrada": [
+          "La fecha y hora de entrada es obligatoria."
+        ]
+      }
+    }
+  },
+  {
+    "solicitud": "Precio por hora de parqueo inexistente (999)",
+    "metodo": "GET",
+    "ruta": "/api/ingresos/precio-por-hora/999",
+    "estado": 404,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+      "title": "Registro no encontrado",
+      "status": 404,
+      "detail": "No existe el parqueo con id 999.",
+      "traceId": "00-26276021f37eb531b89896569aa0a3d0-3e4c7bd116ca7b90-00"
+    }
+  },
+  {
+    "solicitud": "Consulta por tipo sin el tipo",
+    "metodo": "GET",
+    "ruta": "/api/ingresos/por-tipo?desde=2026-10-01T00:00:00&hasta=2026-10-31T23:59:59",
+    "estado": 400,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "title": "Datos inválidos",
+      "status": 400,
+      "errors": {
+        "tipo": [
+          "Indique el tipo de automóvil."
+        ]
+      }
+    }
+  },
+  {
+    "solicitud": "Consulta por tipo con intervalo invertido",
+    "metodo": "GET",
+    "ruta": "/api/ingresos/por-tipo?tipo=4x4&desde=2026-10-31T00:00:00&hasta=2026-10-01T00:00:00",
+    "estado": 400,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+      "title": "Datos inválidos",
+      "status": 400,
+      "detail": "El intervalo de fechas es inválido: 2026-10-31 00:00 es posterior a 2026-10-01 00:00.",
+      "traceId": "00-01ecf72b6c5f6ae8dd8640241835b05d-004d0030b257ab6b-00"
+    }
+  },
+  {
+    "solicitud": "Consulta por provincia con fecha inválida",
+    "metodo": "GET",
+    "ruta": "/api/ingresos/por-provincia?provincia=heredia&desde=ayer&hasta=2026-10-31T00:00:00",
+    "estado": 400,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "title": "Datos inválidos",
+      "status": 400,
+      "errors": {
+        "desde": [
+          "The value 'ayer' is not valid."
+        ]
+      }
+    }
+  },
+  {
+    "solicitud": "Borrar ingreso inexistente (DELETE 999)",
+    "metodo": "DELETE",
+    "ruta": "/api/ingresos/999",
+    "estado": 404,
+    "origen": "BaseDatos",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+      "title": "Registro no encontrado",
+      "status": 404,
+      "detail": "No existe el ingreso con id 999.",
+      "traceId": "00-be00e7e031c0a5acbccddbaba38097f8-64aac43b5738d9c1-00"
+    }
+  }
+]

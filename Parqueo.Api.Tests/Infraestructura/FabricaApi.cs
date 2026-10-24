@@ -14,6 +14,14 @@ public sealed class FabricaApi : WebApplicationFactory<Program>
 {
     private readonly Dictionary<string, string?> _configuracion;
 
+    static FabricaApi()
+    {
+        // Cada API de prueba abriría observadores de archivos (inotify) para recargar
+        // appsettings.json; con cientos de pruebas se agota el límite del sistema.
+        // Las pruebas no necesitan recargar la configuración en caliente.
+        Environment.SetEnvironmentVariable("DOTNET_hostBuilder__reloadConfigOnChange", "false");
+    }
+
     private FabricaApi(Dictionary<string, string?> configuracion)
     {
         _configuracion = configuracion;

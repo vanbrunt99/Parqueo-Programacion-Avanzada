@@ -1,0 +1,466 @@
+# Entorno: contenedor Linux del agente (Ubuntu 24.04, .NET SDK 10.0.402, Newman 6.2.3, PostgreSQL 16.15 LOCAL).
+# NO es la instancia en la nube del profesor ni la aplicación Postman de escritorio: es la misma colección
+# Postman/Parqueo-API.postman_collection.json ejecutada con Newman, el ejecutor de línea de comandos de Postman.
+# Fecha: 2026-10-24 17:32 (hora de Costa Rica). Salida real, sin editar.
+# API iniciado con --OrigenDatos=Json; comando: newman run Postman/Parqueo-API.postman_collection.json -e Postman/Parqueo-Local.postman_environment.json
+
+newman
+
+Parqueo API — Trabajo en Clase 03
+
+❏ 1. Automóviles
+↳ GET listado de automóviles (página 1, 10 por página)
+  GET http://localhost:5246/api/automoviles [200 OK, 613B, 31ms]
+  ✓  Origen de datos: Json
+  ✓  Código 200
+  ✓  Resultado esperado: [1, 2, 3, 4, 5, 6]
+  ✓  Los listados no anidan ingresos
+
+↳ GET listado paginado (página 2, tamaño 4)
+  GET http://localhost:5246/api/automoviles?pagina=2&tamanoPagina=4 [200 OK, 318B, 10ms]
+  ✓  Origen de datos: Json
+  ✓  Código 200
+  ✓  Resultado esperado: [5, 6]
+
+↳ GET automóvil por id con navegación (id 1)
+  GET http://localhost:5246/api/automoviles/1 [200 OK, 1.12kB, 42ms]
+  ✓  Origen de datos: Json
+  ✓  Código 200
+  ✓  Datos del automóvil
+  ✓  Navegación: 3 ingresos con su parqueo
+  ✓  Campos calculados del ingreso 1
+  ✓  Sin referencia circular (el ingreso no repite el automóvil)
+
+↳ GET filtro por color aproximado (ro)
+  GET http://localhost:5246/api/automoviles?color=ro [200 OK, 320B, 12ms]
+  ✓  Origen de datos: Json
+  ✓  Código 200
+  ✓  Resultado esperado: [1, 3]
+
+↳ GET filtro por intervalo de años (2015-2019, extremos incluidos)
+  GET http://localhost:5246/api/automoviles?anioDesde=2015&anioHasta=2019 [200 OK, 395B, 5ms]
+  ✓  Origen de datos: Json
+  ✓  Código 200
+  ✓  Resultado esperado: [1, 3, 5]
+
+↳ GET filtro por fabricante aproximado (da)
+  GET http://localhost:5246/api/automoviles?fabricante=da [200 OK, 317B, 6ms]
+  ✓  Origen de datos: Json
+  ✓  Código 200
+  ✓  Resultado esperado: [2, 6]
+
+↳ GET filtro por tipo sin tilde (sedan)
+  GET http://localhost:5246/api/automoviles?tipo=sedan [200 OK, 320B, 6ms]
+  ✓  Origen de datos: Json
+  ✓  Código 200
+  ✓  Resultado esperado: [1, 3]
+
+↳ GET filtros combinados (tipo 4x4 y año desde 2019)
+  GET http://localhost:5246/api/automoviles?tipo=4x4&anioDesde=2019 [200 OK, 245B, 6ms]
+  ✓  Origen de datos: Json
+  ✓  Código 200
+  ✓  Resultado esperado: [2]
+
+↳ POST crear automóvil
+  POST http://localhost:5246/api/automoviles [201 Created, 311B, 52ms]
+  ✓  Origen de datos: Json
+  ✓  Código 201
+  ✓  Devuelve el id asignado y la ubicación
+
+↳ GET automóvil creado
+  GET http://localhost:5246/api/automoviles/7 [200 OK, 255B, 17ms]
+  ✓  Origen de datos: Json
+  ✓  Código 200
+  ✓  Sin ingresos todavía
+
+↳ PUT actualizar automóvil creado
+  PUT http://localhost:5246/api/automoviles/7 [200 OK, 259B, 19ms]
+  ✓  Origen de datos: Json
+  ✓  Código 200
+  ✓  Datos actualizados
+
+↳ DELETE borrar automóvil creado
+  DELETE http://localhost:5246/api/automoviles/7 [204 No Content, 103B, 19ms]
+  ✓  Origen de datos: Json
+  ✓  Código 204
+
+↳ GET automóvil borrado devuelve 404
+  GET http://localhost:5246/api/automoviles/7 [404 Not Found, 397B, 16ms]
+  ✓  Origen de datos: Json
+  ✓  Código 404
+  ✓  Respuesta ProblemDetails
+
+❏ 2. Parqueos
+↳ GET listado de parqueos
+  GET http://localhost:5246/api/parqueos [200 OK, 465B, 20ms]
+  ✓  Origen de datos: Json
+  ✓  Código 200
+  ✓  Resultado esperado: [1, 2, 3]
+  ✓  Precio decimal exacto
+
+↳ GET parqueo por id con navegación (id 3)
+  GET http://localhost:5246/api/parqueos/3 [200 OK, 1.34kB, 16ms]
+  ✓  Origen de datos: Json
+  ✓  Código 200
+  ✓  Datos del parqueo
+  ✓  Navegación: 4 ingresos con su automóvil
+  ✓  Monto del ingreso 4 (165 min a 675.50/h)
+  ✓  Sin referencia circular (el ingreso no repite el parqueo)
+
+↳ GET filtro por provincia sin tilde (san jose)
+  GET http://localhost:5246/api/parqueos?provincia=san jose [200 OK, 277B, 7ms]
+  ✓  Origen de datos: Json
+  ✓  Código 200
+  ✓  Resultado esperado: [1]
+
+↳ GET filtro por nombre aproximado (mercado)
+  GET http://localhost:5246/api/parqueos?nombre=mercado [200 OK, 269B, 5ms]
+  ✓  Origen de datos: Json
+  ✓  Código 200
+  ✓  Resultado esperado: [2]
+
+↳ GET filtro por rango de precio (700 a 1250, extremos incluidos)
+  GET http://localhost:5246/api/parqueos?precioMinimo=700&precioMaximo=1250 [200 OK, 375B, 7ms]
+  ✓  Origen de datos: Json
+  ✓  Código 200
+  ✓  Resultado esperado: [1, 2]
+
+↳ GET filtro por precio máximo exacto (675.50)
+  GET http://localhost:5246/api/parqueos?precioMaximo=675.50 [200 OK, 261B, 6ms]
+  ✓  Origen de datos: Json
+  ✓  Código 200
+  ✓  Resultado esperado: [3]
+
+↳ GET filtros combinados (nombre parqueo y precio hasta 1000)
+  GET http://localhost:5246/api/parqueos?nombre=parqueo&precioMaximo=1000 [200 OK, 359B, 5ms]
+  ✓  Origen de datos: Json
+  ✓  Código 200
+  ✓  Resultado esperado: [2, 3]
+
+↳ POST crear parqueo
+  POST http://localhost:5246/api/parqueos [201 Created, 325B, 14ms]
+  ✓  Origen de datos: Json
+  ✓  Código 201
+  ✓  Devuelve el id asignado y el precio
+
+↳ GET parqueo creado
+  GET http://localhost:5246/api/parqueos/4 [200 OK, 272B, 3ms]
+  ✓  Origen de datos: Json
+  ✓  Código 200
+  ✓  Sin ingresos todavía
+
+↳ PUT actualizar parqueo creado
+  PUT http://localhost:5246/api/parqueos/4 [200 OK, 278B, 11ms]
+  ✓  Origen de datos: Json
+  ✓  Código 200
+  ✓  Datos actualizados
+
+↳ GET filtro por provincia encuentra el parqueo actualizado (limon)
+  GET http://localhost:5246/api/parqueos?provincia=limon [200 OK, 266B, 5ms]
+  ✓  Origen de datos: Json
+  ✓  Código 200
+  ✓  Solo el parqueo creado
+
+↳ DELETE borrar parqueo creado
+  DELETE http://localhost:5246/api/parqueos/4 [204 No Content, 103B, 11ms]
+  ✓  Origen de datos: Json
+  ✓  Código 204
+
+↳ GET parqueo borrado devuelve 404
+  GET http://localhost:5246/api/parqueos/4 [404 Not Found, 394B, 2ms]
+  ✓  Origen de datos: Json
+  ✓  Código 404
+  ✓  Respuesta ProblemDetails
+
+❏ 3. Ingresos
+↳ GET listado de ingresos (página 1, 10 por página)
+  GET http://localhost:5246/api/ingresos [200 OK, 4.23kB, 18ms]
+  ✓  Origen de datos: Json
+  ✓  Código 200
+  ✓  Resultado esperado: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+↳ GET listado completo de ingresos con navegación (tamaño 100)
+  GET http://localhost:5246/api/ingresos?tamanoPagina=100 [200 OK, 7.06kB, 5ms]
+  ✓  Origen de datos: Json
+  ✓  Código 200
+  ✓  Resultado esperado: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+  ✓  Navegación: cada ingreso trae su automóvil y su parqueo
+
+↳ GET ingreso finalizado por id con campos calculados (id 6)
+  GET http://localhost:5246/api/ingresos/6 [200 OK, 585B, 11ms]
+  ✓  Origen de datos: Json
+  ✓  Código 200
+  ✓  Duración: 80 minutos = 1.3333 horas
+  ✓  Monto: 80 min a 1250/h = 1666.67
+  ✓  Navegación: automóvil y parqueo
+
+↳ GET ingreso en curso por id: campos calculados en null (id 16)
+  GET http://localhost:5246/api/ingresos/16 [200 OK, 566B, 3ms]
+  ✓  Origen de datos: Json
+  ✓  Código 200
+  ✓  Sin salida: minutos, horas y monto son null (no 0)
+
+↳ POST crear ingreso en curso
+  POST http://localhost:5246/api/ingresos [201 Created, 602B, 15ms]
+  ✓  Origen de datos: Json
+  ✓  Código 201
+  ✓  Consecutivo asignado y navegación cargada
+  ✓  Sin salida: campos calculados en null
+
+↳ GET ingreso creado
+  GET http://localhost:5246/api/ingresos/18 [200 OK, 548B, 2ms]
+  ✓  Origen de datos: Json
+  ✓  Código 200
+  ✓  Sigue en curso
+
+↳ PUT registrar salida del ingreso creado (90 minutos)
+  PUT http://localhost:5246/api/ingresos/18 [200 OK, 565B, 10ms]
+  ✓  Origen de datos: Json
+  ✓  Código 200
+  ✓  Duración 90 min = 1.5 h
+  ✓  Monto: 1.5 h a 675.50/h = 1013.25
+
+↳ DELETE borrar ingreso creado
+  DELETE http://localhost:5246/api/ingresos/18 [204 No Content, 103B, 9ms]
+  ✓  Origen de datos: Json
+  ✓  Código 204
+
+↳ GET ingreso borrado devuelve 404
+  GET http://localhost:5246/api/ingresos/18 [404 Not Found, 395B, 2ms]
+  ✓  Origen de datos: Json
+  ✓  Código 404
+  ✓  Respuesta ProblemDetails
+
+❏ 4. Consultas especializadas
+↳ Automóviles tipo 4x4 que ingresaron en octubre
+  GET http://localhost:5246/api/ingresos/por-tipo?tipo=4x4&desde=2026-10-01T00:00:00&hasta=2026-10-31T23:59:59 [200 OK, 2.43kB, 39ms]
+  ✓  Origen de datos: Json
+  ✓  Código 200
+  ✓  Resultado esperado: [2, 4, 6, 11, 15, 16]
+  ✓  Todos son 4x4 e incluyen datos del automóvil
+  ✓  Incluye hora de entrada, de salida y monto
+
+↳ Automóviles tipo sedan (sin tilde) del 4 al 8 de octubre
+  GET http://localhost:5246/api/ingresos/por-tipo?tipo=sedan&desde=2026-10-04T00:00:00&hasta=2026-10-08T23:59:59 [200 OK, 1.31kB, 4ms]
+  ✓  Origen de datos: Json
+  ✓  Código 200
+  ✓  Resultado esperado: [5, 8, 9]
+
+↳ Automóviles tipo moto con extremos exactos del intervalo
+  GET http://localhost:5246/api/ingresos/por-tipo?tipo=moto&desde=2026-10-02T08:10:00&hasta=2026-10-09T18:15:00 [200 OK, 1.28kB, 5ms]
+  ✓  Origen de datos: Json
+  ✓  Código 200
+  ✓  Resultado esperado: [3, 7, 10]
+
+↳ Automóviles en parqueos de San José en octubre
+  GET http://localhost:5246/api/ingresos/por-provincia?provincia=san jose&desde=2026-10-01T00:00:00&hasta=2026-10-31T23:59:59 [200 OK, 2.84kB, 15ms]
+  ✓  Origen de datos: Json
+  ✓  Código 200
+  ✓  Resultado esperado: [1, 3, 6, 9, 12, 15, 16]
+  ✓  Todos en San José con tarifa 1250
+
+↳ Automóviles en parqueos de Heredia del 15 al 17 de octubre
+  GET http://localhost:5246/api/ingresos/por-provincia?provincia=heredia&desde=2026-10-15T00:00:00&hasta=2026-10-17T23:59:59 [200 OK, 907B, 5ms]
+  ✓  Origen de datos: Json
+  ✓  Código 200
+  ✓  Resultado esperado: [14, 17]
+  ✓  Monto 266.67 y null para la estadía en curso
+
+↳ Provincia sin parqueos (Limón) devuelve lista vacía
+  GET http://localhost:5246/api/ingresos/por-provincia?provincia=Limón&desde=2026-10-01T00:00:00&hasta=2026-10-31T23:59:59 [200 OK, 172B, 5ms]
+  ✓  Origen de datos: Json
+  ✓  Código 200
+  ✓  Lista vacía
+
+↳ Precio por hora del parqueo 3 (ObtenerPrecioPorHoraPorParqueo)
+  GET http://localhost:5246/api/ingresos/precio-por-hora/3 [200 OK, 208B, 13ms]
+  ✓  Origen de datos: Json
+  ✓  Código 200
+  ✓  675.50 por hora
+
+❏ 5. Pruebas negativas y de borde
+↳ Automóvil inexistente (GET 999)
+  GET http://localhost:5246/api/automoviles/999 [404 Not Found, 399B, 2ms]
+  ✓  Origen de datos: Json
+  ✓  Código 404
+  ✓  Respuesta ProblemDetails
+
+↳ Automóvil con tipo inválido (POST)
+  POST http://localhost:5246/api/automoviles [400 Bad Request, 489B, 11ms]
+  ✓  Origen de datos: Json
+  ✓  Código 400
+  ✓  Respuesta ProblemDetails
+  ✓  Indica los tipos permitidos
+
+↳ Automóvil sin campos obligatorios (POST)
+  POST http://localhost:5246/api/automoviles [400 Bad Request, 371B, 6ms]
+  ✓  Origen de datos: Json
+  ✓  Código 400
+  ✓  Lista los campos faltantes
+
+↳ Automóvil con año fuera de rango (POST 1800)
+  POST http://localhost:5246/api/automoviles [400 Bad Request, 473B, 15ms]
+  ✓  Origen de datos: Json
+  ✓  Código 400
+  ✓  Respuesta ProblemDetails
+
+↳ Actualizar automóvil inexistente (PUT 999)
+  PUT http://localhost:5246/api/automoviles/999 [404 Not Found, 399B, 3ms]
+  ✓  Origen de datos: Json
+  ✓  Código 404
+  ✓  Respuesta ProblemDetails
+
+↳ Borrar automóvil inexistente (DELETE 999)
+  DELETE http://localhost:5246/api/automoviles/999 [404 Not Found, 399B, 3ms]
+  ✓  Origen de datos: Json
+  ✓  Código 404
+  ✓  Respuesta ProblemDetails
+
+↳ Borrar automóvil con ingresos (DELETE 1) devuelve 409
+  DELETE http://localhost:5246/api/automoviles/1 [409 Conflict, 518B, 3ms]
+  ✓  Origen de datos: Json
+  ✓  Código 409
+  ✓  Respuesta ProblemDetails
+
+↳ Intervalo de años invertido (2020-2010)
+  GET http://localhost:5246/api/automoviles?anioDesde=2020&anioHasta=2010 [400 Bad Request, 506B, 3ms]
+  ✓  Origen de datos: Json
+  ✓  Código 400
+  ✓  Respuesta ProblemDetails
+
+↳ Tamaño de página inválido (0)
+  GET http://localhost:5246/api/automoviles?tamanoPagina=0 [400 Bad Request, 513B, 3ms]
+  ✓  Origen de datos: Json
+  ✓  Código 400
+  ✓  Respuesta ProblemDetails
+
+↳ Parqueo inexistente (GET 999)
+  GET http://localhost:5246/api/parqueos/999 [404 Not Found, 396B, 3ms]
+  ✓  Origen de datos: Json
+  ✓  Código 404
+  ✓  Respuesta ProblemDetails
+
+↳ Parqueo con provincia inválida (POST)
+  POST http://localhost:5246/api/parqueos [400 Bad Request, 546B, 3ms]
+  ✓  Origen de datos: Json
+  ✓  Código 400
+  ✓  Respuesta ProblemDetails
+
+↳ Parqueo con precio cero (POST)
+  POST http://localhost:5246/api/parqueos [400 Bad Request, 488B, 4ms]
+  ✓  Origen de datos: Json
+  ✓  Código 400
+  ✓  Respuesta ProblemDetails
+
+↳ Parqueo con precio negativo (POST)
+  POST http://localhost:5246/api/parqueos [400 Bad Request, 488B, 3ms]
+  ✓  Origen de datos: Json
+  ✓  Código 400
+  ✓  Respuesta ProblemDetails
+
+↳ Parqueo con más de 2 decimales en el precio (POST)
+  POST http://localhost:5246/api/parqueos [400 Bad Request, 469B, 3ms]
+  ✓  Origen de datos: Json
+  ✓  Código 400
+  ✓  Respuesta ProblemDetails
+
+↳ Borrar parqueo con ingresos (DELETE 1) devuelve 409
+  DELETE http://localhost:5246/api/parqueos/1 [409 Conflict, 516B, 3ms]
+  ✓  Origen de datos: Json
+  ✓  Código 409
+  ✓  Respuesta ProblemDetails
+
+↳ Rango de precios invertido (1000 a 500)
+  GET http://localhost:5246/api/parqueos?precioMinimo=1000&precioMaximo=500 [400 Bad Request, 500B, 3ms]
+  ✓  Origen de datos: Json
+  ✓  Código 400
+  ✓  Respuesta ProblemDetails
+
+↳ Ingreso inexistente (GET 999)
+  GET http://localhost:5246/api/ingresos/999 [404 Not Found, 396B, 3ms]
+  ✓  Origen de datos: Json
+  ✓  Código 404
+  ✓  Respuesta ProblemDetails
+
+↳ Ingreso con parqueo inexistente (POST) devuelve 409
+  POST http://localhost:5246/api/ingresos [409 Conflict, 507B, 4ms]
+  ✓  Origen de datos: Json
+  ✓  Código 409
+  ✓  Respuesta ProblemDetails
+
+↳ Ingreso con automóvil inexistente (POST) devuelve 409
+  POST http://localhost:5246/api/ingresos [409 Conflict, 509B, 4ms]
+  ✓  Origen de datos: Json
+  ✓  Código 409
+  ✓  Respuesta ProblemDetails
+
+↳ Ingreso con salida igual a la entrada (POST)
+  POST http://localhost:5246/api/ingresos [400 Bad Request, 479B, 3ms]
+  ✓  Origen de datos: Json
+  ✓  Código 400
+  ✓  Respuesta ProblemDetails
+
+↳ Ingreso con salida anterior a la entrada (POST)
+  POST http://localhost:5246/api/ingresos [400 Bad Request, 479B, 3ms]
+  ✓  Origen de datos: Json
+  ✓  Código 400
+  ✓  Respuesta ProblemDetails
+
+↳ Ingreso con fecha inválida (POST)
+  POST http://localhost:5246/api/ingresos [400 Bad Request, 449B, 5ms]
+  ✓  Origen de datos: Json
+  ✓  Código 400
+
+↳ Ingreso sin fecha de entrada (POST)
+  POST http://localhost:5246/api/ingresos [400 Bad Request, 297B, 2ms]
+  ✓  Origen de datos: Json
+  ✓  Código 400
+  ✓  Indica el campo faltante
+
+↳ Precio por hora de parqueo inexistente (999)
+  GET http://localhost:5246/api/ingresos/precio-por-hora/999 [404 Not Found, 396B, 2ms]
+  ✓  Origen de datos: Json
+  ✓  Código 404
+  ✓  Respuesta ProblemDetails
+
+↳ Consulta por tipo sin el tipo
+  GET http://localhost:5246/api/ingresos/por-tipo?desde=2026-10-01T00:00:00&hasta=2026-10-31T23:59:59 [400 Bad Request, 273B, 2ms]
+  ✓  Origen de datos: Json
+  ✓  Código 400
+
+↳ Consulta por tipo con intervalo invertido
+  GET http://localhost:5246/api/ingresos/por-tipo?tipo=4x4&desde=2026-10-31T00:00:00&hasta=2026-10-01T00:00:00 [400 Bad Request, 504B, 3ms]
+  ✓  Origen de datos: Json
+  ✓  Código 400
+  ✓  Respuesta ProblemDetails
+
+↳ Consulta por provincia con fecha inválida
+  GET http://localhost:5246/api/ingresos/por-provincia?provincia=heredia&desde=ayer&hasta=2026-10-31T00:00:00 [400 Bad Request, 274B, 2ms]
+  ✓  Origen de datos: Json
+  ✓  Código 400
+
+↳ Borrar ingreso inexistente (DELETE 999)
+  DELETE http://localhost:5246/api/ingresos/999 [404 Not Found, 396B, 1ms]
+  ✓  Origen de datos: Json
+  ✓  Código 404
+  ✓  Respuesta ProblemDetails
+
+┌─────────────────────────┬─────────────────┬─────────────────┐
+│                         │        executed │          failed │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│              iterations │               1 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│                requests │              70 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│            test-scripts │              70 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│      prerequest-scripts │               0 │               0 │
+├─────────────────────────┼─────────────────┼─────────────────┤
+│              assertions │             222 │               0 │
+├─────────────────────────┴─────────────────┴─────────────────┤
+│ total run duration: 1634ms                                  │
+├─────────────────────────────────────────────────────────────┤
+│ total data received: 33.16kB (approx)                       │
+├─────────────────────────────────────────────────────────────┤
+│ average response time: 8ms [min: 1ms, max: 52ms, s.d.: 9ms] │
+└─────────────────────────────────────────────────────────────┘
