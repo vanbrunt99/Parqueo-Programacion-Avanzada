@@ -14,8 +14,9 @@ public sealed class ParqueoRepositorioEf : RepositorioEfBase<PrqParqueo>, IParqu
     {
     }
 
+    // Los ingresos traen también su automóvil, para mostrar qué vehículo ingresó.
     protected override IQueryable<PrqParqueo> IncluirPropiedadesNavegacion(IQueryable<PrqParqueo> consulta) =>
-        consulta.Include(p => p.PrqIngresoAutomovils);
+        consulta.Include(p => p.PrqIngresoAutomovils).ThenInclude(i => i.IdAutomovilNavigation);
 
     protected override void Validar(PrqParqueo entidad) => Validador.Validar(entidad);
 

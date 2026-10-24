@@ -30,10 +30,15 @@ public sealed class ParqueoRepositorioJson : RepositorioJsonBase<PrqParqueo>, IP
     protected override async Task IncluirPropiedadesNavegacionAsync(PrqParqueo parqueo, CancellationToken cancelacion)
     {
         var ingresos = await Fuente.LeerAsync<PrqIngresoAutomovil>(FuenteDatosJson.ArchivoIngresos, cancelacion);
+        var automoviles = (await Fuente.LeerAsync<PrqAutomovil>(FuenteDatosJson.ArchivoAutomoviles, cancelacion))
+            .ToDictionary(a => a.Id);
+
+        // Igual que el Include + ThenInclude de EF: cada ingreso con su automóvil.
         parqueo.PrqIngresoAutomovils = ingresos.Where(i => i.IdParqueo == parqueo.Id).ToList();
         foreach (var ingreso in parqueo.PrqIngresoAutomovils)
         {
             ingreso.IdParqueoNavigation = parqueo;
+            ingreso.IdAutomovilNavigation = automoviles.GetValueOrDefault(ingreso.IdAutomovil)!;
         }
     }
 

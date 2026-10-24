@@ -1,0 +1,291 @@
+# Entorno: contenedor Linux del agente (Ubuntu 24.04, .NET SDK 10.0.402, Newman 6.2.3, PostgreSQL 16.15 LOCAL).
+# NO es la instancia en la nube del profesor ni la aplicación Postman de escritorio: es la misma colección
+# Postman/Parqueo-API.postman_collection.json ejecutada con Newman, el ejecutor de línea de comandos de Postman.
+# Fecha: 2026-10-24 17:28 (hora de Costa Rica). Salida real, sin editar.
+# API iniciado con --OrigenDatos=BaseDatos; comando: newman run Postman/Parqueo-API.postman_collection.json -e Postman/Parqueo-Local.postman_environment.json
+
+newman
+
+Parqueo API — Trabajo en Clase 03
+
+❏ 1. Automóviles
+↳ GET listado de automóviles (página 1, 10 por página)
+  GET http://localhost:5246/api/automoviles [200 OK, 618B, 98ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 200
+  ✓  Resultado esperado: [1, 2, 3, 4, 5, 6]
+  ✓  Los listados no anidan ingresos
+
+↳ GET listado paginado (página 2, tamaño 4)
+  GET http://localhost:5246/api/automoviles?pagina=2&tamanoPagina=4 [200 OK, 323B, 34ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 200
+  ✓  Resultado esperado: [5, 6]
+
+↳ GET automóvil por id con navegación (id 1)
+  GET http://localhost:5246/api/automoviles/1 [200 OK, 1.13kB, 157ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 200
+  ✓  Datos del automóvil
+  ✓  Navegación: 3 ingresos con su parqueo
+  ✓  Campos calculados del ingreso 1
+  ✓  Sin referencia circular (el ingreso no repite el automóvil)
+
+↳ GET filtro por color aproximado (ro)
+  GET http://localhost:5246/api/automoviles?color=ro [200 OK, 325B, 13ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 200
+  ✓  Resultado esperado: [1, 3]
+
+↳ GET filtro por intervalo de años (2015-2019, extremos incluidos)
+  GET http://localhost:5246/api/automoviles?anioDesde=2015&anioHasta=2019 [200 OK, 400B, 12ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 200
+  ✓  Resultado esperado: [1, 3, 5]
+
+↳ GET filtro por fabricante aproximado (da)
+  GET http://localhost:5246/api/automoviles?fabricante=da [200 OK, 322B, 9ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 200
+  ✓  Resultado esperado: [2, 6]
+
+↳ GET filtro por tipo sin tilde (sedan)
+  GET http://localhost:5246/api/automoviles?tipo=sedan [200 OK, 325B, 9ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 200
+  ✓  Resultado esperado: [1, 3]
+
+↳ GET filtros combinados (tipo 4x4 y año desde 2019)
+  GET http://localhost:5246/api/automoviles?tipo=4x4&anioDesde=2019 [200 OK, 250B, 18ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 200
+  ✓  Resultado esperado: [2]
+
+↳ POST crear automóvil
+  POST http://localhost:5246/api/automoviles [201 Created, 318B, 206ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 201
+  ✓  Devuelve el id asignado y la ubicación
+
+↳ GET automóvil creado
+  GET http://localhost:5246/api/automoviles/41 [200 OK, 261B, 7ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 200
+  ✓  Sin ingresos todavía
+
+↳ PUT actualizar automóvil creado
+  PUT http://localhost:5246/api/automoviles/41 [200 OK, 265B, 35ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 200
+  ✓  Datos actualizados
+
+↳ DELETE borrar automóvil creado
+  DELETE http://localhost:5246/api/automoviles/41 [204 No Content, 108B, 46ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 204
+
+↳ GET automóvil borrado devuelve 404
+  GET http://localhost:5246/api/automoviles/41 [404 Not Found, 403B, 19ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 404
+  ✓  Respuesta ProblemDetails
+
+❏ 2. Parqueos
+↳ GET listado de parqueos
+  GET http://localhost:5246/api/parqueos [200 OK, 470B, 32ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 200
+  ✓  Resultado esperado: [1, 2, 3]
+  ✓  Precio decimal exacto
+
+↳ GET parqueo por id con navegación (id 3)
+  GET http://localhost:5246/api/parqueos/3 [200 OK, 1.35kB, 45ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 200
+  ✓  Datos del parqueo
+  ✓  Navegación: 4 ingresos con su automóvil
+  ✓  Monto del ingreso 4 (165 min a 675.50/h)
+  ✓  Sin referencia circular (el ingreso no repite el parqueo)
+
+↳ GET filtro por provincia sin tilde (san jose)
+  GET http://localhost:5246/api/parqueos?provincia=san jose [200 OK, 282B, 14ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 200
+  ✓  Resultado esperado: [1]
+
+↳ GET filtro por nombre aproximado (mercado)
+  GET http://localhost:5246/api/parqueos?nombre=mercado [200 OK, 274B, 9ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 200
+  ✓  Resultado esperado: [2]
+
+↳ GET filtro por rango de precio (700 a 1250, extremos incluidos)
+  GET http://localhost:5246/api/parqueos?precioMinimo=700&precioMaximo=1250 [200 OK, 380B, 11ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 200
+  ✓  Resultado esperado: [1, 2]
+
+↳ GET filtro por precio máximo exacto (675.50)
+  GET http://localhost:5246/api/parqueos?precioMaximo=675.50 [200 OK, 266B, 8ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 200
+  ✓  Resultado esperado: [3]
+
+↳ GET filtros combinados (nombre parqueo y precio hasta 1000)
+  GET http://localhost:5246/api/parqueos?nombre=parqueo&precioMaximo=1000 [200 OK, 364B, 9ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 200
+  ✓  Resultado esperado: [2, 3]
+
+↳ POST crear parqueo
+  POST http://localhost:5246/api/parqueos [201 Created, 332B, 43ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 201
+  ✓  Devuelve el id asignado y el precio
+
+↳ GET parqueo creado
+  GET http://localhost:5246/api/parqueos/24 [200 OK, 278B, 4ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 200
+  ✓  Sin ingresos todavía
+
+↳ PUT actualizar parqueo creado
+  PUT http://localhost:5246/api/parqueos/24 [200 OK, 285B, 23ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 200
+  ✓  Datos actualizados
+
+↳ GET filtro por provincia encuentra el parqueo actualizado (limon)
+  GET http://localhost:5246/api/parqueos?provincia=limon [200 OK, 273B, 5ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 200
+  ✓  Solo el parqueo creado
+
+↳ DELETE borrar parqueo creado
+  DELETE http://localhost:5246/api/parqueos/24 [204 No Content, 108B, 18ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 204
+
+↳ GET parqueo borrado devuelve 404
+  GET http://localhost:5246/api/parqueos/24 [404 Not Found, 400B, 5ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 404
+  ✓  Respuesta ProblemDetails
+
+❏ 5. Pruebas negativas y de borde
+↳ Automóvil inexistente (GET 999)
+  GET http://localhost:5246/api/automoviles/999 [404 Not Found, 404B, 4ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 404
+  ✓  Respuesta ProblemDetails
+
+↳ Automóvil con tipo inválido (POST)
+  POST http://localhost:5246/api/automoviles [400 Bad Request, 494B, 10ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 400
+  ✓  Respuesta ProblemDetails
+  ✓  Indica los tipos permitidos
+
+↳ Automóvil sin campos obligatorios (POST)
+  POST http://localhost:5246/api/automoviles [400 Bad Request, 376B, 6ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 400
+  ✓  Lista los campos faltantes
+
+↳ Automóvil con año fuera de rango (POST 1800)
+  POST http://localhost:5246/api/automoviles [400 Bad Request, 478B, 3ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 400
+  ✓  Respuesta ProblemDetails
+
+↳ Actualizar automóvil inexistente (PUT 999)
+  PUT http://localhost:5246/api/automoviles/999 [404 Not Found, 404B, 4ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 404
+  ✓  Respuesta ProblemDetails
+
+↳ Borrar automóvil inexistente (DELETE 999)
+  DELETE http://localhost:5246/api/automoviles/999 [404 Not Found, 404B, 5ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 404
+  ✓  Respuesta ProblemDetails
+
+↳ Borrar automóvil con ingresos (DELETE 1) devuelve 409
+  DELETE http://localhost:5246/api/automoviles/1 [409 Conflict, 523B, 6ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 409
+  ✓  Respuesta ProblemDetails
+
+↳ Intervalo de años invertido (2020-2010)
+  GET http://localhost:5246/api/automoviles?anioDesde=2020&anioHasta=2010 [400 Bad Request, 511B, 3ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 400
+  ✓  Respuesta ProblemDetails
+
+↳ Tamaño de página inválido (0)
+  GET http://localhost:5246/api/automoviles?tamanoPagina=0 [400 Bad Request, 518B, 3ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 400
+  ✓  Respuesta ProblemDetails
+
+↳ Parqueo inexistente (GET 999)
+  GET http://localhost:5246/api/parqueos/999 [404 Not Found, 401B, 4ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 404
+  ✓  Respuesta ProblemDetails
+
+↳ Parqueo con provincia inválida (POST)
+  POST http://localhost:5246/api/parqueos [400 Bad Request, 551B, 2ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 400
+  ✓  Respuesta ProblemDetails
+
+↳ Parqueo con precio cero (POST)
+  POST http://localhost:5246/api/parqueos [400 Bad Request, 493B, 3ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 400
+  ✓  Respuesta ProblemDetails
+
+↳ Parqueo con precio negativo (POST)
+  POST http://localhost:5246/api/parqueos [400 Bad Request, 493B, 3ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 400
+  ✓  Respuesta ProblemDetails
+
+↳ Parqueo con más de 2 decimales en el precio (POST)
+  POST http://localhost:5246/api/parqueos [400 Bad Request, 474B, 3ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 400
+  ✓  Respuesta ProblemDetails
+
+↳ Borrar parqueo con ingresos (DELETE 1) devuelve 409
+  DELETE http://localhost:5246/api/parqueos/1 [409 Conflict, 521B, 6ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 409
+  ✓  Respuesta ProblemDetails
+
+↳ Rango de precios invertido (1000 a 500)
+  GET http://localhost:5246/api/parqueos?precioMinimo=1000&precioMaximo=500 [400 Bad Request, 505B, 2ms]
+  ✓  Origen de datos: BaseDatos
+  ✓  Código 400
+  ✓  Respuesta ProblemDetails
+
+┌─────────────────────────┬───────────────────┬──────────────────┐
+│                         │          executed │           failed │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│              iterations │                 1 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│                requests │                42 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│            test-scripts │                42 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│      prerequest-scripts │                 0 │                0 │
+├─────────────────────────┼───────────────────┼──────────────────┤
+│              assertions │               133 │                0 │
+├─────────────────────────┴───────────────────┴──────────────────┤
+│ total run duration: 1569ms                                     │
+├────────────────────────────────────────────────────────────────┤
+│ total data received: 9.55kB (approx)                           │
+├────────────────────────────────────────────────────────────────┤
+│ average response time: 22ms [min: 2ms, max: 206ms, s.d.: 40ms] │
+└────────────────────────────────────────────────────────────────┘

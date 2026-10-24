@@ -1,0 +1,816 @@
+[
+  {
+    "solicitud": "GET listado de automóviles (página 1, 10 por página)",
+    "metodo": "GET",
+    "ruta": "/api/automoviles",
+    "estado": 200,
+    "origen": "Json",
+    "cuerpo": [
+      {
+        "id": 1,
+        "color": "Rojo",
+        "anio": 2019,
+        "fabricante": "Toyota",
+        "tipo": "sedán"
+      },
+      {
+        "id": 2,
+        "color": "Blanco",
+        "anio": 2021,
+        "fabricante": "Hyundai",
+        "tipo": "4x4"
+      },
+      {
+        "id": 3,
+        "color": "Negro",
+        "anio": 2015,
+        "fabricante": "Nissan",
+        "tipo": "sedán"
+      },
+      {
+        "id": 4,
+        "color": "Azul",
+        "anio": 2023,
+        "fabricante": "Yamaha",
+        "tipo": "moto"
+      },
+      {
+        "id": 5,
+        "color": "Gris",
+        "anio": 2018,
+        "fabricante": "Mitsubishi",
+        "tipo": "4x4"
+      },
+      {
+        "id": 6,
+        "color": "Verde",
+        "anio": 2012,
+        "fabricante": "Honda",
+        "tipo": "moto"
+      }
+    ]
+  },
+  {
+    "solicitud": "GET listado paginado (página 2, tamaño 4)",
+    "metodo": "GET",
+    "ruta": "/api/automoviles?pagina=2&tamanoPagina=4",
+    "estado": 200,
+    "origen": "Json",
+    "cuerpo": [
+      {
+        "id": 5,
+        "color": "Gris",
+        "anio": 2018,
+        "fabricante": "Mitsubishi",
+        "tipo": "4x4"
+      },
+      {
+        "id": 6,
+        "color": "Verde",
+        "anio": 2012,
+        "fabricante": "Honda",
+        "tipo": "moto"
+      }
+    ]
+  },
+  {
+    "solicitud": "GET automóvil por id con navegación (id 1)",
+    "metodo": "GET",
+    "ruta": "/api/automoviles/1",
+    "estado": 200,
+    "origen": "Json",
+    "cuerpo": {
+      "id": 1,
+      "color": "Rojo",
+      "anio": 2019,
+      "fabricante": "Toyota",
+      "tipo": "sedán",
+      "ingresos": [
+        {
+          "consecutivo": 1,
+          "fechaHoraEntrada": "2026-10-01T07:45:00",
+          "fechaHoraSalida": "2026-10-01T10:15:00",
+          "duracionEstadiaMinutos": 150,
+          "duracionEstadiaHoras": 2.5,
+          "montoTotalAPagar": 3125.0,
+          "parqueo": {
+            "id": 1,
+            "nombreProvincia": "San José",
+            "nombre": "Parqueo Central Avenida Segunda",
+            "precioPorHora": 1250.0
+          }
+        },
+        {
+          "consecutivo": 8,
+          "fechaHoraEntrada": "2026-10-07T15:30:00",
+          "fechaHoraSalida": "2026-10-07T17:00:00",
+          "duracionEstadiaMinutos": 90,
+          "duracionEstadiaHoras": 1.5,
+          "montoTotalAPagar": 1200.0,
+          "parqueo": {
+            "id": 2,
+            "nombreProvincia": "Heredia",
+            "nombre": "Parqueo Mercado de Heredia",
+            "precioPorHora": 800.0
+          }
+        },
+        {
+          "consecutivo": 13,
+          "fechaHoraEntrada": "2026-10-14T11:00:00",
+          "fechaHoraSalida": "2026-10-14T14:00:00",
+          "duracionEstadiaMinutos": 180,
+          "duracionEstadiaHoras": 3,
+          "montoTotalAPagar": 2026.5,
+          "parqueo": {
+            "id": 3,
+            "nombreProvincia": "Cartago",
+            "nombre": "Parqueo Las Ruinas",
+            "precioPorHora": 675.5
+          }
+        }
+      ]
+    }
+  },
+  {
+    "solicitud": "GET filtro por color aproximado (ro)",
+    "metodo": "GET",
+    "ruta": "/api/automoviles?color=ro",
+    "estado": 200,
+    "origen": "Json",
+    "cuerpo": [
+      {
+        "id": 1,
+        "color": "Rojo",
+        "anio": 2019,
+        "fabricante": "Toyota",
+        "tipo": "sedán"
+      },
+      {
+        "id": 3,
+        "color": "Negro",
+        "anio": 2015,
+        "fabricante": "Nissan",
+        "tipo": "sedán"
+      }
+    ]
+  },
+  {
+    "solicitud": "GET filtro por intervalo de años (2015-2019, extremos incluidos)",
+    "metodo": "GET",
+    "ruta": "/api/automoviles?anioDesde=2015&anioHasta=2019",
+    "estado": 200,
+    "origen": "Json",
+    "cuerpo": [
+      {
+        "id": 1,
+        "color": "Rojo",
+        "anio": 2019,
+        "fabricante": "Toyota",
+        "tipo": "sedán"
+      },
+      {
+        "id": 3,
+        "color": "Negro",
+        "anio": 2015,
+        "fabricante": "Nissan",
+        "tipo": "sedán"
+      },
+      {
+        "id": 5,
+        "color": "Gris",
+        "anio": 2018,
+        "fabricante": "Mitsubishi",
+        "tipo": "4x4"
+      }
+    ]
+  },
+  {
+    "solicitud": "GET filtro por fabricante aproximado (da)",
+    "metodo": "GET",
+    "ruta": "/api/automoviles?fabricante=da",
+    "estado": 200,
+    "origen": "Json",
+    "cuerpo": [
+      {
+        "id": 2,
+        "color": "Blanco",
+        "anio": 2021,
+        "fabricante": "Hyundai",
+        "tipo": "4x4"
+      },
+      {
+        "id": 6,
+        "color": "Verde",
+        "anio": 2012,
+        "fabricante": "Honda",
+        "tipo": "moto"
+      }
+    ]
+  },
+  {
+    "solicitud": "GET filtro por tipo sin tilde (sedan)",
+    "metodo": "GET",
+    "ruta": "/api/automoviles?tipo=sedan",
+    "estado": 200,
+    "origen": "Json",
+    "cuerpo": [
+      {
+        "id": 1,
+        "color": "Rojo",
+        "anio": 2019,
+        "fabricante": "Toyota",
+        "tipo": "sedán"
+      },
+      {
+        "id": 3,
+        "color": "Negro",
+        "anio": 2015,
+        "fabricante": "Nissan",
+        "tipo": "sedán"
+      }
+    ]
+  },
+  {
+    "solicitud": "GET filtros combinados (tipo 4x4 y año desde 2019)",
+    "metodo": "GET",
+    "ruta": "/api/automoviles?tipo=4x4&anioDesde=2019",
+    "estado": 200,
+    "origen": "Json",
+    "cuerpo": [
+      {
+        "id": 2,
+        "color": "Blanco",
+        "anio": 2021,
+        "fabricante": "Hyundai",
+        "tipo": "4x4"
+      }
+    ]
+  },
+  {
+    "solicitud": "POST crear automóvil",
+    "metodo": "POST",
+    "ruta": "/api/automoviles",
+    "estado": 201,
+    "origen": "Json",
+    "cuerpo": {
+      "id": 7,
+      "color": "Café",
+      "anio": 2022,
+      "fabricante": "Kia",
+      "tipo": "sedán",
+      "ingresos": []
+    }
+  },
+  {
+    "solicitud": "GET automóvil creado",
+    "metodo": "GET",
+    "ruta": "/api/automoviles/7",
+    "estado": 200,
+    "origen": "Json",
+    "cuerpo": {
+      "id": 7,
+      "color": "Café",
+      "anio": 2022,
+      "fabricante": "Kia",
+      "tipo": "sedán",
+      "ingresos": []
+    }
+  },
+  {
+    "solicitud": "PUT actualizar automóvil creado",
+    "metodo": "PUT",
+    "ruta": "/api/automoviles/7",
+    "estado": 200,
+    "origen": "Json",
+    "cuerpo": {
+      "id": 7,
+      "color": "Café oscuro",
+      "anio": 2023,
+      "fabricante": "Kia",
+      "tipo": "4x4",
+      "ingresos": []
+    }
+  },
+  {
+    "solicitud": "DELETE borrar automóvil creado",
+    "metodo": "DELETE",
+    "ruta": "/api/automoviles/7",
+    "estado": 204,
+    "origen": "Json",
+    "cuerpo": ""
+  },
+  {
+    "solicitud": "GET automóvil borrado devuelve 404",
+    "metodo": "GET",
+    "ruta": "/api/automoviles/7",
+    "estado": 404,
+    "origen": "Json",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+      "title": "Registro no encontrado",
+      "status": 404,
+      "detail": "No existe el automóvil con id 7.",
+      "traceId": "00-4e7ca1762c2f8a2bdf0aef1264e9943e-2fc553c1860a38ca-00"
+    }
+  },
+  {
+    "solicitud": "GET listado de parqueos",
+    "metodo": "GET",
+    "ruta": "/api/parqueos",
+    "estado": 200,
+    "origen": "Json",
+    "cuerpo": [
+      {
+        "id": 1,
+        "nombreProvincia": "San José",
+        "nombre": "Parqueo Central Avenida Segunda",
+        "precioPorHora": 1250.0
+      },
+      {
+        "id": 2,
+        "nombreProvincia": "Heredia",
+        "nombre": "Parqueo Mercado de Heredia",
+        "precioPorHora": 800.0
+      },
+      {
+        "id": 3,
+        "nombreProvincia": "Cartago",
+        "nombre": "Parqueo Las Ruinas",
+        "precioPorHora": 675.5
+      }
+    ]
+  },
+  {
+    "solicitud": "GET parqueo por id con navegación (id 3)",
+    "metodo": "GET",
+    "ruta": "/api/parqueos/3",
+    "estado": 200,
+    "origen": "Json",
+    "cuerpo": {
+      "id": 3,
+      "nombreProvincia": "Cartago",
+      "nombre": "Parqueo Las Ruinas",
+      "precioPorHora": 675.5,
+      "ingresos": [
+        {
+          "consecutivo": 4,
+          "fechaHoraEntrada": "2026-10-03T13:20:00",
+          "fechaHoraSalida": "2026-10-03T16:05:00",
+          "duracionEstadiaMinutos": 165,
+          "duracionEstadiaHoras": 2.75,
+          "montoTotalAPagar": 1857.63,
+          "automovil": {
+            "id": 5,
+            "color": "Gris",
+            "anio": 2018,
+            "fabricante": "Mitsubishi",
+            "tipo": "4x4"
+          }
+        },
+        {
+          "consecutivo": 7,
+          "fechaHoraEntrada": "2026-10-06T07:00:00",
+          "fechaHoraSalida": "2026-10-06T07:50:00",
+          "duracionEstadiaMinutos": 50,
+          "duracionEstadiaHoras": 0.8333,
+          "montoTotalAPagar": 562.92,
+          "automovil": {
+            "id": 6,
+            "color": "Verde",
+            "anio": 2012,
+            "fabricante": "Honda",
+            "tipo": "moto"
+          }
+        },
+        {
+          "consecutivo": 10,
+          "fechaHoraEntrada": "2026-10-09T18:15:00",
+          "fechaHoraSalida": "2026-10-09T19:00:00",
+          "duracionEstadiaMinutos": 45,
+          "duracionEstadiaHoras": 0.75,
+          "montoTotalAPagar": 506.63,
+          "automovil": {
+            "id": 4,
+            "color": "Azul",
+            "anio": 2023,
+            "fabricante": "Yamaha",
+            "tipo": "moto"
+          }
+        },
+        {
+          "consecutivo": 13,
+          "fechaHoraEntrada": "2026-10-14T11:00:00",
+          "fechaHoraSalida": "2026-10-14T14:00:00",
+          "duracionEstadiaMinutos": 180,
+          "duracionEstadiaHoras": 3,
+          "montoTotalAPagar": 2026.5,
+          "automovil": {
+            "id": 1,
+            "color": "Rojo",
+            "anio": 2019,
+            "fabricante": "Toyota",
+            "tipo": "sedán"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "solicitud": "GET filtro por provincia sin tilde (san jose)",
+    "metodo": "GET",
+    "ruta": "/api/parqueos?provincia=san%20jose",
+    "estado": 200,
+    "origen": "Json",
+    "cuerpo": [
+      {
+        "id": 1,
+        "nombreProvincia": "San José",
+        "nombre": "Parqueo Central Avenida Segunda",
+        "precioPorHora": 1250.0
+      }
+    ]
+  },
+  {
+    "solicitud": "GET filtro por nombre aproximado (mercado)",
+    "metodo": "GET",
+    "ruta": "/api/parqueos?nombre=mercado",
+    "estado": 200,
+    "origen": "Json",
+    "cuerpo": [
+      {
+        "id": 2,
+        "nombreProvincia": "Heredia",
+        "nombre": "Parqueo Mercado de Heredia",
+        "precioPorHora": 800.0
+      }
+    ]
+  },
+  {
+    "solicitud": "GET filtro por rango de precio (700 a 1250, extremos incluidos)",
+    "metodo": "GET",
+    "ruta": "/api/parqueos?precioMinimo=700&precioMaximo=1250",
+    "estado": 200,
+    "origen": "Json",
+    "cuerpo": [
+      {
+        "id": 1,
+        "nombreProvincia": "San José",
+        "nombre": "Parqueo Central Avenida Segunda",
+        "precioPorHora": 1250.0
+      },
+      {
+        "id": 2,
+        "nombreProvincia": "Heredia",
+        "nombre": "Parqueo Mercado de Heredia",
+        "precioPorHora": 800.0
+      }
+    ]
+  },
+  {
+    "solicitud": "GET filtro por precio máximo exacto (675.50)",
+    "metodo": "GET",
+    "ruta": "/api/parqueos?precioMaximo=675.50",
+    "estado": 200,
+    "origen": "Json",
+    "cuerpo": [
+      {
+        "id": 3,
+        "nombreProvincia": "Cartago",
+        "nombre": "Parqueo Las Ruinas",
+        "precioPorHora": 675.5
+      }
+    ]
+  },
+  {
+    "solicitud": "GET filtros combinados (nombre parqueo y precio hasta 1000)",
+    "metodo": "GET",
+    "ruta": "/api/parqueos?nombre=parqueo&precioMaximo=1000",
+    "estado": 200,
+    "origen": "Json",
+    "cuerpo": [
+      {
+        "id": 2,
+        "nombreProvincia": "Heredia",
+        "nombre": "Parqueo Mercado de Heredia",
+        "precioPorHora": 800.0
+      },
+      {
+        "id": 3,
+        "nombreProvincia": "Cartago",
+        "nombre": "Parqueo Las Ruinas",
+        "precioPorHora": 675.5
+      }
+    ]
+  },
+  {
+    "solicitud": "POST crear parqueo",
+    "metodo": "POST",
+    "ruta": "/api/parqueos",
+    "estado": 201,
+    "origen": "Json",
+    "cuerpo": {
+      "id": 4,
+      "nombreProvincia": "Limón",
+      "nombre": "Parqueo del Puerto",
+      "precioPorHora": 950.25,
+      "ingresos": []
+    }
+  },
+  {
+    "solicitud": "GET parqueo creado",
+    "metodo": "GET",
+    "ruta": "/api/parqueos/4",
+    "estado": 200,
+    "origen": "Json",
+    "cuerpo": {
+      "id": 4,
+      "nombreProvincia": "Limón",
+      "nombre": "Parqueo del Puerto",
+      "precioPorHora": 950.25,
+      "ingresos": []
+    }
+  },
+  {
+    "solicitud": "PUT actualizar parqueo creado",
+    "metodo": "PUT",
+    "ruta": "/api/parqueos/4",
+    "estado": 200,
+    "origen": "Json",
+    "cuerpo": {
+      "id": 4,
+      "nombreProvincia": "Limón",
+      "nombre": "Parqueo del Puerto Moín",
+      "precioPorHora": 1000.0,
+      "ingresos": []
+    }
+  },
+  {
+    "solicitud": "GET filtro por provincia encuentra el parqueo actualizado (limon)",
+    "metodo": "GET",
+    "ruta": "/api/parqueos?provincia=limon",
+    "estado": 200,
+    "origen": "Json",
+    "cuerpo": [
+      {
+        "id": 4,
+        "nombreProvincia": "Limón",
+        "nombre": "Parqueo del Puerto Moín",
+        "precioPorHora": 1000.0
+      }
+    ]
+  },
+  {
+    "solicitud": "DELETE borrar parqueo creado",
+    "metodo": "DELETE",
+    "ruta": "/api/parqueos/4",
+    "estado": 204,
+    "origen": "Json",
+    "cuerpo": ""
+  },
+  {
+    "solicitud": "GET parqueo borrado devuelve 404",
+    "metodo": "GET",
+    "ruta": "/api/parqueos/4",
+    "estado": 404,
+    "origen": "Json",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+      "title": "Registro no encontrado",
+      "status": 404,
+      "detail": "No existe el parqueo con id 4.",
+      "traceId": "00-d0a85d0cc84392f877d0e0798b70596d-d879b44855bffb2d-00"
+    }
+  },
+  {
+    "solicitud": "Automóvil inexistente (GET 999)",
+    "metodo": "GET",
+    "ruta": "/api/automoviles/999",
+    "estado": 404,
+    "origen": "Json",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+      "title": "Registro no encontrado",
+      "status": 404,
+      "detail": "No existe el automóvil con id 999.",
+      "traceId": "00-59ef69f62734d48111f4af3e77b3149d-2f624156b2db3d01-00"
+    }
+  },
+  {
+    "solicitud": "Automóvil con tipo inválido (POST)",
+    "metodo": "POST",
+    "ruta": "/api/automoviles",
+    "estado": 400,
+    "origen": "Json",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+      "title": "Datos inválidos",
+      "status": 400,
+      "detail": "El tipo 'camión' no es válido. Valores permitidos: sedán, 4x4, moto.",
+      "traceId": "00-6ca54a97c66562754e1cc7c81e42f177-9c1b774840265960-00"
+    }
+  },
+  {
+    "solicitud": "Automóvil sin campos obligatorios (POST)",
+    "metodo": "POST",
+    "ruta": "/api/automoviles",
+    "estado": 400,
+    "origen": "Json",
+    "cuerpo": {
+      "title": "Datos inválidos",
+      "status": 400,
+      "errors": {
+        "Tipo": [
+          "El tipo es obligatorio (sedán, 4x4 o moto)."
+        ],
+        "Color": [
+          "El color es obligatorio."
+        ],
+        "Fabricante": [
+          "El fabricante es obligatorio."
+        ]
+      }
+    }
+  },
+  {
+    "solicitud": "Automóvil con año fuera de rango (POST 1800)",
+    "metodo": "POST",
+    "ruta": "/api/automoviles",
+    "estado": 400,
+    "origen": "Json",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+      "title": "Datos inválidos",
+      "status": 400,
+      "detail": "El año debe estar entre 1886 y 2100; se recibió 1800.",
+      "traceId": "00-9af5d3f5e2dc753d0c65f45ae6e98a62-65bba36a72f285a2-00"
+    }
+  },
+  {
+    "solicitud": "Actualizar automóvil inexistente (PUT 999)",
+    "metodo": "PUT",
+    "ruta": "/api/automoviles/999",
+    "estado": 404,
+    "origen": "Json",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+      "title": "Registro no encontrado",
+      "status": 404,
+      "detail": "No existe el automóvil con id 999.",
+      "traceId": "00-7418fa4583e63e2345326a1a9b51d386-7d7533cbaa5ff33f-00"
+    }
+  },
+  {
+    "solicitud": "Borrar automóvil inexistente (DELETE 999)",
+    "metodo": "DELETE",
+    "ruta": "/api/automoviles/999",
+    "estado": 404,
+    "origen": "Json",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+      "title": "Registro no encontrado",
+      "status": 404,
+      "detail": "No existe el automóvil con id 999.",
+      "traceId": "00-4a9ffa0ac3c9c3c7decce5b290f75ddc-7b3579be21526074-00"
+    }
+  },
+  {
+    "solicitud": "Borrar automóvil con ingresos (DELETE 1) devuelve 409",
+    "metodo": "DELETE",
+    "ruta": "/api/automoviles/1",
+    "estado": 409,
+    "origen": "Json",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.10",
+      "title": "Conflicto con los datos existentes",
+      "status": 409,
+      "detail": "No se puede borrar el registro 1 de prq_automovil porque tiene ingresos registrados.",
+      "traceId": "00-9b132c3331cb39580ae3d6071430d5de-b3c81c89208a56d2-00"
+    }
+  },
+  {
+    "solicitud": "Intervalo de años invertido (2020-2010)",
+    "metodo": "GET",
+    "ruta": "/api/automoviles?anioDesde=2020&anioHasta=2010",
+    "estado": 400,
+    "origen": "Json",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+      "title": "Datos inválidos",
+      "status": 400,
+      "detail": "El intervalo de años es inválido: el año inicial (2020) es mayor que el final (2010).",
+      "traceId": "00-c17fb8201443f27890348d330059ed31-047b7b68d378d15d-00"
+    }
+  },
+  {
+    "solicitud": "Tamaño de página inválido (0)",
+    "metodo": "GET",
+    "ruta": "/api/automoviles?tamanoPagina=0",
+    "estado": 400,
+    "origen": "Json",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+      "title": "Datos inválidos",
+      "status": 400,
+      "detail": "El tamaño de página debe estar entre 1 y 100. (Parameter 'tamanoPagina')\nActual value was 0.",
+      "traceId": "00-65b6c7792c746926c75f215756a53012-1600223a2c2861af-00"
+    }
+  },
+  {
+    "solicitud": "Parqueo inexistente (GET 999)",
+    "metodo": "GET",
+    "ruta": "/api/parqueos/999",
+    "estado": 404,
+    "origen": "Json",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.5",
+      "title": "Registro no encontrado",
+      "status": 404,
+      "detail": "No existe el parqueo con id 999.",
+      "traceId": "00-dae25db7c5923c443a3176a2187adb2c-34ea1f3116adc2ce-00"
+    }
+  },
+  {
+    "solicitud": "Parqueo con provincia inválida (POST)",
+    "metodo": "POST",
+    "ruta": "/api/parqueos",
+    "estado": 400,
+    "origen": "Json",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+      "title": "Datos inválidos",
+      "status": 400,
+      "detail": "La provincia 'Panamá' no es válida. Valores permitidos: San José, Alajuela, Cartago, Heredia, Guanacaste, Puntarenas, Limón.",
+      "traceId": "00-7b52813bbf3a48a41b1efa3c9b7fa406-fa2874ddb0b16e88-00"
+    }
+  },
+  {
+    "solicitud": "Parqueo con precio cero (POST)",
+    "metodo": "POST",
+    "ruta": "/api/parqueos",
+    "estado": 400,
+    "origen": "Json",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+      "title": "Datos inválidos",
+      "status": 400,
+      "detail": "El precio por hora debe ser mayor que 0 y menor o igual a 99999999.99.",
+      "traceId": "00-5db71c1178714e320c8358b0653e19c1-147ddfd3b70e5bfe-00"
+    }
+  },
+  {
+    "solicitud": "Parqueo con precio negativo (POST)",
+    "metodo": "POST",
+    "ruta": "/api/parqueos",
+    "estado": 400,
+    "origen": "Json",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+      "title": "Datos inválidos",
+      "status": 400,
+      "detail": "El precio por hora debe ser mayor que 0 y menor o igual a 99999999.99.",
+      "traceId": "00-0433a929d603daf63f0b63792b80572f-eb908463e9f15350-00"
+    }
+  },
+  {
+    "solicitud": "Parqueo con más de 2 decimales en el precio (POST)",
+    "metodo": "POST",
+    "ruta": "/api/parqueos",
+    "estado": 400,
+    "origen": "Json",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+      "title": "Datos inválidos",
+      "status": 400,
+      "detail": "El precio por hora admite como máximo 2 decimales.",
+      "traceId": "00-2109a9090b18d81234e1241339a9fdba-229a0f50b4f36a4a-00"
+    }
+  },
+  {
+    "solicitud": "Borrar parqueo con ingresos (DELETE 1) devuelve 409",
+    "metodo": "DELETE",
+    "ruta": "/api/parqueos/1",
+    "estado": 409,
+    "origen": "Json",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.10",
+      "title": "Conflicto con los datos existentes",
+      "status": 409,
+      "detail": "No se puede borrar el registro 1 de prq_parqueo porque tiene ingresos registrados.",
+      "traceId": "00-67e4e4b4a9f7fb4cf707fc12af6aec36-aa27c04de97b2bd2-00"
+    }
+  },
+  {
+    "solicitud": "Rango de precios invertido (1000 a 500)",
+    "metodo": "GET",
+    "ruta": "/api/parqueos?precioMinimo=1000&precioMaximo=500",
+    "estado": 400,
+    "origen": "Json",
+    "cuerpo": {
+      "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+      "title": "Datos inválidos",
+      "status": 400,
+      "detail": "El rango de precios es inválido: el mínimo (1000) es mayor que el máximo (500).",
+      "traceId": "00-1ecbf3306c1133bdee3e03fa8db80ef0-0da7fa00585608df-00"
+    }
+  }
+]

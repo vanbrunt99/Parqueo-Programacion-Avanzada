@@ -489,6 +489,484 @@
       ]
     },
     {
+      "name": "2. Parqueos",
+      "item": [
+        {
+          "name": "GET listado de parqueos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Resultado esperado: [1, 2, 3]', () => pm.expect(pm.response.json().map(x => x.id)).to.eql([1, 2, 3]));",
+                  "pm.test('Precio decimal exacto', () => pm.expect(pm.response.json()[2].precioPorHora).to.eql(675.5));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/parqueos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parqueos"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET parqueo por id con navegación (id 3)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 200', () => pm.response.to.have.status(200));",
+                  "const p = pm.response.json();",
+                  "pm.test('Datos del parqueo', () => { pm.expect(p.nombreProvincia).to.eql('Cartago'); pm.expect(p.precioPorHora).to.eql(675.5); });",
+                  "pm.test('Navegación: 4 ingresos con su automóvil', () => { pm.expect(p.ingresos.map(i => i.consecutivo)).to.eql([4, 7, 10, 13]); p.ingresos.forEach(i => pm.expect(i.automovil.fabricante).to.be.a('string')); });",
+                  "pm.test('Monto del ingreso 4 (165 min a 675.50/h)', () => pm.expect(p.ingresos[0].montoTotalAPagar).to.eql(1857.63));",
+                  "pm.test('Sin referencia circular (el ingreso no repite el parqueo)', () => pm.expect(p.ingresos[0]).to.not.have.property('parqueo'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/parqueos/3",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parqueos",
+                "3"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET filtro por provincia sin tilde (san jose)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Resultado esperado: [1]', () => pm.expect(pm.response.json().map(x => x.id)).to.eql([1]));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/parqueos?provincia=san jose",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parqueos"
+              ],
+              "query": [
+                {
+                  "key": "provincia",
+                  "value": "san jose"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET filtro por nombre aproximado (mercado)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Resultado esperado: [2]', () => pm.expect(pm.response.json().map(x => x.id)).to.eql([2]));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/parqueos?nombre=mercado",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parqueos"
+              ],
+              "query": [
+                {
+                  "key": "nombre",
+                  "value": "mercado"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET filtro por rango de precio (700 a 1250, extremos incluidos)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Resultado esperado: [1, 2]', () => pm.expect(pm.response.json().map(x => x.id)).to.eql([1, 2]));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/parqueos?precioMinimo=700&precioMaximo=1250",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parqueos"
+              ],
+              "query": [
+                {
+                  "key": "precioMinimo",
+                  "value": "700"
+                },
+                {
+                  "key": "precioMaximo",
+                  "value": "1250"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET filtro por precio máximo exacto (675.50)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Resultado esperado: [3]', () => pm.expect(pm.response.json().map(x => x.id)).to.eql([3]));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/parqueos?precioMaximo=675.50",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parqueos"
+              ],
+              "query": [
+                {
+                  "key": "precioMaximo",
+                  "value": "675.50"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET filtros combinados (nombre parqueo y precio hasta 1000)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Resultado esperado: [2, 3]', () => pm.expect(pm.response.json().map(x => x.id)).to.eql([2, 3]));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/parqueos?nombre=parqueo&precioMaximo=1000",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parqueos"
+              ],
+              "query": [
+                {
+                  "key": "nombre",
+                  "value": "parqueo"
+                },
+                {
+                  "key": "precioMaximo",
+                  "value": "1000"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST crear parqueo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 201', () => pm.response.to.have.status(201));",
+                  "const p = pm.response.json();",
+                  "pm.test('Devuelve el id asignado y el precio', () => { pm.expect(p.id).to.be.above(3); pm.expect(p.precioPorHora).to.eql(950.25); });",
+                  "pm.collectionVariables.set('idParqueo', p.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/parqueos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parqueos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombreProvincia\": \"Limón\",\n  \"nombre\": \"Parqueo del Puerto\",\n  \"precioPorHora\": 950.25\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "GET parqueo creado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Sin ingresos todavía', () => pm.expect(pm.response.json().ingresos).to.eql([]));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/parqueos/{{idParqueo}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parqueos",
+                "{{idParqueo}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "PUT actualizar parqueo creado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Datos actualizados', () => { const p = pm.response.json(); pm.expect(p.nombre).to.eql('Parqueo del Puerto Moín'); pm.expect(p.precioPorHora).to.eql(1000); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/parqueos/{{idParqueo}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parqueos",
+                "{{idParqueo}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombreProvincia\": \"Limón\",\n  \"nombre\": \"Parqueo del Puerto Moín\",\n  \"precioPorHora\": 1000.0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "GET filtro por provincia encuentra el parqueo actualizado (limon)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Solo el parqueo creado', () => pm.expect(pm.response.json().map(p => p.id)).to.eql([Number(pm.collectionVariables.get('idParqueo'))]));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/parqueos?provincia=limon",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parqueos"
+              ],
+              "query": [
+                {
+                  "key": "provincia",
+                  "value": "limon"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "DELETE borrar parqueo creado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 204', () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/parqueos/{{idParqueo}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parqueos",
+                "{{idParqueo}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET parqueo borrado devuelve 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 404', () => pm.response.to.have.status(404));",
+                  "pm.test('Respuesta ProblemDetails', () => { const p = pm.response.json(); pm.expect(p.status).to.eql(404); pm.expect(p.title).to.be.a('string'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/parqueos/{{idParqueo}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parqueos",
+                "{{idParqueo}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "5. Pruebas negativas y de borde",
       "item": [
         {
@@ -833,6 +1311,284 @@
                 {
                   "key": "tamanoPagina",
                   "value": "0"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Parqueo inexistente (GET 999)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 404', () => pm.response.to.have.status(404));",
+                  "pm.test('Respuesta ProblemDetails', () => { const p = pm.response.json(); pm.expect(p.status).to.eql(404); pm.expect(p.title).to.be.a('string'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/parqueos/999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parqueos",
+                "999"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Parqueo con provincia inválida (POST)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Respuesta ProblemDetails', () => { const p = pm.response.json(); pm.expect(p.status).to.eql(400); pm.expect(p.title).to.be.a('string'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/parqueos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parqueos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombreProvincia\": \"Panamá\",\n  \"nombre\": \"Parqueo X\",\n  \"precioPorHora\": 500\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Parqueo con precio cero (POST)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Respuesta ProblemDetails', () => { const p = pm.response.json(); pm.expect(p.status).to.eql(400); pm.expect(p.title).to.be.a('string'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/parqueos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parqueos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombreProvincia\": \"Limón\",\n  \"nombre\": \"Parqueo X\",\n  \"precioPorHora\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Parqueo con precio negativo (POST)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Respuesta ProblemDetails', () => { const p = pm.response.json(); pm.expect(p.status).to.eql(400); pm.expect(p.title).to.be.a('string'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/parqueos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parqueos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombreProvincia\": \"Limón\",\n  \"nombre\": \"Parqueo X\",\n  \"precioPorHora\": -10\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Parqueo con más de 2 decimales en el precio (POST)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Respuesta ProblemDetails', () => { const p = pm.response.json(); pm.expect(p.status).to.eql(400); pm.expect(p.title).to.be.a('string'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/parqueos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parqueos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombreProvincia\": \"Limón\",\n  \"nombre\": \"Parqueo X\",\n  \"precioPorHora\": 100.125\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Borrar parqueo con ingresos (DELETE 1) devuelve 409",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 409', () => pm.response.to.have.status(409));",
+                  "pm.test('Respuesta ProblemDetails', () => { const p = pm.response.json(); pm.expect(p.status).to.eql(409); pm.expect(p.title).to.be.a('string'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/parqueos/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parqueos",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Rango de precios invertido (1000 a 500)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Origen de datos: ' + pm.response.headers.get('X-Origen-Datos'), () => pm.expect(['Json','BaseDatos']).to.include(pm.response.headers.get('X-Origen-Datos')));",
+                  "pm.test('Código 400', () => pm.response.to.have.status(400));",
+                  "pm.test('Respuesta ProblemDetails', () => { const p = pm.response.json(); pm.expect(p.status).to.eql(400); pm.expect(p.title).to.be.a('string'); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/parqueos?precioMinimo=1000&precioMaximo=500",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "parqueos"
+              ],
+              "query": [
+                {
+                  "key": "precioMinimo",
+                  "value": "1000"
+                },
+                {
+                  "key": "precioMaximo",
+                  "value": "500"
                 }
               ]
             }

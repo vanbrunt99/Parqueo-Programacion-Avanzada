@@ -152,7 +152,9 @@ public abstract class ConsultasRepositoriosPruebasBase : IDisposable
         Assert.NotNull(parqueo);
         Assert.Equal(("Cartago", "Parqueo Las Ruinas", 675.50m), (parqueo.NombreProvincia, parqueo.Nombre, parqueo.PrecioPorHora));
         Assert.Equal([4, 7, 10, 13], parqueo.PrqIngresoAutomovils.Select(i => i.Consecutivo).Order());
-        Assert.Equal(1857.63m, parqueo.PrqIngresoAutomovils.Single(i => i.Consecutivo == 4).MontoTotalAPagar);
+        var ingreso4 = parqueo.PrqIngresoAutomovils.Single(i => i.Consecutivo == 4);
+        Assert.Equal(1857.63m, ingreso4.MontoTotalAPagar);
+        Assert.Equal("Mitsubishi", ingreso4.IdAutomovilNavigation.Fabricante); // ThenInclude del automóvil
     }
 
     [SkippableFact]

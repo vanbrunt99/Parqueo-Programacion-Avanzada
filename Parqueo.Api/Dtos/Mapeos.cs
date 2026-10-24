@@ -45,6 +45,35 @@ public static class Mapeos
 
     // ------------------------------------------------------------------ parqueos
 
+    public static PrqParqueo AEntidad(this ParqueoSolicitud solicitud, int id) => new()
+    {
+        Id = id,
+        NombreProvincia = solicitud.NombreProvincia!,
+        Nombre = solicitud.Nombre!,
+        PrecioPorHora = solicitud.PrecioPorHora!.Value,
+    };
+
+    /// <summary>Parqueo sin ingresos (listados).</summary>
+    public static ParqueoRespuesta ARespuesta(this PrqParqueo parqueo) =>
+        new(parqueo.Id, parqueo.NombreProvincia, parqueo.Nombre, parqueo.PrecioPorHora);
+
+    /// <summary>Parqueo con sus ingresos y el automóvil de cada uno (consulta por id).</summary>
+    public static ParqueoRespuesta ARespuestaConIngresos(this PrqParqueo parqueo) =>
+        parqueo.ARespuesta() with
+        {
+            Ingresos = parqueo.PrqIngresoAutomovils
+                .OrderBy(i => i.FechaHoraEntrada)
+                .Select(i => new IngresoDeParqueoRespuesta(
+                    i.Consecutivo,
+                    i.FechaHoraEntrada,
+                    i.FechaHoraSalida,
+                    Minutos(i.DuracionEstadiaMinutos),
+                    Horas(i.DuracionEstadiaHoras),
+                    i.MontoTotalAPagar,
+                    i.IdAutomovilNavigation.AResumen()))
+                .ToList(),
+        };
+
     public static ParqueoResumen AResumen(this PrqParqueo parqueo) =>
         new(parqueo.Id, parqueo.NombreProvincia, parqueo.Nombre, parqueo.PrecioPorHora);
 
