@@ -1,0 +1,14 @@
+# dotnet build y dotnet test en el equipo del estudiante (sin PARQUEO_PRUEBAS_BD: las pruebas de PostgreSQL se omiten)
+# Equipo del estudiante: Microsoft Windows 11 Home, .NET SDK 10.0.402.
+# Fecha: 2026-10-26 16:16 (hora local). Salida real, sin editar (se ocultan servidor, base y usuario).
+
+# dotnet build Parqueo.slnx --no-incremental
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+# dotnet test Parqueo.slnx
+A total of 1 test files matched the specified pattern.
+A total of 1 test files matched the specified pattern.
+Passed!  - Failed:     0, Passed:   146, Skipped:    99, Total:   245, Duration: 3 s - Parqueo.Tests.dll (net10.0)
+Passed!  - Failed:     0, Passed:    87, Skipped:    85, Total:   172, Duration: 10 s - Parqueo.Api.Tests.dll (net10.0)
