@@ -25,4 +25,22 @@ public sealed class ConfiguracionApiPruebas
         Assert.Contains("Base de datos no disponible", cuerpo);
         Assert.DoesNotContain("secreto-de-prueba", cuerpo);
     }
+
+    /// <summary>
+    /// Una cadena de conexión mal formada es un error de configuración del servidor (500), no
+    /// datos inválidos del cliente (400), y la respuesta no debe repetir la cadena.
+    /// </summary>
+    [Fact]
+    public async Task CadenaDeConexionMalFormada_Devuelve500SinExponerla()
+    {
+        using var fabrica = FabricaApi.ConBaseDatos("Host=127.0.0.1;Password=\"secreto\"roto\";Port=1");
+        using var cliente = fabrica.CreateClient();
+
+        var respuesta = await cliente.GetAsync("/api/automoviles");
+        string cuerpo = await respuesta.Content.ReadAsStringAsync();
+
+        Assert.Equal(HttpStatusCode.InternalServerError, respuesta.StatusCode);
+        Assert.Contains("Error interno", cuerpo);
+        Assert.DoesNotContain("secreto", cuerpo);
+    }
 }
