@@ -51,6 +51,28 @@ Parqueo-Programacion-Avanzada/
 └── Parqueo.slnx
 ```
 
+## Base del curso (esquema `user_13`)
+
+La instancia PostgreSQL del profesor está en Azure (base `advanced_programming`) y cada
+estudiante trabaja en su propio esquema; el de este trabajo es `user_13`. Las tablas PRQ
+se crearon allí el 19 de octubre de 2026 con los scripts de `BaseDatos/` y contienen 6
+automóviles, 3 parqueos y 17 ingresos (dos sin salida). Evidencia:
+`docs/evidencias/11-verificacion-nube-2026-10-19.txt` (231 pruebas contra la nube, sin
+omisiones).
+
+- El modelo generado por el scaffold incluye explícitamente el esquema `user_13`
+  (`ToTable("prq_automovil", "user_13", ...)`). Para repetir el scaffold use los nombres
+  calificados `user_13.prq_automovil`, `user_13.prq_parqueo` y `user_13.prq_ingreso_automovil`
+  en las opciones `--table`. El proveedor agrega metadatos de ENUM de otros esquemas aunque
+  se limiten las tablas; se retiraron del contexto porque ninguna tabla PRQ usa ENUM.
+- La conexión se guarda en User Secrets con la clave `ConnectionStrings:ParqueoDb`; Azure
+  exige SSL (`SSL Mode=VerifyFull` o `Require`).
+- Para una base local de pruebas, cree el esquema `user_13` y ejecute los scripts con
+  `search_path` apuntando a él (ver "Pruebas automatizadas").
+- Las evidencias 01 a 10 corresponden a la ejecución local del agente; la 11, a la base del
+  curso; las de `docs/evidencias/tc3/equipo-estudiante-*` se generaron en el equipo del
+  estudiante.
+
 ## Requisitos e instalación
 
 - .NET SDK 10 (`dotnet --list-sdks`)
@@ -331,10 +353,13 @@ dotnet test Parqueo.slnx
 
 Sin configuración adicional se ejecutan las pruebas de JSON y de los campos calculados;
 las de PostgreSQL aparecen como **omitidas** (Skipped). Para ejecutarlas, defina una base
-con los dos scripts cargados (se recomienda una base local, no la del profesor):
+con los dos scripts cargados en un esquema `user_13`, porque el modelo apunta a ese esquema
+(se recomienda una base local, no la del profesor):
 
 ```powershell
-$env:PARQUEO_PRUEBAS_BD = "Host=localhost;Port=5432;Database=parqueo_local;Username=<usuario>;Password=<contraseña>"
+# Una vez, en la base local: CREATE SCHEMA user_13; y luego los dos scripts con
+#   --ConnectionStrings:ParqueoDb="...;Search Path=user_13" --EjecutarScripts="BaseDatos/diseño-bd.sql;BaseDatos/insertar-registros.sql"
+$env:PARQUEO_PRUEBAS_BD = "Host=localhost;Port=5432;Database=parqueo_local;Username=<usuario>;Password=<contraseña>;Search Path=user_13"
 dotnet test Parqueo.slnx
 ```
 

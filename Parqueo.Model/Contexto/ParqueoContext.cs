@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Parqueo.Model.Entidades;
@@ -24,7 +24,7 @@ public partial class ParqueoContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("pk_prq_automovil");
 
-            entity.ToTable("prq_automovil", tb => tb.HasComment("Automóviles que utilizan los parqueos."));
+            entity.ToTable("prq_automovil", "user_13", tb => tb.HasComment("Automóviles que utilizan los parqueos."));
 
             entity.Property(e => e.Id)
                 .HasComment("Llave primaria del automóvil.")
@@ -50,7 +50,7 @@ public partial class ParqueoContext : DbContext
         {
             entity.HasKey(e => e.Consecutivo).HasName("pk_prq_ingreso_automovil");
 
-            entity.ToTable("prq_ingreso_automovil", tb => tb.HasComment("Registro de ingresos y salidas de automóviles en los parqueos."));
+            entity.ToTable("prq_ingreso_automovil", "user_13", tb => tb.HasComment("Registro de ingresos y salidas de automóviles en los parqueos."));
 
             entity.HasIndex(e => e.FechaHoraEntrada, "ix_prq_ingreso_automovil_entrada");
 
@@ -91,7 +91,7 @@ public partial class ParqueoContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("pk_prq_parqueo");
 
-            entity.ToTable("prq_parqueo", tb => tb.HasComment("Parqueos (estacionamientos) disponibles."));
+            entity.ToTable("prq_parqueo", "user_13", tb => tb.HasComment("Parqueos (estacionamientos) disponibles."));
 
             entity.Property(e => e.Id)
                 .HasComment("Llave primaria del parqueo.")
