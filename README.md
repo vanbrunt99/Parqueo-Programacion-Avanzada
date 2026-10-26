@@ -380,8 +380,12 @@ dotnet test Parqueo.slnx
   personalizados; repositorios y consultas; CRUD; correcciones; documentación.
 - `feature/trabajo-en-clase-03`, creada desde `main`: un commit por API, en el orden del
   enunciado (automóviles, parqueos, ingresos), cada uno con su carpeta de Postman ejecutada;
-  un commit con las correcciones de una revisión independiente del código y un commit final
-  de documentación.
+  un commit con las correcciones de una revisión independiente del código y uno de
+  documentación. Después: herramientas de base de datos en la consola, ajustes para Windows,
+  merge de `main` (verificación del 19 de octubre en el esquema `user_13`), `.gitattributes`
+  y correcciones encontradas al ejecutar en el equipo del estudiante. Al terminar se fusiona
+  en `main` con `merge --no-ff`, igual que la rama del Trabajo 02.
+- Repositorio: https://github.com/vanbrunt99/Parqueo-Programacion-Avanzada
 
 ## Evidencias
 

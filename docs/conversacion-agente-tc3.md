@@ -873,3 +873,47 @@ orden, fueron:
 - La sección 1 de la plantilla menciona el agente de Visual Studio Code. Esta sesión no ocurrió
   en Visual Studio Code; si el estudiante usa ese agente al ejecutar los pasos en su equipo,
   esa conversación debe agregarse al documento.
+
+## 5. Segunda sesión: equipo del estudiante (26 de octubre de 2026)
+
+Mensaje del estudiante: «Ya tengo mi computadora activa y desde aqui te escribo, por favor
+termina y revisa todo lo que no pudiste hacer desde mi celular, que quede como trabajo 10/10
+como habiamos establecido». El agente preguntó y el estudiante eligió: publicar en la cuenta
+de GitHub `vanbrunt99`, repositorio público, instalar Postman y probar contra la base del
+profesor (el estudiante escribe la contraseña; el agente nunca la ve).
+
+Acciones y hallazgos, en orden:
+
+1. **Acceso al equipo.** El agente pudo leer y escribir archivos en las carpetas autorizadas y
+   ver la pantalla, pero no escribir en terminales. Por eso preparó el script
+   `Completar-TC3.ps1` (fuera del repositorio), que el estudiante ejecutó en PowerShell:
+   clona el repositorio desde el paquete (bundle), compila, ejecuta las pruebas, instala
+   Postman con winget, guarda la cadena de conexión en User Secrets, revisa la base del curso
+   y levanta los dos APIs (Json en 5246 y BaseDatos en 5247).
+2. **Consola y entorno de Postman (commit `39d6581`).** `--EstadoBd` y `--EjecutarScripts`
+   permiten revisar y crear las tablas sin psql; se agregó un entorno de Postman para el
+   origen BaseDatos en el puerto 5247.
+3. **Windows (commit `7d56842`).** Las lecturas JSON comparten el archivo con
+   `FileShare.Delete` y se reintentan ante bloqueos momentáneos.
+4. **Repositorio existente en GitHub.** `vanbrunt99/Parqueo-Programacion-Avanzada` ya existía
+   (público) y `main` tenía el commit `0cd0a7d` del 19 de octubre: verificación en la base
+   del curso con el esquema propio `user_13` (servidor Azure `postgresql-hecferme`, base
+   `advanced_programming`) y el modelo con ese esquema explícito. El agente lo integró en la
+   rama del Trabajo 03 con un merge (`2b7d065`), sin reescribir historial ni hacer push
+   forzado. Las pruebas locales del agente se adaptaron al esquema `user_13`.
+5. **Pruebas en Windows.** La primera ejecución en el equipo del estudiante dio 3 fallas en
+   `LeerYGuardarSinCambios_ConservaElArchivoIdentico`: Git convertía los JSON a CRLF. Se
+   agregó `.gitattributes` (commit `21e8699`) y en la segunda ejecución pasaron todas
+   (146 + 87; las de PostgreSQL se omiten sin `PARQUEO_PRUEBAS_BD`).
+6. **Cadena de conexión.** La primera versión del script armó mal la cadena (error de formato
+   en el índice 48) y el API respondía 400 con el mensaje de Npgsql. Se corrigió el script
+   (la cadena se arma con `DbConnectionStringBuilder` y se prueba antes de seguir), la
+   consola valida la cadena y lo informa sin mostrarla (`89a2c2f`), y el API responde 500
+   ante una `ArgumentException` que no proviene del código de Parqueo (`e92c273`, con prueba).
+7. **Verificación del agente** después de estos cambios: 245/245 y 173/173 pruebas con
+   PostgreSQL local (esquema `user_13`) y la colección completa (74 solicitudes, 237
+   aserciones) sin fallas con Newman en ambos orígenes.
+8. **Pausa.** Al momento de este registro el estudiante estaba ingresando la contraseña de la
+   base del curso en el script y pidió un paquete con todo lo hecho para continuar con otra
+   herramienta. Quedan pendientes: terminar esa ejecución, las capturas en Postman, el commit
+   de las evidencias del equipo del estudiante, la fusión en `main`, el push y el Word final.
