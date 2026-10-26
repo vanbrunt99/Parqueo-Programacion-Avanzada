@@ -14,6 +14,10 @@ var builder = Host.CreateApplicationBuilder(new HostApplicationBuilderSettings
     ContentRootPath = AppContext.BaseDirectory, // appsettings.json y Datos/ se copian junto al ejecutable
 });
 builder.Configuration.AddUserSecrets<Program>(optional: true);
+// Se vuelven a agregar las variables de entorno y los argumentos para que tengan prioridad
+// sobre User Secrets (por ejemplo, --ConnectionStrings:ParqueoDb=... para otra base).
+builder.Configuration.AddEnvironmentVariables();
+builder.Configuration.AddCommandLine(args);
 
 // Origen de datos: "Json" (predeterminado) o "BaseDatos".
 // Ejemplo: dotnet run --project Parqueo.AppConsole -- --OrigenDatos=BaseDatos
@@ -25,6 +29,34 @@ if (!Enum.TryParse(textoOrigen, ignoreCase: true, out OrigenDatos origen))
 }
 
 string? cadenaConexion = builder.Configuration.GetConnectionString("ParqueoDb");
+
+// Herramientas para preparar la base del curso sin psql (ver HerramientasBaseDatos):
+//   dotnet run --project Parqueo.AppConsole -- --EstadoBd=true
+//   dotnet run --project Parqueo.AppConsole -- --EjecutarScripts="BaseDatos/diseño-bd.sql;BaseDatos/insertar-registros.sql"
+bool estadoBd = builder.Configuration.GetValue<bool>("EstadoBd");
+string? scripts = builder.Configuration["EjecutarScripts"];
+if (estadoBd || !string.IsNullOrWhiteSpace(scripts))
+{
+    if (string.IsNullOrWhiteSpace(cadenaConexion))
+    {
+        Console.WriteLine("Falta la cadena ConnectionStrings:ParqueoDb (guárdela con dotnet user-secrets).");
+        return 1;
+    }
+
+    Console.WriteLine($"Conexión: {DescribirConexion(cadenaConexion)}");
+    var herramientas = new HerramientasBaseDatos(cadenaConexion);
+    try
+    {
+        return estadoBd
+            ? await herramientas.MostrarEstadoAsync()
+            : await herramientas.EjecutarScriptsAsync(scripts!.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries));
+    }
+    catch (NpgsqlException error)
+    {
+        Console.WriteLine($"No se pudo usar la base de datos: {error.Message}");
+        return 1;
+    }
+}
 string carpetaJson = Path.GetFullPath(builder.Configuration["RutaDatosJson"] ?? "Datos", AppContext.BaseDirectory);
 
 try

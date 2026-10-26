@@ -74,6 +74,15 @@ dotnet run --project Parqueo.Api --launch-profile http                          
 dotnet run --project Parqueo.Api --launch-profile http -- --OrigenDatos=BaseDatos    # PostgreSQL con el secreto
 ```
 
+Para tener los dos orígenes levantados a la vez, compile una vez y use otro puerto para
+PostgreSQL (cada comando en su propia ventana):
+
+```powershell
+dotnet build Parqueo.slnx
+dotnet run --project Parqueo.Api --launch-profile http --no-build -- --OrigenDatos=Json
+dotnet run --project Parqueo.Api --launch-profile http --no-build -- --OrigenDatos=BaseDatos --urls=http://localhost:5247
+```
+
 El API escucha en `http://localhost:5246`. Cada respuesta, incluidas las de error, trae el
 encabezado **`X-Origen-Datos`** con el valor `Json` o `BaseDatos`, para comprobar desde
 Postman qué origen respondió. En ambiente Development el documento OpenAPI queda en
@@ -136,7 +145,9 @@ Respuestas de error (formato ProblemDetails):
 
 1. En Postman, **Import** → `Postman/Parqueo-API.postman_collection.json` y
    `Postman/Parqueo-Local.postman_environment.json`.
-2. Seleccione el entorno **Parqueo API local** (`baseUrl = http://localhost:5246`).
+2. Importe también `Postman/Parqueo-Local-BaseDatos.postman_environment.json` y seleccione el
+   entorno del origen que va a probar: **Parqueo API local — Json (5246)** o
+   **Parqueo API local — BaseDatos (5247)**.
 3. Inicie el API con el origen que quiere probar y ejecute la colección completa
    (**Run collection**) o carpeta por carpeta, en orden:
    1. Automóviles · 2. Parqueos · 3. Ingresos · 4. Consultas especializadas · 5. Pruebas negativas y de borde.
@@ -201,6 +212,17 @@ psql "host=<servidor> port=5432 dbname=<base> user=<usuario> sslmode=require" -v
 Los scripts trabajan dentro de una transacción y no borran nada: si una tabla o un
 registro ya existe, fallan sin dejar cambios parciales. `insertar-registros.sql` termina
 con dos consultas de verificación (conteos y montos calculados en SQL).
+
+Sin psql, la consola ejecuta los mismos scripts con la cadena guardada en User Secrets
+(desde la carpeta del repositorio):
+
+```powershell
+dotnet run --project Parqueo.AppConsole -- --EstadoBd=true      # base, usuario y tablas PRQ existentes
+dotnet run --project Parqueo.AppConsole -- --EjecutarScripts="BaseDatos/diseño-bd.sql;BaseDatos/insertar-registros.sql"
+```
+
+`--EstadoBd` termina con código 0 si existen las tres tablas, 2 si no existe ninguna y 3 si
+existen solo algunas. `verificar-restricciones.sql` usa comandos de psql y se ejecuta con psql.
 
 ## Guardar la cadena de conexión como secreto
 
