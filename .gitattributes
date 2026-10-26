@@ -1,0 +1,10 @@
+# Finales de línea: LF dentro del repositorio. En Windows, Git convierte los archivos de
+# texto según la configuración local, salvo los JSON: el API y los repositorios JSON los
+# escriben siempre con LF, y la prueba LeerYGuardarSinCambios exige el archivo idéntico.
+* text=auto
+*.json text eol=lf
+*.sh text eol=lf
+*.png binary
+*.jpg binary
+*.docx binary
+*.bundle binary
