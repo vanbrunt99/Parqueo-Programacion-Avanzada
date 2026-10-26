@@ -87,7 +87,11 @@ public sealed class FuenteDatosJson
 
         try
         {
-            await using var flujo = File.OpenRead(ruta);
+            // FileShare.Delete permite que una escritura simultánea reemplace el archivo
+            // mientras se lee (en Windows, File.OpenRead lo impediría).
+            await using var flujo = await ConReintentosAsync(
+                () => new FileStream(ruta, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete, 4096, useAsync: true),
+                cancelacion);
             return await JsonSerializer.DeserializeAsync<List<T>>(flujo, _opciones, cancelacion) ?? new List<T>();
         }
         catch (JsonException error)
@@ -111,7 +115,27 @@ public sealed class FuenteDatosJson
             await flujo.WriteAsync("\n"u8.ToArray(), cancelacion);
         }
 
-        File.Move(temporal, ruta, overwrite: true);
+        await ConReintentosAsync(() => { File.Move(temporal, ruta, overwrite: true); return true; }, cancelacion);
+    }
+
+    /// <summary>
+    /// En Windows, el antivirus o una lectura en curso pueden bloquear el archivo por unos
+    /// milisegundos; se reintenta la operación antes de reportar el error.
+    /// </summary>
+    private static async Task<TResultado> ConReintentosAsync<TResultado>(Func<TResultado> operacion, CancellationToken cancelacion)
+    {
+        const int Intentos = 10;
+        for (int intento = 1; ; intento++)
+        {
+            try
+            {
+                return operacion();
+            }
+            catch (Exception error) when (intento < Intentos && error is IOException or UnauthorizedAccessException)
+            {
+                await Task.Delay(20 * intento, cancelacion);
+            }
+        }
     }
 
     private string RutaDe(string archivo) => Path.Combine(Directorio, archivo);
