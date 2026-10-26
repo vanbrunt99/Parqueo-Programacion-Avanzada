@@ -29,6 +29,12 @@ if (!Enum.TryParse(textoOrigen, ignoreCase: true, out OrigenDatos origen))
 }
 
 string? cadenaConexion = builder.Configuration.GetConnectionString("ParqueoDb");
+if (!string.IsNullOrWhiteSpace(cadenaConexion) && !CadenaValida(cadenaConexion))
+{
+    // No se muestra la cadena: puede contener la contraseña.
+    Console.WriteLine("La cadena ConnectionStrings:ParqueoDb no tiene un formato válido. Vuelva a guardarla con dotnet user-secrets.");
+    return 1;
+}
 
 // Herramientas para preparar la base del curso sin psql (ver HerramientasBaseDatos):
 //   dotnet run --project Parqueo.AppConsole -- --EstadoBd=true
@@ -94,4 +100,17 @@ static string DescribirConexion(string cadena)
 {
     var datos = new NpgsqlConnectionStringBuilder(cadena);
     return $"Host={datos.Host}; Database={datos.Database}; Username={datos.Username}";
+}
+
+static bool CadenaValida(string cadena)
+{
+    try
+    {
+        _ = new NpgsqlConnectionStringBuilder(cadena);
+        return true;
+    }
+    catch (ArgumentException)
+    {
+        return false;
+    }
 }
