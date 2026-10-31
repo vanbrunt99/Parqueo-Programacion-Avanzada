@@ -1,0 +1,30 @@
+@model PaginacionViewModel
+<nav class="d-flex flex-wrap justify-content-between align-items-center gap-2 mt-3" aria-label="Paginación">
+    <span class="text-muted" id="resumen-paginacion">
+        @if (Model.Total == 0)
+        {
+            <text>0 @Model.Unidad</text>
+        }
+        else
+        {
+            <text>Mostrando @Model.Desde–@Model.Hasta de @Model.Total @Model.Unidad · página @Model.Pagina de @Model.TotalPaginas</text>
+        }
+    </span>
+    @if (Model.TotalPaginas > 1)
+    {
+        <ul class="pagination mb-0">
+            <li class="page-item @(Model.Pagina <= 1 ? "disabled" : "")">
+                <a class="page-link" asp-controller="@Model.Controlador" asp-action="Index" asp-all-route-data="Model.RutaDe(Model.Pagina - 1)" aria-label="Página anterior">Anterior</a>
+            </li>
+            @for (int numero = 1; numero <= Model.TotalPaginas; numero++)
+            {
+                <li class="page-item @(numero == Model.Pagina ? "active" : "")">
+                    <a class="page-link" asp-controller="@Model.Controlador" asp-action="Index" asp-all-route-data="Model.RutaDe(numero)" aria-current="@(numero == Model.Pagina ? "page" : null)">@numero</a>
+                </li>
+            }
+            <li class="page-item @(Model.Pagina >= Model.TotalPaginas ? "disabled" : "")">
+                <a class="page-link" asp-controller="@Model.Controlador" asp-action="Index" asp-all-route-data="Model.RutaDe(Model.Pagina + 1)" aria-label="Página siguiente">Siguiente</a>
+            </li>
+        </ul>
+    }
+</nav>

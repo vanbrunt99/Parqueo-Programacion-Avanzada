@@ -1,0 +1,17 @@
+@model IngresoFormularioViewModel
+@{
+    ViewData["Title"] = $"Editar ingreso #{Model.Consecutivo}";
+}
+<h1 class="h3">Editar ingreso #@Model.Consecutivo</h1>
+<p class="text-muted">Al guardar se envía <code>PUT /api/ingresos/@Model.Consecutivo</code>. Para registrar la salida, complete la fecha y hora de salida.</p>
+<form asp-action="Editar" asp-route-id="@Model.Consecutivo" method="post" class="card card-body">
+    <input type="hidden" name="volver" value="@ViewData["Volver"]" />
+    <partial name="_Formulario" model="Model" />
+    <div class="d-flex gap-2 mt-4">
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        <a class="btn btn-outline-secondary" asp-action="Detalles" asp-route-id="@Model.Consecutivo" asp-route-volver="@ViewData["Volver"]">Cancelar</a>
+    </div>
+</form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,54 @@
+@model PaginaApi<IngresoApi>
+@{
+    ViewData["Title"] = "Ingresos";
+    string volver = Context.Request.Path + Context.Request.QueryString;
+}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <h1 class="h3 mb-0">Ingresos de automóviles</h1>
+    <a class="btn btn-success" asp-action="Crear" asp-route-volver="@volver">Registrar ingreso</a>
+</div>
+<p class="text-muted">Datos de <code>GET /api/ingresos</code>. La duración y el monto los calcula el API y quedan pendientes mientras no haya salida.</p>
+
+@if (Model.Total == 0)
+{
+    <div class="alert alert-info" role="status">No hay ingresos registrados.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle tabla-datos" id="tabla-ingresos">
+            <thead>
+                <tr>
+                    <th scope="col" class="numero">Consecutivo</th>
+                    <th scope="col">Automóvil</th>
+                    <th scope="col">Parqueo</th>
+                    <th scope="col">Entrada</th>
+                    <th scope="col">Salida</th>
+                    <th scope="col" class="numero">Minutos</th>
+                    <th scope="col" class="numero">Monto</th>
+                    <th scope="col"><span class="visually-hidden">Acciones</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var ingreso in Model.Registros)
+                {
+                    <tr data-consecutivo="@ingreso.Consecutivo">
+                        <td class="numero">@ingreso.Consecutivo</td>
+                        <td>#@ingreso.Automovil.Id @ingreso.Automovil.Fabricante @ingreso.Automovil.Color</td>
+                        <td>#@ingreso.Parqueo.Id @ingreso.Parqueo.Nombre</td>
+                        <td>@Formatos.FechaHora(ingreso.FechaHoraEntrada)</td>
+                        <td class="@(ingreso.FechaHoraSalida is null ? "estado-en-curso" : "")">@Formatos.Salida(ingreso.FechaHoraSalida)</td>
+                        <td class="numero">@Formatos.Minutos(ingreso.DuracionEstadiaMinutos)</td>
+                        <td class="numero">@Formatos.Colones(ingreso.MontoTotalAPagar)</td>
+                        <td class="text-end text-nowrap">
+                            <a class="btn btn-sm btn-outline-primary" asp-action="Detalles" asp-route-id="@ingreso.Consecutivo" asp-route-volver="@volver">Detalles</a>
+                            <a class="btn btn-sm btn-outline-secondary" asp-action="Editar" asp-route-id="@ingreso.Consecutivo" asp-route-volver="@volver">Editar</a>
+                            <a class="btn btn-sm btn-outline-danger" asp-action="Borrar" asp-route-id="@ingreso.Consecutivo" asp-route-volver="@volver">Borrar</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+<partial name="_Paginacion" model="@(new PaginacionViewModel("Ingresos", Model.Pagina, Model.TotalPaginas, Model.Desde, Model.Hasta, Model.Total, Model.TamanoPagina, "ingresos", new Dictionary<string, string>()))" />

@@ -1,0 +1,45 @@
+html {
+  font-size: 15px;
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 0;
+}
+
+.btn:focus, .btn:active:focus, .form-control:focus, .form-select:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+.tabla-datos th {
+  white-space: nowrap;
+}
+
+.numero {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.estado-en-curso {
+  color: #8a5300;
+  font-style: italic;
+}
+
+tr.fila-seleccionable {
+  cursor: pointer;
+}
+
+tr.fila-seleccionable:focus-visible {
+  outline: 3px solid #258cfb;
+  outline-offset: -3px;
+}
+
+/* El resumen de validación solo se muestra cuando hay errores. */
+.validation-summary-valid {
+  display: none;
+}
+
+.validation-summary-errors ul {
+  margin-bottom: 0;
+}

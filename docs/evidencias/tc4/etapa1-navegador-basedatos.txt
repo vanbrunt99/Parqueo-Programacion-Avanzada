@@ -1,0 +1,64 @@
+# Prueba real en navegador (Chromium headless con Playwright) contra el MVC y el API levantados en el contenedor del agente.
+# Origen del API: BaseDatos = PostgreSQL LOCAL del agente, esquema user_13 (puerto 5247; MVC en 5131 con --Api:UrlBase=http://localhost:5247/).
+# Script: pruebas-navegador/etapa1-automoviles-ingresos.cjs. Salida real, sin editar.
+
+Prueba en navegador — etapa 1 — MVC http://localhost:5131 — origen esperado BaseDatos
+Chromium 141.0.7390.37 (Playwright), fecha 2026-10-31T22:39:29.295Z
+
+1. Inicio
+  [OK]    El inicio informa que el API está en línea
+  [OK]    El pie muestra el origen BaseDatos informado por X-Origen-Datos
+  [captura] etapa1-basedatos-01-inicio.png: página de inicio con el estado del API y el origen de datos
+2. Filtro por intervalo de años
+  [OK]    Sin filtro se listan los 6 automóviles
+  [OK]    Años 2015 a 2019 (incluidos): automóviles 1, 3 y 5
+  [OK]    El resumen indica 3 automóviles en total
+  [captura] etapa1-basedatos-02-filtro-2015-2019.png: filtro por años 2015–2019 con botones Detalles, Editar y Borrar
+  [OK]    Intervalo invertido: se muestra el error y no se lista nada
+  [OK]    Intervalo invertido: tabla vacía
+  [captura] etapa1-basedatos-03-intervalo-invertido.png: validación del intervalo invertido (2020–2010)
+  [OK]    Sin coincidencias: mensaje "No hay automóviles en el intervalo indicado"
+3. Paginación conservando el filtro
+  [OK]    Página 1 de tamaño 4: automóviles 1 a 4
+  [OK]    La página 2 conserva el filtro anioDesde=2012
+  [OK]    Página 2: automóviles 5 y 6
+  [OK]    El resumen muestra 5–6 de 6
+  [captura] etapa1-basedatos-04-paginacion.png: segunda página con el filtro conservado
+4. Detalles con la propiedad de navegación ingresos
+  [OK]    El automóvil 2 muestra sus ingresos 2, 6 y 16
+  [OK]    Ingreso 6: 80 min, 1,3333 h y ₡1 666,67 (calculados por el API)
+  [OK]    Ingreso 16 sin salida: "Sin salida"/"En curso", sin ceros ni NaN
+  [captura] etapa1-basedatos-05-detalles-automovil-2.png: detalles del automóvil 2 con sus ingresos y montos
+5. Validación del formulario (lado del cliente y del servidor)
+  [OK]    Formulario vacío: mensajes de validación sin enviar al API
+  [captura] etapa1-basedatos-06-crear-validacion.png: validación del formulario de creación
+6. Crear, editar y borrar un automóvil temporal
+  [OK]    Creado el automóvil #127 (POST 201, origen BaseDatos)
+  [captura] etapa1-basedatos-07-creado.png: automóvil #127 creado mediante POST /api/automoviles
+  [captura] etapa1-basedatos-08-editar.png: formulario de edición del automóvil #127
+  [OK]    La edición se guardó con PUT sobre el mismo id
+  [OK]    El aviso muestra la respuesta 200 del PUT
+  [OK]    El GET de borrar solo pide confirmación
+  [captura] etapa1-basedatos-09-confirmar-borrado.png: confirmación antes de borrar el automóvil #127
+  [OK]    Borrado con DELETE (204) y regreso al listado
+  [OK]    El automóvil #127 ya no existe (404)
+7. Integridad referencial
+  [OK]    Borrar el automóvil 1 (con ingresos) muestra el conflicto 409 del API
+  [captura] etapa1-basedatos-10-conflicto-borrado.png: el API rechaza borrar un automóvil con ingresos
+  [OK]    El automóvil 1 conserva sus 3 ingresos
+8. Mantenimiento de ingresos
+  [OK]    Listado de ingresos paginado: 1–10 de 17
+  [captura] etapa1-basedatos-11-ingresos.png: listado de ingresos con duración y monto del API
+  [captura] etapa1-basedatos-12-ingreso-crear.png: registro de un ingreso con la salida vacía
+  [OK]    Ingreso #121: entrada 31/10/2026 08:00 sin conversión horaria y salida null
+  [OK]    Salida anterior a la entrada: se muestra el error del API
+  [OK]    Se conserva lo escrito en el formulario
+  [captura] etapa1-basedatos-13-ingreso-error-salida.png: el API rechaza una salida anterior a la entrada
+  [OK]    Con salida a las 09:20: 80 min, 1,3333 h y ₡1 666,67 calculados por el API
+  [captura] etapa1-basedatos-14-ingreso-con-salida.png: ingreso #121 con la salida registrada
+  [OK]    Ingreso temporal #121 borrado
+  [OK]    Consecutivo inexistente (999): 404
+
+  [OK]    Sin errores de JavaScript en la consola del navegador
+
+RESULTADO: todas las verificaciones pasaron.

@@ -1,0 +1,9 @@
+@model MensajeViewModel
+@{
+    ViewData["Title"] = Model.Titulo;
+}
+<div class="alert alert-danger" role="alert">
+    <h1 class="h4">@Model.Titulo</h1>
+    <p>@Model.Detalle</p>
+    <p class="mb-0 small">Inicie el API (por ejemplo, <code>dotnet run --project Parqueo.Api --launch-profile http</code>) y vuelva a intentarlo.</p>
+</div>

@@ -1,0 +1,17 @@
+@model IngresoFormularioViewModel
+@{
+    ViewData["Title"] = "Registrar ingreso";
+}
+<h1 class="h3">Registrar ingreso</h1>
+<p class="text-muted">Al guardar se envía <code>POST /api/ingresos</code>; el consecutivo lo asigna el origen de datos.</p>
+<form asp-action="Crear" method="post" class="card card-body">
+    <input type="hidden" name="volver" value="@ViewData["Volver"]" />
+    <partial name="_Formulario" model="Model" />
+    <div class="d-flex gap-2 mt-4">
+        <button type="submit" class="btn btn-success">Guardar</button>
+        <a class="btn btn-outline-secondary" href="@ViewData["Volver"]">Cancelar</a>
+    </div>
+</form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

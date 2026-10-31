@@ -1,0 +1,30 @@
+@model IngresoFormularioViewModel
+<div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+<div class="row g-3">
+    <div class="col-md-6">
+        <label asp-for="IdAutomovil" class="form-label"></label>
+        <select asp-for="IdAutomovil" asp-items="Model.Automoviles" class="form-select">
+            <option value="">Seleccione…</option>
+        </select>
+        <span asp-validation-for="IdAutomovil" class="text-danger small"></span>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="IdParqueo" class="form-label"></label>
+        <select asp-for="IdParqueo" asp-items="Model.Parqueos" class="form-select">
+            <option value="">Seleccione…</option>
+        </select>
+        <span asp-validation-for="IdParqueo" class="text-danger small"></span>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="FechaHoraEntrada" class="form-label"></label>
+        <input asp-for="FechaHoraEntrada" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" class="form-control" />
+        <span asp-validation-for="FechaHoraEntrada" class="text-danger small"></span>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="FechaHoraSalida" class="form-label"></label>
+        <input asp-for="FechaHoraSalida" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" class="form-control" />
+        <span asp-validation-for="FechaHoraSalida" class="text-danger small"></span>
+        <div class="form-text">Déjela vacía si el automóvil sigue en el parqueo.</div>
+    </div>
+</div>
+<p class="form-text mt-3 mb-0">Hora local de Costa Rica, sin zona horaria. El API valida que la salida sea posterior a la entrada.</p>

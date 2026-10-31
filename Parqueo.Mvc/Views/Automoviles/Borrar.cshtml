@@ -1,0 +1,31 @@
+@model BorrarAutomovilViewModel
+@{
+    ViewData["Title"] = $"Borrar automóvil #{Model.Automovil.Id}";
+    var a = Model.Automovil;
+    int cantidadIngresos = a.Ingresos?.Count ?? 0;
+}
+<h1 class="h3">Borrar automóvil #@a.Id</h1>
+@if (Model.Error is not null)
+{
+    <div class="alert alert-danger" role="alert" id="error-borrado">@Model.Error</div>
+}
+else
+{
+    <div class="alert alert-warning" role="alert">¿Desea borrar este automóvil? Esta acción no se puede deshacer.</div>
+}
+<dl class="row card card-body flex-row mx-0">
+    <dt class="col-sm-3">Color</dt><dd class="col-sm-9">@a.Color</dd>
+    <dt class="col-sm-3">Año</dt><dd class="col-sm-9">@a.Anio</dd>
+    <dt class="col-sm-3">Fabricante</dt><dd class="col-sm-9">@a.Fabricante</dd>
+    <dt class="col-sm-3">Tipo</dt><dd class="col-sm-9">@TiposAutomovil.Etiqueta(a.Tipo)</dd>
+    <dt class="col-sm-3">Ingresos registrados</dt><dd class="col-sm-9 mb-0">@cantidadIngresos</dd>
+</dl>
+@if (cantidadIngresos > 0 && Model.Error is null)
+{
+    <p class="text-muted small mt-2">El API rechaza el borrado de un automóvil con ingresos (integridad referencial).</p>
+}
+<form asp-action="Borrar" asp-route-id="@a.Id" method="post" class="d-flex gap-2 mt-3">
+    <input type="hidden" name="volver" value="@ViewData["Volver"]" />
+    <button type="submit" class="btn btn-danger">Confirmar borrado</button>
+    <a class="btn btn-outline-secondary" href="@ViewData["Volver"]">Cancelar</a>
+</form>

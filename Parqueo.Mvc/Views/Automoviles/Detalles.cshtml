@@ -1,0 +1,63 @@
+@model AutomovilApi
+@{
+    ViewData["Title"] = $"Automóvil #{Model.Id}";
+    var ingresos = Model.Ingresos ?? [];
+}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <h1 class="h3 mb-0">Automóvil #@Model.Id</h1>
+    <div class="d-flex gap-2">
+        <a class="btn btn-outline-secondary" asp-action="Editar" asp-route-id="@Model.Id" asp-route-volver="@ViewData["Volver"]">Editar</a>
+        <a class="btn btn-outline-danger" asp-action="Borrar" asp-route-id="@Model.Id" asp-route-volver="@ViewData["Volver"]">Borrar</a>
+        <a class="btn btn-outline-primary" href="@ViewData["Volver"]">Volver al listado</a>
+    </div>
+</div>
+
+<dl class="row card card-body flex-row mx-0" id="datos-automovil">
+    <dt class="col-sm-3">Id</dt><dd class="col-sm-9">@Model.Id</dd>
+    <dt class="col-sm-3">Color</dt><dd class="col-sm-9">@Model.Color</dd>
+    <dt class="col-sm-3">Año</dt><dd class="col-sm-9">@Model.Anio</dd>
+    <dt class="col-sm-3">Fabricante</dt><dd class="col-sm-9">@Model.Fabricante</dd>
+    <dt class="col-sm-3">Tipo</dt><dd class="col-sm-9 mb-0">@TiposAutomovil.Etiqueta(Model.Tipo)</dd>
+</dl>
+
+<h2 class="h5 mt-4">Ingresos a parqueos (propiedad de navegación del API)</h2>
+@if (ingresos.Count == 0)
+{
+    <p class="text-muted" id="sin-ingresos">Este automóvil no tiene ingresos registrados.</p>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-sm table-striped align-middle tabla-datos" id="tabla-ingresos-automovil">
+            <thead>
+                <tr>
+                    <th scope="col" class="numero">Consecutivo</th>
+                    <th scope="col" class="numero">Id parqueo</th>
+                    <th scope="col">Parqueo</th>
+                    <th scope="col">Entrada</th>
+                    <th scope="col">Salida</th>
+                    <th scope="col" class="numero">Minutos</th>
+                    <th scope="col" class="numero">Horas</th>
+                    <th scope="col" class="numero">Monto</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var ingreso in ingresos.OrderBy(i => i.FechaHoraEntrada))
+                {
+                    <tr data-consecutivo="@ingreso.Consecutivo">
+                        <td class="numero">@ingreso.Consecutivo</td>
+                        <td class="numero">@ingreso.Parqueo.Id</td>
+                        <td>@ingreso.Parqueo.Nombre</td>
+                        <td>@Formatos.FechaHora(ingreso.FechaHoraEntrada)</td>
+                        <td class="@(ingreso.FechaHoraSalida is null ? "estado-en-curso" : "")">@Formatos.Salida(ingreso.FechaHoraSalida)</td>
+                        <td class="numero">@Formatos.Minutos(ingreso.DuracionEstadiaMinutos)</td>
+                        <td class="numero">@Formatos.Horas(ingreso.DuracionEstadiaHoras)</td>
+                        <td class="numero">@Formatos.Colones(ingreso.MontoTotalAPagar)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+<a class="btn btn-sm btn-outline-success" asp-controller="Ingresos" asp-action="Crear" asp-route-idAutomovil="@Model.Id"
+   asp-route-volver="@(Context.Request.Path + Context.Request.QueryString)">Registrar ingreso de este automóvil</a>

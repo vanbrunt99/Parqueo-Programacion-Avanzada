@@ -1,0 +1,26 @@
+@model AutomovilFormularioViewModel
+<div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+<div class="row g-3">
+    <div class="col-md-6">
+        <label asp-for="Color" class="form-label"></label>
+        <input asp-for="Color" class="form-control" maxlength="30" autocomplete="off" />
+        <span asp-validation-for="Color" class="text-danger small"></span>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="Anio" class="form-label"></label>
+        <input asp-for="Anio" class="form-control" type="number" inputmode="numeric" />
+        <span asp-validation-for="Anio" class="text-danger small"></span>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="Fabricante" class="form-label"></label>
+        <input asp-for="Fabricante" class="form-control" maxlength="50" autocomplete="off" />
+        <span asp-validation-for="Fabricante" class="text-danger small"></span>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="Tipo" class="form-label"></label>
+        <select asp-for="Tipo" asp-items="Model.Tipos" class="form-select">
+            <option value="">Seleccione…</option>
+        </select>
+        <span asp-validation-for="Tipo" class="text-danger small"></span>
+    </div>
+</div>

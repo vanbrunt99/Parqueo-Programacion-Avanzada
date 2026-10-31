@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--
+      .NET oculta por defecto la consulta (?anioDesde=...) de las URL en el registro del
+      HttpClient. Aquí solo viajan filtros sin datos sensibles, y verlos en el registro sirve de
+      evidencia de qué método del API llamó el MVC.
+    -->
+    <RuntimeHostConfigurationOption Include="System.Net.Http.DisableUriRedaction" Value="true" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,14 @@
+@model IngresoApi
+@{
+    ViewData["Title"] = $"Ingreso #{Model.Consecutivo}";
+}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <h1 class="h3 mb-0">Ingreso #@Model.Consecutivo</h1>
+    <div class="d-flex gap-2">
+        <a class="btn btn-outline-secondary" asp-action="Editar" asp-route-id="@Model.Consecutivo" asp-route-volver="@ViewData["Volver"]">Editar</a>
+        <a class="btn btn-outline-danger" asp-action="Borrar" asp-route-id="@Model.Consecutivo" asp-route-volver="@ViewData["Volver"]">Borrar</a>
+        <a class="btn btn-outline-primary" href="@ViewData["Volver"]">Volver</a>
+    </div>
+</div>
+<partial name="_DatosIngreso" model="Model" />
+<p class="text-muted small mt-2">La duración y el monto vienen calculados por el API (cobro proporcional al tiempo exacto).</p>

@@ -1,0 +1,59 @@
+@inject ClienteApiParqueo ApiParqueo
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Parqueo</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Parqueo.Mvc.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-dark bg-primary mb-4" aria-label="Navegación principal">
+            <div class="container">
+                <a class="navbar-brand fw-semibold" asp-controller="Inicio" asp-action="Index">Parqueo PRQ</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu-principal"
+                        aria-controls="menu-principal" aria-expanded="false" aria-label="Mostrar menú">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div id="menu-principal" class="collapse navbar-collapse">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item"><a class="nav-link" asp-controller="Inicio" asp-action="Index">Inicio</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Automoviles" asp-action="Index">Automóviles</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Ingresos" asp-action="Index">Ingresos</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-4">
+            @if (TempData["Aviso"] is string aviso)
+            {
+                <div class="alert alert-success" role="status">@aviso</div>
+            }
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted small mt-4">
+        <div class="container d-flex flex-wrap justify-content-between gap-2 py-2">
+            <span>Trabajo en Clase 04 · BSI-19 Programación Avanzada</span>
+            <span id="origen-datos">
+                API: <code>@ApiParqueo.UrlBase</code>
+                @if (ViewData["OrigenDatos"] is string origen)
+                {
+                    <text> · Origen informado por el API (X-Origen-Datos): <strong data-origen="@origen">@origen</strong></text>
+                }
+            </span>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

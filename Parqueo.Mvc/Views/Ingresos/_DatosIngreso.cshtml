@@ -1,0 +1,13 @@
+@model IngresoApi
+<dl class="row card card-body flex-row mx-0" id="datos-ingreso">
+    <dt class="col-sm-4">Consecutivo</dt><dd class="col-sm-8">@Model.Consecutivo</dd>
+    <dt class="col-sm-4">Automóvil</dt>
+    <dd class="col-sm-8">#@Model.Automovil.Id · @Model.Automovil.Fabricante @Model.Automovil.Color @Model.Automovil.Anio (@TiposAutomovil.Etiqueta(Model.Automovil.Tipo))</dd>
+    <dt class="col-sm-4">Parqueo</dt>
+    <dd class="col-sm-8">#@Model.Parqueo.Id · @Model.Parqueo.Nombre (@Model.Parqueo.NombreProvincia) · @Formatos.Precio(Model.Parqueo.PrecioPorHora) por hora</dd>
+    <dt class="col-sm-4">Entrada</dt><dd class="col-sm-8">@Formatos.FechaHora(Model.FechaHoraEntrada)</dd>
+    <dt class="col-sm-4">Salida</dt><dd class="col-sm-8">@Formatos.Salida(Model.FechaHoraSalida)</dd>
+    <dt class="col-sm-4">Duración (minutos)</dt><dd class="col-sm-8">@Formatos.Minutos(Model.DuracionEstadiaMinutos)</dd>
+    <dt class="col-sm-4">Duración (horas)</dt><dd class="col-sm-8">@Formatos.Horas(Model.DuracionEstadiaHoras)</dd>
+    <dt class="col-sm-4">Monto a cancelar</dt><dd class="col-sm-8 mb-0">@Formatos.Colones(Model.MontoTotalAPagar)</dd>
+</dl>

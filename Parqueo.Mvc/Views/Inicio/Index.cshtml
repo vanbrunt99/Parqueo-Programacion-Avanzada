@@ -1,0 +1,37 @@
+@{
+    ViewData["Title"] = "Inicio";
+}
+<h1 class="h3">Parqueo de automóviles</h1>
+<p class="text-muted">
+    Aplicación MVC del Trabajo en Clase 04. Cada pantalla obtiene y guarda los datos llamando al API REST del
+    Trabajo 03; el API decide si los repositorios trabajan con los archivos JSON o con PostgreSQL.
+</p>
+
+<div class="alert alert-light border" role="status">
+    Estado del API: <strong id="estado-api">@ViewData["EstadoApi"]</strong>
+    @if (ViewData["TotalAutomoviles"] is int total)
+    {
+        <text> · @total automóviles registrados</text>
+    }
+</div>
+
+<div class="row g-3">
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <h2 class="h5 card-title">Automóviles</h2>
+                <p class="card-text">Consulta por intervalo de años (año inferior y superior) y mantenimiento completo: detalles, crear, editar y borrar.</p>
+                <a class="btn btn-primary" asp-controller="Automoviles" asp-action="Index">Ir a automóviles</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <h2 class="h5 card-title">Ingresos</h2>
+                <p class="card-text">Entradas y salidas de los automóviles en los parqueos, con duración y monto calculados por el API.</p>
+                <a class="btn btn-primary" asp-controller="Ingresos" asp-action="Index">Ir a ingresos</a>
+            </div>
+        </div>
+    </div>
+</div>

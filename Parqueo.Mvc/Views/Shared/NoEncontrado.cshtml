@@ -1,0 +1,9 @@
+@model MensajeViewModel
+@{
+    ViewData["Title"] = Model.Titulo;
+}
+<div class="alert alert-warning" role="alert">
+    <h1 class="h4">@Model.Titulo</h1>
+    <p class="mb-0">@Model.Detalle</p>
+</div>
+<a class="btn btn-outline-secondary" href="javascript:history.back()">Volver</a>

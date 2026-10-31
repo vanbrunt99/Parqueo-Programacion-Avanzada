@@ -1,0 +1,19 @@
+@model BorrarIngresoViewModel
+@{
+    ViewData["Title"] = $"Borrar ingreso #{Model.Ingreso.Consecutivo}";
+}
+<h1 class="h3">Borrar ingreso #@Model.Ingreso.Consecutivo</h1>
+@if (Model.Error is not null)
+{
+    <div class="alert alert-danger" role="alert" id="error-borrado">@Model.Error</div>
+}
+else
+{
+    <div class="alert alert-warning" role="alert">¿Desea borrar este ingreso? Esta acción no se puede deshacer.</div>
+}
+<partial name="_DatosIngreso" model="Model.Ingreso" />
+<form asp-action="Borrar" asp-route-id="@Model.Ingreso.Consecutivo" method="post" class="d-flex gap-2 mt-3">
+    <input type="hidden" name="volver" value="@ViewData["Volver"]" />
+    <button type="submit" class="btn btn-danger">Confirmar borrado</button>
+    <a class="btn btn-outline-secondary" href="@ViewData["Volver"]">Cancelar</a>
+</form>

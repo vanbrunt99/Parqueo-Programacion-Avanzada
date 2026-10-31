@@ -1,0 +1,162 @@
+# Registro del MVC (categoría System.Net.Http.HttpClient.ClienteApiParqueo): cada pantalla llama por HTTP al API.
+# Extracto real (líneas «Start processing» y «End processing») de las dos instancias del MVC durante las pruebas en navegador de la etapa 1.
+
+## MVC en http://localhost:5130 → API Json en http://localhost:5246/
+Start processing HTTP request GET http://localhost:5246/api/automoviles?pagina=1&tamanoPagina=1
+End processing HTTP request after 51.4123ms - 200
+Start processing HTTP request GET http://localhost:5246/api/automoviles?pagina=1&tamanoPagina=1
+End processing HTTP request after 9.431ms - 200
+Start processing HTTP request GET http://localhost:5246/api/automoviles?pagina=1&tamanoPagina=10
+End processing HTTP request after 5.7646ms - 200
+Start processing HTTP request GET http://localhost:5246/api/automoviles?anioDesde=2015&anioHasta=2019&pagina=1&tamanoPagina=10
+End processing HTTP request after 9.662ms - 200
+Start processing HTTP request GET http://localhost:5246/api/automoviles?anioDesde=2030&anioHasta=2040&pagina=1&tamanoPagina=10
+End processing HTTP request after 7.5861ms - 200
+Start processing HTTP request GET http://localhost:5246/api/automoviles?anioDesde=2012&pagina=1&tamanoPagina=4
+End processing HTTP request after 9.5211ms - 200
+Start processing HTTP request GET http://localhost:5246/api/automoviles?anioDesde=2012&pagina=2&tamanoPagina=4
+End processing HTTP request after 7.2563ms - 200
+Start processing HTTP request GET http://localhost:5246/api/automoviles/2
+End processing HTTP request after 36.7663ms - 200
+Start processing HTTP request POST http://localhost:5246/api/automoviles
+End processing HTTP request after 59.7802ms - 201
+Start processing HTTP request GET http://localhost:5246/api/automoviles/7
+End processing HTTP request after 1.8397ms - 200
+Start processing HTTP request GET http://localhost:5246/api/automoviles/7
+End processing HTTP request after 2.9695ms - 200
+Start processing HTTP request PUT http://localhost:5246/api/automoviles/7
+End processing HTTP request after 18.0509ms - 200
+Start processing HTTP request GET http://localhost:5246/api/automoviles/7
+End processing HTTP request after 2.8945ms - 200
+Start processing HTTP request GET http://localhost:5246/api/automoviles/7
+End processing HTTP request after 2.1447ms - 200
+Start processing HTTP request DELETE http://localhost:5246/api/automoviles/7
+End processing HTTP request after 14.0997ms - 204
+Start processing HTTP request GET http://localhost:5246/api/automoviles?pagina=1&tamanoPagina=10
+End processing HTTP request after 4.1871ms - 200
+Start processing HTTP request GET http://localhost:5246/api/automoviles/7
+End processing HTTP request after 13.5523ms - 404
+Start processing HTTP request GET http://localhost:5246/api/automoviles/1
+End processing HTTP request after 2.1535ms - 200
+Start processing HTTP request DELETE http://localhost:5246/api/automoviles/1
+End processing HTTP request after 10.3052ms - 409
+Start processing HTTP request GET http://localhost:5246/api/automoviles/1
+End processing HTTP request after 2.1216ms - 200
+Start processing HTTP request GET http://localhost:5246/api/automoviles/1
+End processing HTTP request after 3.7932ms - 200
+Start processing HTTP request GET http://localhost:5246/api/ingresos?pagina=1&tamanoPagina=10
+End processing HTTP request after 20.0936ms - 200
+Start processing HTTP request GET http://localhost:5246/api/automoviles?pagina=1&tamanoPagina=100
+End processing HTTP request after 7.0578ms - 200
+Start processing HTTP request GET http://localhost:5246/api/parqueos?pagina=1&tamanoPagina=100
+End processing HTTP request after 18.4032ms - 200
+Start processing HTTP request POST http://localhost:5246/api/ingresos
+End processing HTTP request after 29.6772ms - 201
+Start processing HTTP request GET http://localhost:5246/api/ingresos/18
+End processing HTTP request after 9.3136ms - 200
+Start processing HTTP request GET http://localhost:5246/api/ingresos/18
+End processing HTTP request after 3.23ms - 200
+Start processing HTTP request GET http://localhost:5246/api/automoviles?pagina=1&tamanoPagina=100
+End processing HTTP request after 5.5995ms - 200
+Start processing HTTP request GET http://localhost:5246/api/parqueos?pagina=1&tamanoPagina=100
+End processing HTTP request after 4.6767ms - 200
+Start processing HTTP request PUT http://localhost:5246/api/ingresos/18
+End processing HTTP request after 14.607ms - 400
+Start processing HTTP request GET http://localhost:5246/api/automoviles?pagina=1&tamanoPagina=100
+End processing HTTP request after 5.7707ms - 200
+Start processing HTTP request GET http://localhost:5246/api/parqueos?pagina=1&tamanoPagina=100
+End processing HTTP request after 5.3203ms - 200
+Start processing HTTP request PUT http://localhost:5246/api/ingresos/18
+End processing HTTP request after 7.2243ms - 200
+Start processing HTTP request GET http://localhost:5246/api/ingresos/18
+End processing HTTP request after 3.135ms - 200
+Start processing HTTP request GET http://localhost:5246/api/ingresos/18
+End processing HTTP request after 8.5192ms - 200
+Start processing HTTP request DELETE http://localhost:5246/api/ingresos/18
+End processing HTTP request after 11.0156ms - 204
+Start processing HTTP request GET http://localhost:5246/api/ingresos?pagina=1&tamanoPagina=10
+End processing HTTP request after 3.5514ms - 200
+Start processing HTTP request GET http://localhost:5246/api/ingresos/18
+End processing HTTP request after 2.0083ms - 404
+Start processing HTTP request GET http://localhost:5246/api/ingresos/999
+End processing HTTP request after 1.5773ms - 404
+
+## MVC en http://localhost:5131 → API BaseDatos (PostgreSQL local) en http://localhost:5247/
+Start processing HTTP request GET http://localhost:5247/api/automoviles?pagina=1&tamanoPagina=1
+End processing HTTP request after 151.3284ms - 200
+Start processing HTTP request GET http://localhost:5247/api/automoviles?pagina=1&tamanoPagina=1
+End processing HTTP request after 44.2932ms - 200
+Start processing HTTP request GET http://localhost:5247/api/automoviles?pagina=1&tamanoPagina=10
+End processing HTTP request after 11.4038ms - 200
+Start processing HTTP request GET http://localhost:5247/api/automoviles?anioDesde=2015&anioHasta=2019&pagina=1&tamanoPagina=10
+End processing HTTP request after 46.526ms - 200
+Start processing HTTP request GET http://localhost:5247/api/automoviles?anioDesde=2030&anioHasta=2040&pagina=1&tamanoPagina=10
+End processing HTTP request after 5.9343ms - 200
+Start processing HTTP request GET http://localhost:5247/api/automoviles?anioDesde=2012&pagina=1&tamanoPagina=4
+End processing HTTP request after 22.6662ms - 200
+Start processing HTTP request GET http://localhost:5247/api/automoviles?anioDesde=2012&pagina=2&tamanoPagina=4
+End processing HTTP request after 18.6171ms - 200
+Start processing HTTP request GET http://localhost:5247/api/automoviles/2
+End processing HTTP request after 166.4956ms - 200
+Start processing HTTP request POST http://localhost:5247/api/automoviles
+End processing HTTP request after 257.3772ms - 201
+Start processing HTTP request GET http://localhost:5247/api/automoviles/127
+End processing HTTP request after 3.9846ms - 200
+Start processing HTTP request GET http://localhost:5247/api/automoviles/127
+End processing HTTP request after 9.6646ms - 200
+Start processing HTTP request PUT http://localhost:5247/api/automoviles/127
+End processing HTTP request after 59.6319ms - 200
+Start processing HTTP request GET http://localhost:5247/api/automoviles/127
+End processing HTTP request after 4.4326ms - 200
+Start processing HTTP request GET http://localhost:5247/api/automoviles/127
+End processing HTTP request after 4.2473ms - 200
+Start processing HTTP request DELETE http://localhost:5247/api/automoviles/127
+End processing HTTP request after 44.6207ms - 204
+Start processing HTTP request GET http://localhost:5247/api/automoviles?pagina=1&tamanoPagina=10
+End processing HTTP request after 4.2519ms - 200
+Start processing HTTP request GET http://localhost:5247/api/automoviles/127
+End processing HTTP request after 19.0541ms - 404
+Start processing HTTP request GET http://localhost:5247/api/automoviles/1
+End processing HTTP request after 4.5405ms - 200
+Start processing HTTP request DELETE http://localhost:5247/api/automoviles/1
+End processing HTTP request after 23.7243ms - 409
+Start processing HTTP request GET http://localhost:5247/api/automoviles/1
+End processing HTTP request after 5.534ms - 200
+Start processing HTTP request GET http://localhost:5247/api/automoviles/1
+End processing HTTP request after 12.2331ms - 200
+Start processing HTTP request GET http://localhost:5247/api/ingresos?pagina=1&tamanoPagina=10
+End processing HTTP request after 42.3296ms - 200
+Start processing HTTP request GET http://localhost:5247/api/automoviles?pagina=1&tamanoPagina=100
+End processing HTTP request after 7.4842ms - 200
+Start processing HTTP request GET http://localhost:5247/api/parqueos?pagina=1&tamanoPagina=100
+End processing HTTP request after 28.0704ms - 200
+Start processing HTTP request POST http://localhost:5247/api/ingresos
+End processing HTTP request after 75.2542ms - 201
+Start processing HTTP request GET http://localhost:5247/api/ingresos/121
+End processing HTTP request after 12.8826ms - 200
+Start processing HTTP request GET http://localhost:5247/api/ingresos/121
+End processing HTTP request after 6.2364ms - 200
+Start processing HTTP request GET http://localhost:5247/api/automoviles?pagina=1&tamanoPagina=100
+End processing HTTP request after 3.2942ms - 200
+Start processing HTTP request GET http://localhost:5247/api/parqueos?pagina=1&tamanoPagina=100
+End processing HTTP request after 4.597ms - 200
+Start processing HTTP request PUT http://localhost:5247/api/ingresos/121
+End processing HTTP request after 20.8016ms - 400
+Start processing HTTP request GET http://localhost:5247/api/automoviles?pagina=1&tamanoPagina=100
+End processing HTTP request after 4.6854ms - 200
+Start processing HTTP request GET http://localhost:5247/api/parqueos?pagina=1&tamanoPagina=100
+End processing HTTP request after 4.4944ms - 200
+Start processing HTTP request PUT http://localhost:5247/api/ingresos/121
+End processing HTTP request after 22.5417ms - 200
+Start processing HTTP request GET http://localhost:5247/api/ingresos/121
+End processing HTTP request after 5.2562ms - 200
+Start processing HTTP request GET http://localhost:5247/api/ingresos/121
+End processing HTTP request after 4.5454ms - 200
+Start processing HTTP request DELETE http://localhost:5247/api/ingresos/121
+End processing HTTP request after 27.1205ms - 204
+Start processing HTTP request GET http://localhost:5247/api/ingresos?pagina=1&tamanoPagina=10
+End processing HTTP request after 5.0438ms - 200
+Start processing HTTP request GET http://localhost:5247/api/ingresos/121
+End processing HTTP request after 7.485ms - 404
+Start processing HTTP request GET http://localhost:5247/api/ingresos/999
+End processing HTTP request after 3.7076ms - 404
