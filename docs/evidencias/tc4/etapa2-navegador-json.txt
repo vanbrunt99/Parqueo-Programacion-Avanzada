@@ -3,7 +3,7 @@
 # Script: pruebas-navegador/etapa2-maestro-detalle.cjs. Salida real, sin editar.
 
 Prueba en navegador — etapa 2 (maestro/detalle con JavaScript) — MVC http://localhost:5130 — API http://localhost:5246 — origen esperado Json
-Chromium 141.0.7390.37 (Playwright), fecha 2026-10-31T22:45:29.408Z
+Chromium 141.0.7390.37 (Playwright), fecha 2026-10-31T22:55:34.024Z
 
 1. Pantalla inicial y combo de tipos
   [OK]    El combo ofrece los tipos sedán, 4x4 y moto (valores exactos)
@@ -22,6 +22,7 @@ Chromium 141.0.7390.37 (Playwright), fecha 2026-10-31T22:45:29.408Z
   [OK]    El detalle se actualizó sin recargar ni cambiar de página
   [OK]    El detalle corresponde al automóvil 2
   [OK]    Automóvil 2: ingresos 2, 6 y 16 (orden de entrada)
+  [OK]    Las ocho columnas del detalle caben sin desplazamiento horizontal (ventana de 1280 px)
   [OK]    Ingreso 6: id del parqueo 1 (tomado de ingreso.parqueo.id)
   [OK]    Ingreso 6: entrada 05/10/2026 12:00 y salida 13:20, sin desfase horario
   [OK]    Ingreso 6: 80 minutos, 1,3333 horas y ₡1 666,67 (valores del API)

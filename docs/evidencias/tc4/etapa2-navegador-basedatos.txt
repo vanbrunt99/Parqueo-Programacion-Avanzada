@@ -3,7 +3,7 @@
 # Script: pruebas-navegador/etapa2-maestro-detalle.cjs. Salida real, sin editar.
 
 Prueba en navegador — etapa 2 (maestro/detalle con JavaScript) — MVC http://localhost:5131 — API http://localhost:5247 — origen esperado BaseDatos
-Chromium 141.0.7390.37 (Playwright), fecha 2026-10-31T22:45:34.114Z
+Chromium 141.0.7390.37 (Playwright), fecha 2026-10-31T22:55:38.684Z
 
 1. Pantalla inicial y combo de tipos
   [OK]    El combo ofrece los tipos sedán, 4x4 y moto (valores exactos)
@@ -22,6 +22,7 @@ Chromium 141.0.7390.37 (Playwright), fecha 2026-10-31T22:45:34.114Z
   [OK]    El detalle se actualizó sin recargar ni cambiar de página
   [OK]    El detalle corresponde al automóvil 2
   [OK]    Automóvil 2: ingresos 2, 6 y 16 (orden de entrada)
+  [OK]    Las ocho columnas del detalle caben sin desplazamiento horizontal (ventana de 1280 px)
   [OK]    Ingreso 6: id del parqueo 1 (tomado de ingreso.parqueo.id)
   [OK]    Ingreso 6: entrada 05/10/2026 12:00 y salida 13:20, sin desfase horario
   [OK]    Ingreso 6: 80 minutos, 1,3333 horas y ₡1 666,67 (valores del API)
@@ -36,9 +37,9 @@ Chromium 141.0.7390.37 (Playwright), fecha 2026-10-31T22:45:34.114Z
   [OK]    Al cambiar el tipo, el detalle anterior desaparece
   [OK]    La tabla del tipo anterior se limpia hasta consultar de nuevo
 5. Automóvil sin ingresos
-  [OK]    Automóvil temporal #150 creado en el API para la prueba
+  [OK]    Automóvil temporal #170 creado en el API para la prueba
   [OK]    Sin ingresos: mensaje claro y sin tabla
-  [captura] etapa2-basedatos-05-sin-ingresos.png: automóvil #150 sin ingresos
+  [captura] etapa2-basedatos-05-sin-ingresos.png: automóvil #170 sin ingresos
 6. Respuesta tardía: no sobrescribe la selección vigente
   [OK]    La solicitud del automóvil 4 se demoró 1,5 s a propósito
   [OK]    Tras la respuesta tardía, el detalle sigue siendo del automóvil 6

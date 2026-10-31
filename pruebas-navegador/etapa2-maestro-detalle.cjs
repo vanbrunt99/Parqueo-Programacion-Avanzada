@@ -57,6 +57,8 @@ async function seleccionar(pagina, id) {
     r.verificar(pagina.url() === urlAntes, 'El detalle se actualizó sin recargar ni cambiar de página');
     r.verificar((await pagina.getAttribute('#tabla-detalle', 'data-id-automovil')) === '2', 'El detalle corresponde al automóvil 2');
     r.verificar(JSON.stringify(await idsDeFilas(pagina, '#tabla-detalle', 'data-consecutivo')) === '[2,6,16]', 'Automóvil 2: ingresos 2, 6 y 16 (orden de entrada)');
+    const desborde = await pagina.$eval('#tabla-detalle', (t) => t.parentElement.scrollWidth - t.parentElement.clientWidth);
+    r.verificar(desborde <= 0, 'Las ocho columnas del detalle caben sin desplazamiento horizontal (ventana de 1280 px)', `${desborde}px de desborde`);
     const fila6 = await pagina.$$eval('#tabla-detalle tr[data-consecutivo="6"] td', (c) => c.map((x) => x.textContent));
     r.verificar(fila6[1] === '1', 'Ingreso 6: id del parqueo 1 (tomado de ingreso.parqueo.id)', JSON.stringify(fila6));
     r.verificar(fila6[3] === '05/10/2026 12:00' && fila6[4] === '05/10/2026 13:20', 'Ingreso 6: entrada 05/10/2026 12:00 y salida 13:20, sin desfase horario', JSON.stringify(fila6));

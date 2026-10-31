@@ -44,7 +44,13 @@ tr.fila-seleccionable:focus-visible {
   margin-bottom: 0;
 }
 
-/* Maestro/detalle: el nombre del parqueo no se parte en muchas líneas. */
+/* Maestro/detalle: el nombre del parqueo no se parte en muchas líneas y las fechas no se
+   parten; con encabezados breves las ocho columnas caben sin desplazamiento horizontal. */
 #tabla-detalle td:nth-child(3) {
-  min-width: 13rem;
+  min-width: 12rem;
+}
+
+#tabla-detalle td:nth-child(4),
+#tabla-detalle td:nth-child(5) {
+  white-space: nowrap;
 }
