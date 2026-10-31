@@ -1,0 +1,23 @@
+# Equivalencia de resultados entre OrigenDatos=Json y OrigenDatos=BaseDatos (PostgreSQL LOCAL del agente).
+# Mismas URL del MVC (5130) y del API (5246); solo cambió "OrigenDatos" en Parqueo.Api/appsettings.json.
+# Respuestas completas en verificacion-respuestas-json.json y verificacion-respuestas-basedatos.json.
+# Se comparan los valores del JSON interpretado (1250 y 1250.00 cuentan como iguales). El campo origenDatos (MVC)
+# y el encabezado X-Origen-Datos (API) se comparan aparte porque deben diferir.
+
+Recurso consultado                                      Origen (Json)  Origen (BaseDatos)  Contenido
+MVC /MaestroDetalle/Automoviles?tipo=sed%C3%A1n         Json           BaseDatos           idéntico
+MVC /MaestroDetalle/Automoviles?tipo=4x4                Json           BaseDatos           idéntico
+MVC /MaestroDetalle/Automoviles?tipo=moto               Json           BaseDatos           idéntico
+MVC /MaestroDetalle/Ingresos/1                          Json           BaseDatos           idéntico
+MVC /MaestroDetalle/Ingresos/2                          Json           BaseDatos           idéntico
+MVC /MaestroDetalle/Ingresos/3                          Json           BaseDatos           idéntico
+MVC /MaestroDetalle/Ingresos/4                          Json           BaseDatos           idéntico
+MVC /MaestroDetalle/Ingresos/5                          Json           BaseDatos           idéntico
+MVC /MaestroDetalle/Ingresos/6                          Json           BaseDatos           idéntico
+API /api/automoviles?tamanoPagina=100                   Json           BaseDatos           idéntico
+API /api/parqueos?tamanoPagina=100                      Json           BaseDatos           idéntico
+API /api/ingresos?tamanoPagina=100                      Json           BaseDatos           idéntico
+
+Resultado: 12 de 12 respuestas con contenido idéntico en ambos orígenes; origen informado Json en todas las de la primera corrida y BaseDatos en todas las de la segunda: sí.
+Ingreso de referencia 6: 80 minutos, 1.3333 horas, monto 1666.67 (precio 1250 por hora).
+Ingresos en curso (sin salida) con los tres campos calculados en null: [16, 17]

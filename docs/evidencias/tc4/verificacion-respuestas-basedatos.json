@@ -1,0 +1,771 @@
+{
+ "origenInformado": {
+  "http://localhost:5130/MaestroDetalle/Automoviles?tipo=sed%C3%A1n": "BaseDatos",
+  "http://localhost:5130/MaestroDetalle/Automoviles?tipo=4x4": "BaseDatos",
+  "http://localhost:5130/MaestroDetalle/Automoviles?tipo=moto": "BaseDatos",
+  "http://localhost:5130/MaestroDetalle/Ingresos/1": "BaseDatos",
+  "http://localhost:5130/MaestroDetalle/Ingresos/2": "BaseDatos",
+  "http://localhost:5130/MaestroDetalle/Ingresos/3": "BaseDatos",
+  "http://localhost:5130/MaestroDetalle/Ingresos/4": "BaseDatos",
+  "http://localhost:5130/MaestroDetalle/Ingresos/5": "BaseDatos",
+  "http://localhost:5130/MaestroDetalle/Ingresos/6": "BaseDatos",
+  "http://localhost:5246/api/automoviles?tamanoPagina=100": "BaseDatos",
+  "http://localhost:5246/api/parqueos?tamanoPagina=100": "BaseDatos",
+  "http://localhost:5246/api/ingresos?tamanoPagina=100": "BaseDatos"
+ },
+ "respuestas": {
+  "http://localhost:5130/MaestroDetalle/Automoviles?tipo=sed%C3%A1n": {
+   "tipo": "sedán",
+   "total": 2,
+   "automoviles": [
+    {
+     "id": 1,
+     "color": "Rojo",
+     "anio": 2019,
+     "fabricante": "Toyota",
+     "tipo": "sedán"
+    },
+    {
+     "id": 3,
+     "color": "Negro",
+     "anio": 2015,
+     "fabricante": "Nissan",
+     "tipo": "sedán"
+    }
+   ]
+  },
+  "http://localhost:5130/MaestroDetalle/Automoviles?tipo=4x4": {
+   "tipo": "4x4",
+   "total": 2,
+   "automoviles": [
+    {
+     "id": 2,
+     "color": "Blanco",
+     "anio": 2021,
+     "fabricante": "Hyundai",
+     "tipo": "4x4"
+    },
+    {
+     "id": 5,
+     "color": "Gris",
+     "anio": 2018,
+     "fabricante": "Mitsubishi",
+     "tipo": "4x4"
+    }
+   ]
+  },
+  "http://localhost:5130/MaestroDetalle/Automoviles?tipo=moto": {
+   "tipo": "moto",
+   "total": 2,
+   "automoviles": [
+    {
+     "id": 4,
+     "color": "Azul",
+     "anio": 2023,
+     "fabricante": "Yamaha",
+     "tipo": "moto"
+    },
+    {
+     "id": 6,
+     "color": "Verde",
+     "anio": 2012,
+     "fabricante": "Honda",
+     "tipo": "moto"
+    }
+   ]
+  },
+  "http://localhost:5130/MaestroDetalle/Ingresos/1": {
+   "automovil": {
+    "id": 1,
+    "color": "Rojo",
+    "anio": 2019,
+    "fabricante": "Toyota",
+    "tipo": "sedán"
+   },
+   "ingresos": [
+    {
+     "consecutivo": 1,
+     "idParqueo": 1,
+     "nombreParqueo": "Parqueo Central Avenida Segunda",
+     "fechaHoraEntrada": "2026-10-01T07:45:00",
+     "fechaHoraSalida": "2026-10-01T10:15:00",
+     "duracionEstadiaMinutos": 150,
+     "duracionEstadiaHoras": 2.5,
+     "montoACancelar": 3125.0
+    },
+    {
+     "consecutivo": 8,
+     "idParqueo": 2,
+     "nombreParqueo": "Parqueo Mercado de Heredia",
+     "fechaHoraEntrada": "2026-10-07T15:30:00",
+     "fechaHoraSalida": "2026-10-07T17:00:00",
+     "duracionEstadiaMinutos": 90,
+     "duracionEstadiaHoras": 1.5,
+     "montoACancelar": 1200.0
+    },
+    {
+     "consecutivo": 13,
+     "idParqueo": 3,
+     "nombreParqueo": "Parqueo Las Ruinas",
+     "fechaHoraEntrada": "2026-10-14T11:00:00",
+     "fechaHoraSalida": "2026-10-14T14:00:00",
+     "duracionEstadiaMinutos": 180,
+     "duracionEstadiaHoras": 3,
+     "montoACancelar": 2026.5
+    }
+   ]
+  },
+  "http://localhost:5130/MaestroDetalle/Ingresos/2": {
+   "automovil": {
+    "id": 2,
+    "color": "Blanco",
+    "anio": 2021,
+    "fabricante": "Hyundai",
+    "tipo": "4x4"
+   },
+   "ingresos": [
+    {
+     "consecutivo": 2,
+     "idParqueo": 2,
+     "nombreParqueo": "Parqueo Mercado de Heredia",
+     "fechaHoraEntrada": "2026-10-01T09:00:00",
+     "fechaHoraSalida": "2026-10-01T09:45:00",
+     "duracionEstadiaMinutos": 45,
+     "duracionEstadiaHoras": 0.75,
+     "montoACancelar": 600.0
+    },
+    {
+     "consecutivo": 6,
+     "idParqueo": 1,
+     "nombreParqueo": "Parqueo Central Avenida Segunda",
+     "fechaHoraEntrada": "2026-10-05T12:00:00",
+     "fechaHoraSalida": "2026-10-05T13:20:00",
+     "duracionEstadiaMinutos": 80,
+     "duracionEstadiaHoras": 1.3333,
+     "montoACancelar": 1666.67
+    },
+    {
+     "consecutivo": 16,
+     "idParqueo": 1,
+     "nombreParqueo": "Parqueo Central Avenida Segunda",
+     "fechaHoraEntrada": "2026-10-17T08:05:00",
+     "fechaHoraSalida": null,
+     "duracionEstadiaMinutos": null,
+     "duracionEstadiaHoras": null,
+     "montoACancelar": null
+    }
+   ]
+  },
+  "http://localhost:5130/MaestroDetalle/Ingresos/3": {
+   "automovil": {
+    "id": 3,
+    "color": "Negro",
+    "anio": 2015,
+    "fabricante": "Nissan",
+    "tipo": "sedán"
+   },
+   "ingresos": [
+    {
+     "consecutivo": 5,
+     "idParqueo": 2,
+     "nombreParqueo": "Parqueo Mercado de Heredia",
+     "fechaHoraEntrada": "2026-10-04T10:00:00",
+     "fechaHoraSalida": "2026-10-04T18:00:00",
+     "duracionEstadiaMinutos": 480,
+     "duracionEstadiaHoras": 8,
+     "montoACancelar": 6400.0
+    },
+    {
+     "consecutivo": 9,
+     "idParqueo": 1,
+     "nombreParqueo": "Parqueo Central Avenida Segunda",
+     "fechaHoraEntrada": "2026-10-08T08:00:00",
+     "fechaHoraSalida": "2026-10-08T12:30:00",
+     "duracionEstadiaMinutos": 270,
+     "duracionEstadiaHoras": 4.5,
+     "montoACancelar": 5625.0
+    },
+    {
+     "consecutivo": 17,
+     "idParqueo": 2,
+     "nombreParqueo": "Parqueo Mercado de Heredia",
+     "fechaHoraEntrada": "2026-10-17T09:20:00",
+     "fechaHoraSalida": null,
+     "duracionEstadiaMinutos": null,
+     "duracionEstadiaHoras": null,
+     "montoACancelar": null
+    }
+   ]
+  },
+  "http://localhost:5130/MaestroDetalle/Ingresos/4": {
+   "automovil": {
+    "id": 4,
+    "color": "Azul",
+    "anio": 2023,
+    "fabricante": "Yamaha",
+    "tipo": "moto"
+   },
+   "ingresos": [
+    {
+     "consecutivo": 3,
+     "idParqueo": 1,
+     "nombreParqueo": "Parqueo Central Avenida Segunda",
+     "fechaHoraEntrada": "2026-10-02T08:10:00",
+     "fechaHoraSalida": "2026-10-02T08:40:00",
+     "duracionEstadiaMinutos": 30,
+     "duracionEstadiaHoras": 0.5,
+     "montoACancelar": 625.0
+    },
+    {
+     "consecutivo": 10,
+     "idParqueo": 3,
+     "nombreParqueo": "Parqueo Las Ruinas",
+     "fechaHoraEntrada": "2026-10-09T18:15:00",
+     "fechaHoraSalida": "2026-10-09T19:00:00",
+     "duracionEstadiaMinutos": 45,
+     "duracionEstadiaHoras": 0.75,
+     "montoACancelar": 506.63
+    },
+    {
+     "consecutivo": 14,
+     "idParqueo": 2,
+     "nombreParqueo": "Parqueo Mercado de Heredia",
+     "fechaHoraEntrada": "2026-10-15T16:45:00",
+     "fechaHoraSalida": "2026-10-15T17:05:00",
+     "duracionEstadiaMinutos": 20,
+     "duracionEstadiaHoras": 0.3333,
+     "montoACancelar": 266.67
+    }
+   ]
+  },
+  "http://localhost:5130/MaestroDetalle/Ingresos/5": {
+   "automovil": {
+    "id": 5,
+    "color": "Gris",
+    "anio": 2018,
+    "fabricante": "Mitsubishi",
+    "tipo": "4x4"
+   },
+   "ingresos": [
+    {
+     "consecutivo": 4,
+     "idParqueo": 3,
+     "nombreParqueo": "Parqueo Las Ruinas",
+     "fechaHoraEntrada": "2026-10-03T13:20:00",
+     "fechaHoraSalida": "2026-10-03T16:05:00",
+     "duracionEstadiaMinutos": 165,
+     "duracionEstadiaHoras": 2.75,
+     "montoACancelar": 1857.63
+    },
+    {
+     "consecutivo": 11,
+     "idParqueo": 2,
+     "nombreParqueo": "Parqueo Mercado de Heredia",
+     "fechaHoraEntrada": "2026-10-10T09:40:00",
+     "fechaHoraSalida": "2026-10-10T11:10:00",
+     "duracionEstadiaMinutos": 90,
+     "duracionEstadiaHoras": 1.5,
+     "montoACancelar": 1200.0
+    },
+    {
+     "consecutivo": 15,
+     "idParqueo": 1,
+     "nombreParqueo": "Parqueo Central Avenida Segunda",
+     "fechaHoraEntrada": "2026-10-16T10:30:00",
+     "fechaHoraSalida": "2026-10-16T12:45:00",
+     "duracionEstadiaMinutos": 135,
+     "duracionEstadiaHoras": 2.25,
+     "montoACancelar": 2812.5
+    }
+   ]
+  },
+  "http://localhost:5130/MaestroDetalle/Ingresos/6": {
+   "automovil": {
+    "id": 6,
+    "color": "Verde",
+    "anio": 2012,
+    "fabricante": "Honda",
+    "tipo": "moto"
+   },
+   "ingresos": [
+    {
+     "consecutivo": 7,
+     "idParqueo": 3,
+     "nombreParqueo": "Parqueo Las Ruinas",
+     "fechaHoraEntrada": "2026-10-06T07:00:00",
+     "fechaHoraSalida": "2026-10-06T07:50:00",
+     "duracionEstadiaMinutos": 50,
+     "duracionEstadiaHoras": 0.8333,
+     "montoACancelar": 562.92
+    },
+    {
+     "consecutivo": 12,
+     "idParqueo": 1,
+     "nombreParqueo": "Parqueo Central Avenida Segunda",
+     "fechaHoraEntrada": "2026-10-12T06:55:00",
+     "fechaHoraSalida": "2026-10-12T07:25:00",
+     "duracionEstadiaMinutos": 30,
+     "duracionEstadiaHoras": 0.5,
+     "montoACancelar": 625.0
+    }
+   ]
+  },
+  "http://localhost:5246/api/automoviles?tamanoPagina=100": [
+   {
+    "id": 1,
+    "color": "Rojo",
+    "anio": 2019,
+    "fabricante": "Toyota",
+    "tipo": "sedán"
+   },
+   {
+    "id": 2,
+    "color": "Blanco",
+    "anio": 2021,
+    "fabricante": "Hyundai",
+    "tipo": "4x4"
+   },
+   {
+    "id": 3,
+    "color": "Negro",
+    "anio": 2015,
+    "fabricante": "Nissan",
+    "tipo": "sedán"
+   },
+   {
+    "id": 4,
+    "color": "Azul",
+    "anio": 2023,
+    "fabricante": "Yamaha",
+    "tipo": "moto"
+   },
+   {
+    "id": 5,
+    "color": "Gris",
+    "anio": 2018,
+    "fabricante": "Mitsubishi",
+    "tipo": "4x4"
+   },
+   {
+    "id": 6,
+    "color": "Verde",
+    "anio": 2012,
+    "fabricante": "Honda",
+    "tipo": "moto"
+   }
+  ],
+  "http://localhost:5246/api/parqueos?tamanoPagina=100": [
+   {
+    "id": 1,
+    "nombreProvincia": "San José",
+    "nombre": "Parqueo Central Avenida Segunda",
+    "precioPorHora": 1250.0
+   },
+   {
+    "id": 2,
+    "nombreProvincia": "Heredia",
+    "nombre": "Parqueo Mercado de Heredia",
+    "precioPorHora": 800.0
+   },
+   {
+    "id": 3,
+    "nombreProvincia": "Cartago",
+    "nombre": "Parqueo Las Ruinas",
+    "precioPorHora": 675.5
+   }
+  ],
+  "http://localhost:5246/api/ingresos?tamanoPagina=100": [
+   {
+    "consecutivo": 1,
+    "idParqueo": 1,
+    "idAutomovil": 1,
+    "fechaHoraEntrada": "2026-10-01T07:45:00",
+    "fechaHoraSalida": "2026-10-01T10:15:00",
+    "duracionEstadiaMinutos": 150,
+    "duracionEstadiaHoras": 2.5,
+    "montoTotalAPagar": 3125.0,
+    "automovil": {
+     "id": 1,
+     "color": "Rojo",
+     "anio": 2019,
+     "fabricante": "Toyota",
+     "tipo": "sedán"
+    },
+    "parqueo": {
+     "id": 1,
+     "nombreProvincia": "San José",
+     "nombre": "Parqueo Central Avenida Segunda",
+     "precioPorHora": 1250.0
+    }
+   },
+   {
+    "consecutivo": 2,
+    "idParqueo": 2,
+    "idAutomovil": 2,
+    "fechaHoraEntrada": "2026-10-01T09:00:00",
+    "fechaHoraSalida": "2026-10-01T09:45:00",
+    "duracionEstadiaMinutos": 45,
+    "duracionEstadiaHoras": 0.75,
+    "montoTotalAPagar": 600.0,
+    "automovil": {
+     "id": 2,
+     "color": "Blanco",
+     "anio": 2021,
+     "fabricante": "Hyundai",
+     "tipo": "4x4"
+    },
+    "parqueo": {
+     "id": 2,
+     "nombreProvincia": "Heredia",
+     "nombre": "Parqueo Mercado de Heredia",
+     "precioPorHora": 800.0
+    }
+   },
+   {
+    "consecutivo": 3,
+    "idParqueo": 1,
+    "idAutomovil": 4,
+    "fechaHoraEntrada": "2026-10-02T08:10:00",
+    "fechaHoraSalida": "2026-10-02T08:40:00",
+    "duracionEstadiaMinutos": 30,
+    "duracionEstadiaHoras": 0.5,
+    "montoTotalAPagar": 625.0,
+    "automovil": {
+     "id": 4,
+     "color": "Azul",
+     "anio": 2023,
+     "fabricante": "Yamaha",
+     "tipo": "moto"
+    },
+    "parqueo": {
+     "id": 1,
+     "nombreProvincia": "San José",
+     "nombre": "Parqueo Central Avenida Segunda",
+     "precioPorHora": 1250.0
+    }
+   },
+   {
+    "consecutivo": 4,
+    "idParqueo": 3,
+    "idAutomovil": 5,
+    "fechaHoraEntrada": "2026-10-03T13:20:00",
+    "fechaHoraSalida": "2026-10-03T16:05:00",
+    "duracionEstadiaMinutos": 165,
+    "duracionEstadiaHoras": 2.75,
+    "montoTotalAPagar": 1857.63,
+    "automovil": {
+     "id": 5,
+     "color": "Gris",
+     "anio": 2018,
+     "fabricante": "Mitsubishi",
+     "tipo": "4x4"
+    },
+    "parqueo": {
+     "id": 3,
+     "nombreProvincia": "Cartago",
+     "nombre": "Parqueo Las Ruinas",
+     "precioPorHora": 675.5
+    }
+   },
+   {
+    "consecutivo": 5,
+    "idParqueo": 2,
+    "idAutomovil": 3,
+    "fechaHoraEntrada": "2026-10-04T10:00:00",
+    "fechaHoraSalida": "2026-10-04T18:00:00",
+    "duracionEstadiaMinutos": 480,
+    "duracionEstadiaHoras": 8,
+    "montoTotalAPagar": 6400.0,
+    "automovil": {
+     "id": 3,
+     "color": "Negro",
+     "anio": 2015,
+     "fabricante": "Nissan",
+     "tipo": "sedán"
+    },
+    "parqueo": {
+     "id": 2,
+     "nombreProvincia": "Heredia",
+     "nombre": "Parqueo Mercado de Heredia",
+     "precioPorHora": 800.0
+    }
+   },
+   {
+    "consecutivo": 6,
+    "idParqueo": 1,
+    "idAutomovil": 2,
+    "fechaHoraEntrada": "2026-10-05T12:00:00",
+    "fechaHoraSalida": "2026-10-05T13:20:00",
+    "duracionEstadiaMinutos": 80,
+    "duracionEstadiaHoras": 1.3333,
+    "montoTotalAPagar": 1666.67,
+    "automovil": {
+     "id": 2,
+     "color": "Blanco",
+     "anio": 2021,
+     "fabricante": "Hyundai",
+     "tipo": "4x4"
+    },
+    "parqueo": {
+     "id": 1,
+     "nombreProvincia": "San José",
+     "nombre": "Parqueo Central Avenida Segunda",
+     "precioPorHora": 1250.0
+    }
+   },
+   {
+    "consecutivo": 7,
+    "idParqueo": 3,
+    "idAutomovil": 6,
+    "fechaHoraEntrada": "2026-10-06T07:00:00",
+    "fechaHoraSalida": "2026-10-06T07:50:00",
+    "duracionEstadiaMinutos": 50,
+    "duracionEstadiaHoras": 0.8333,
+    "montoTotalAPagar": 562.92,
+    "automovil": {
+     "id": 6,
+     "color": "Verde",
+     "anio": 2012,
+     "fabricante": "Honda",
+     "tipo": "moto"
+    },
+    "parqueo": {
+     "id": 3,
+     "nombreProvincia": "Cartago",
+     "nombre": "Parqueo Las Ruinas",
+     "precioPorHora": 675.5
+    }
+   },
+   {
+    "consecutivo": 8,
+    "idParqueo": 2,
+    "idAutomovil": 1,
+    "fechaHoraEntrada": "2026-10-07T15:30:00",
+    "fechaHoraSalida": "2026-10-07T17:00:00",
+    "duracionEstadiaMinutos": 90,
+    "duracionEstadiaHoras": 1.5,
+    "montoTotalAPagar": 1200.0,
+    "automovil": {
+     "id": 1,
+     "color": "Rojo",
+     "anio": 2019,
+     "fabricante": "Toyota",
+     "tipo": "sedán"
+    },
+    "parqueo": {
+     "id": 2,
+     "nombreProvincia": "Heredia",
+     "nombre": "Parqueo Mercado de Heredia",
+     "precioPorHora": 800.0
+    }
+   },
+   {
+    "consecutivo": 9,
+    "idParqueo": 1,
+    "idAutomovil": 3,
+    "fechaHoraEntrada": "2026-10-08T08:00:00",
+    "fechaHoraSalida": "2026-10-08T12:30:00",
+    "duracionEstadiaMinutos": 270,
+    "duracionEstadiaHoras": 4.5,
+    "montoTotalAPagar": 5625.0,
+    "automovil": {
+     "id": 3,
+     "color": "Negro",
+     "anio": 2015,
+     "fabricante": "Nissan",
+     "tipo": "sedán"
+    },
+    "parqueo": {
+     "id": 1,
+     "nombreProvincia": "San José",
+     "nombre": "Parqueo Central Avenida Segunda",
+     "precioPorHora": 1250.0
+    }
+   },
+   {
+    "consecutivo": 10,
+    "idParqueo": 3,
+    "idAutomovil": 4,
+    "fechaHoraEntrada": "2026-10-09T18:15:00",
+    "fechaHoraSalida": "2026-10-09T19:00:00",
+    "duracionEstadiaMinutos": 45,
+    "duracionEstadiaHoras": 0.75,
+    "montoTotalAPagar": 506.63,
+    "automovil": {
+     "id": 4,
+     "color": "Azul",
+     "anio": 2023,
+     "fabricante": "Yamaha",
+     "tipo": "moto"
+    },
+    "parqueo": {
+     "id": 3,
+     "nombreProvincia": "Cartago",
+     "nombre": "Parqueo Las Ruinas",
+     "precioPorHora": 675.5
+    }
+   },
+   {
+    "consecutivo": 11,
+    "idParqueo": 2,
+    "idAutomovil": 5,
+    "fechaHoraEntrada": "2026-10-10T09:40:00",
+    "fechaHoraSalida": "2026-10-10T11:10:00",
+    "duracionEstadiaMinutos": 90,
+    "duracionEstadiaHoras": 1.5,
+    "montoTotalAPagar": 1200.0,
+    "automovil": {
+     "id": 5,
+     "color": "Gris",
+     "anio": 2018,
+     "fabricante": "Mitsubishi",
+     "tipo": "4x4"
+    },
+    "parqueo": {
+     "id": 2,
+     "nombreProvincia": "Heredia",
+     "nombre": "Parqueo Mercado de Heredia",
+     "precioPorHora": 800.0
+    }
+   },
+   {
+    "consecutivo": 12,
+    "idParqueo": 1,
+    "idAutomovil": 6,
+    "fechaHoraEntrada": "2026-10-12T06:55:00",
+    "fechaHoraSalida": "2026-10-12T07:25:00",
+    "duracionEstadiaMinutos": 30,
+    "duracionEstadiaHoras": 0.5,
+    "montoTotalAPagar": 625.0,
+    "automovil": {
+     "id": 6,
+     "color": "Verde",
+     "anio": 2012,
+     "fabricante": "Honda",
+     "tipo": "moto"
+    },
+    "parqueo": {
+     "id": 1,
+     "nombreProvincia": "San José",
+     "nombre": "Parqueo Central Avenida Segunda",
+     "precioPorHora": 1250.0
+    }
+   },
+   {
+    "consecutivo": 13,
+    "idParqueo": 3,
+    "idAutomovil": 1,
+    "fechaHoraEntrada": "2026-10-14T11:00:00",
+    "fechaHoraSalida": "2026-10-14T14:00:00",
+    "duracionEstadiaMinutos": 180,
+    "duracionEstadiaHoras": 3,
+    "montoTotalAPagar": 2026.5,
+    "automovil": {
+     "id": 1,
+     "color": "Rojo",
+     "anio": 2019,
+     "fabricante": "Toyota",
+     "tipo": "sedán"
+    },
+    "parqueo": {
+     "id": 3,
+     "nombreProvincia": "Cartago",
+     "nombre": "Parqueo Las Ruinas",
+     "precioPorHora": 675.5
+    }
+   },
+   {
+    "consecutivo": 14,
+    "idParqueo": 2,
+    "idAutomovil": 4,
+    "fechaHoraEntrada": "2026-10-15T16:45:00",
+    "fechaHoraSalida": "2026-10-15T17:05:00",
+    "duracionEstadiaMinutos": 20,
+    "duracionEstadiaHoras": 0.3333,
+    "montoTotalAPagar": 266.67,
+    "automovil": {
+     "id": 4,
+     "color": "Azul",
+     "anio": 2023,
+     "fabricante": "Yamaha",
+     "tipo": "moto"
+    },
+    "parqueo": {
+     "id": 2,
+     "nombreProvincia": "Heredia",
+     "nombre": "Parqueo Mercado de Heredia",
+     "precioPorHora": 800.0
+    }
+   },
+   {
+    "consecutivo": 15,
+    "idParqueo": 1,
+    "idAutomovil": 5,
+    "fechaHoraEntrada": "2026-10-16T10:30:00",
+    "fechaHoraSalida": "2026-10-16T12:45:00",
+    "duracionEstadiaMinutos": 135,
+    "duracionEstadiaHoras": 2.25,
+    "montoTotalAPagar": 2812.5,
+    "automovil": {
+     "id": 5,
+     "color": "Gris",
+     "anio": 2018,
+     "fabricante": "Mitsubishi",
+     "tipo": "4x4"
+    },
+    "parqueo": {
+     "id": 1,
+     "nombreProvincia": "San José",
+     "nombre": "Parqueo Central Avenida Segunda",
+     "precioPorHora": 1250.0
+    }
+   },
+   {
+    "consecutivo": 16,
+    "idParqueo": 1,
+    "idAutomovil": 2,
+    "fechaHoraEntrada": "2026-10-17T08:05:00",
+    "fechaHoraSalida": null,
+    "duracionEstadiaMinutos": null,
+    "duracionEstadiaHoras": null,
+    "montoTotalAPagar": null,
+    "automovil": {
+     "id": 2,
+     "color": "Blanco",
+     "anio": 2021,
+     "fabricante": "Hyundai",
+     "tipo": "4x4"
+    },
+    "parqueo": {
+     "id": 1,
+     "nombreProvincia": "San José",
+     "nombre": "Parqueo Central Avenida Segunda",
+     "precioPorHora": 1250.0
+    }
+   },
+   {
+    "consecutivo": 17,
+    "idParqueo": 2,
+    "idAutomovil": 3,
+    "fechaHoraEntrada": "2026-10-17T09:20:00",
+    "fechaHoraSalida": null,
+    "duracionEstadiaMinutos": null,
+    "duracionEstadiaHoras": null,
+    "montoTotalAPagar": null,
+    "automovil": {
+     "id": 3,
+     "color": "Negro",
+     "anio": 2015,
+     "fabricante": "Nissan",
+     "tipo": "sedán"
+    },
+    "parqueo": {
+     "id": 2,
+     "nombreProvincia": "Heredia",
+     "nombre": "Parqueo Mercado de Heredia",
+     "precioPorHora": 800.0
+    }
+   }
+  ]
+ }
+}

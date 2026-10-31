@@ -1,0 +1,126 @@
+# Verificación del origen de datos configurado en Parqueo.Api/appsettings.json: "OrigenDatos": "Json"
+# Entorno: contenedor Linux del agente. Json = copia de trabajo de Datos/ junto al ejecutable (bin/Debug/net10.0/Datos), según RutaDatosJson.
+# Fecha: 2026-10-31 16:55 (hora de Costa Rica). Comandos y salidas reales; la contraseña local nunca se imprime.
+
+## 1. Archivo appsettings.json efectivo del API (raíz de contenido = carpeta del proyecto)
+$ grep -n -E 'OrigenDatos|RutaDatosJson' Parqueo.Api/appsettings.json
+2:  "OrigenDatos": "Json",
+3:  "RutaDatosJson": "Datos",
+
+$ git diff -- Parqueo.Api/appsettings.json
+
+$ grep -E 'Content root path|Hosting environment|Now listening|Origen de datos' api.log   (salida de consola del API)
+Origen de datos: Json (carpeta /home/claude/tc4/Parqueo-Programacion-Avanzada/Parqueo.Api/bin/Debug/net10.0/Datos)
+Now listening on: http://localhost:5246
+Hosting environment: Development
+Content root path: /home/claude/tc4/Parqueo-Programacion-Avanzada/Parqueo.Api
+
+## 2. Ninguna otra fuente sobrescribe OrigenDatos
+# Comando con el que se inició el API (proceso dotnet run) y proceso real de la aplicación:
+$ xargs -0 echo < /proc/21766/cmdline
+dotnet run --project Parqueo.Api --launch-profile http --no-build --
+
+$ xargs -0 echo < /proc/21799/cmdline
+/home/claude/tc4/Parqueo-Programacion-Avanzada/Parqueo.Api/bin/Debug/net10.0/Parqueo.Api
+
+$ tr '\0' '\n' < /proc/21799/environ | grep -c -i -E '^(OrigenDatos|ConnectionStrings|RutaDatosJson)' || true
+0
+
+$ tr '\0' '\n' < /proc/21799/environ | grep -E '^ASPNETCORE_' | sort
+ASPNETCORE_ENVIRONMENT=Development
+ASPNETCORE_URLS=http://localhost:5246
+
+$ grep -c OrigenDatos Parqueo.Api/appsettings.Development.json || true
+0
+
+$ (claves de User Secrets del API; los valores no se muestran)
+['ConnectionStrings:ParqueoDb']
+
+## 3. Respuestas del API: encabezado X-Origen-Datos
+$ curl -s -D - -o /dev/null 'http://localhost:5246/api/automoviles?anioDesde=2015&anioHasta=2020' | grep -i -E '^(HTTP|X-Origen-Datos|X-Total-Registros)'
+HTTP/1.1 200 OK
+X-Total-Registros: 3
+X-Origen-Datos: Json
+
+$ curl -s -D - 'http://localhost:5246/api/ingresos/6' | grep -v -i -E '^(date|server|transfer-encoding|content-type)'
+HTTP/1.1 200 OK
+X-Origen-Datos: Json
+
+{"consecutivo":6,"idParqueo":1,"idAutomovil":2,"fechaHoraEntrada":"2026-10-05T12:00:00","fechaHoraSalida":"2026-10-05T13:20:00","duracionEstadiaMinutos":80,"duracionEstadiaHoras":1.3333,"montoTotalAPagar":1666.67,"automovil":{"id":2,"color":"Blanco","anio":2021,"fabricante":"Hyundai","tipo":"4x4"},"parqueo":{"id":1,"nombreProvincia":"San José","nombre":"Parqueo Central Avenida Segunda","precioPorHora":1250.00}}
+
+
+## 4. Consultas a través del MVC (puerto 5130). La URL del API sale de Parqueo.Mvc/appsettings.json
+$ grep -n UrlBase Parqueo.Mvc/appsettings.json
+3:    "UrlBase": "http://localhost:5246/"
+
+$ xargs -0 echo < /proc/21769/cmdline
+dotnet run --project Parqueo.Mvc --launch-profile http --no-build --
+
+$ tr '\0' '\n' < /proc/21811/environ | grep -c -i -E '^Api__' || true
+0
+
+$ curl -s 'http://localhost:5130/Automoviles?anioDesde=2015&anioHasta=2020' | grep -o -E 'data-origen="[A-Za-z]+"'
+data-origen="Json"
+
+$ curl -s -H 'Accept: application/json' 'http://localhost:5130/MaestroDetalle/Automoviles?tipo=4x4'
+{"tipo":"4x4","origenDatos":"Json","total":2,"automoviles":[{"id":2,"color":"Blanco","anio":2021,"fabricante":"Hyundai","tipo":"4x4"},{"id":5,"color":"Gris","anio":2018,"fabricante":"Mitsubishi","tipo":"4x4"}]}
+
+$ curl -s -H 'Accept: application/json' 'http://localhost:5130/MaestroDetalle/Ingresos/2'
+{"automovil":{"id":2,"color":"Blanco","anio":2021,"fabricante":"Hyundai","tipo":"4x4"},"origenDatos":"Json","ingresos":[{"consecutivo":2,"idParqueo":2,"nombreParqueo":"Parqueo Mercado de Heredia","fechaHoraEntrada":"2026-10-01T09:00:00","fechaHoraSalida":"2026-10-01T09:45:00","duracionEstadiaMinutos":45,"duracionEstadiaHoras":0.75,"montoACancelar":600.00},{"consecutivo":6,"idParqueo":1,"nombreParqueo":"Parqueo Central Avenida Segunda","fechaHoraEntrada":"2026-10-05T12:00:00","fechaHoraSalida":"2026-10-05T13:20:00","duracionEstadiaMinutos":80,"duracionEstadiaHoras":1.3333,"montoACancelar":1666.67},{"consecutivo":16,"idParqueo":1,"nombreParqueo":"Parqueo Central Avenida Segunda","fechaHoraEntrada":"2026-10-17T08:05:00","fechaHoraSalida":null,"duracionEstadiaMinutos":null,"duracionEstadiaHoras":null,"montoACancelar":null}]}
+
+## 5. Registro del MVC: llamadas HTTP al API (extracto)
+Start processing HTTP request GET http://localhost:5246/api/automoviles?pagina=1&tamanoPagina=1
+Start processing HTTP request GET http://localhost:5246/api/automoviles?anioDesde=2015&anioHasta=2020&pagina=1&tamanoPagina=10
+Start processing HTTP request GET http://localhost:5246/api/automoviles?tipo=4x4&pagina=1&tamanoPagina=100
+Start processing HTTP request GET http://localhost:5246/api/automoviles/2
+Start processing HTTP request GET http://localhost:5246/api/automoviles?tipo=sed%C3%A1n&pagina=1&tamanoPagina=100
+Start processing HTTP request GET http://localhost:5246/api/automoviles?tipo=4x4&pagina=1&tamanoPagina=100
+Start processing HTTP request GET http://localhost:5246/api/automoviles?tipo=moto&pagina=1&tamanoPagina=100
+Start processing HTTP request GET http://localhost:5246/api/automoviles/1
+Start processing HTTP request GET http://localhost:5246/api/automoviles/2
+Start processing HTTP request GET http://localhost:5246/api/automoviles/3
+Start processing HTTP request GET http://localhost:5246/api/automoviles/4
+Start processing HTTP request GET http://localhost:5246/api/automoviles/5
+(total de llamadas del MVC al API: 17)
+
+## 6. Actividad en PostgreSQL local durante esta corrida
+$ lsof -nP -a -p <proceso del API> -iTCP:5432 -sTCP:ESTABLISHED   (conexiones del proceso del API al servidor PostgreSQL)
+(ninguna conexión: el proceso del API no abrió conexiones a PostgreSQL)
+
+Consultado desde la base postgres (no genera transacciones en parqueo_local):
+transacciones confirmadas en parqueo_local: antes=7373, después=7373, diferencia=0
+  (el contador de pg_stat_database también puede incluir algún proceso interno del servidor, como autovacuum)
+conexiones abiertas del usuario estudiante_prq a parqueo_local al final (pool de Npgsql): 0
+
+## 7. Archivos JSON: la semilla Datos/ y la copia de trabajo no cambiaron (consultas de solo lectura)
+sha256 iguales antes y después:
+  1d8e5e8e473da4f6…  Datos/automoviles.json
+  0c5e0b4998279ffc…  Datos/ingresos-automoviles.json
+  f1ad72f01b44ec7a…  Datos/parqueos.json
+  1d8e5e8e473da4f6…  Parqueo.Api/bin/Debug/net10.0/Datos/automoviles.json
+  0c5e0b4998279ffc…  Parqueo.Api/bin/Debug/net10.0/Datos/ingresos-automoviles.json
+  f1ad72f01b44ec7a…  Parqueo.Api/bin/Debug/net10.0/Datos/parqueos.json
+
+## 8. Navegador (Chromium headless con Playwright): pruebas-navegador/verificacion-origen.cjs
+Verificación del origen configurado en appsettings.json — MVC http://localhost:5130 — origen esperado Json
+Chromium 141.0.7390.37 (Playwright), fecha 2026-10-31T22:55:58.337Z
+
+1. Listado de automóviles filtrado por años (2015 a 2020, inclusivo)
+  [OK]    Automóviles 1, 3 y 5
+  [OK]    El pie informa el origen Json recibido en X-Origen-Datos
+  [captura] verificacion-json-01-automoviles-2015-2020.png: listado filtrado servido por el origen Json
+2. Detalle del ingreso de referencia (80 minutos a 1250 por hora)
+  [OK]    Duración de 80 minutos y 1,3333 horas
+  [OK]    Monto a cancelar ₡1 666,67 calculado por el API
+  [OK]    El pie informa el origen Json
+  [captura] verificacion-json-02-ingreso-6.png: ingreso 6 con el monto de referencia
+3. Maestro/detalle con JavaScript
+  [OK]    Tipo 4x4: automóviles 2 y 5
+  [OK]    El estado del maestro muestra el origen Json recibido en la respuesta
+  [OK]    Automóvil 2: ingresos 2, 6 y 16
+  [OK]    Las ocho columnas del detalle caben sin desplazamiento horizontal (ventana de 1280 px)
+  [OK]    Ingreso 16 en curso: salida y campos calculados sin valor
+  [captura] verificacion-json-03-maestro-detalle.png: maestro/detalle servido por el origen Json
+  [OK]    Sin errores en la consola del navegador
+
+RESULTADO: todas las verificaciones pasaron.
