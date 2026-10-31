@@ -1,0 +1,50 @@
+# Registro del MVC (System.Net.Http.HttpClient.ClienteApiParqueo) durante la prueba del maestro/detalle.
+# El navegador llama a /MaestroDetalle/... (mismo origen) y el MVC llama al API. Extracto real.
+
+## MVC en http://localhost:5130 → API Json en http://localhost:5246/
+Start processing HTTP request GET http://localhost:5246/api/automoviles?pagina=1&tamanoPagina=1
+End processing HTTP request after 67.0967ms - 200
+Start processing HTTP request GET http://localhost:5246/api/automoviles?tipo=sed%C3%A1n&pagina=1&tamanoPagina=100
+End processing HTTP request after 21.8825ms - 200
+Start processing HTTP request GET http://localhost:5246/api/automoviles?tipo=moto&pagina=1&tamanoPagina=100
+End processing HTTP request after 8.6998ms - 200
+Start processing HTTP request GET http://localhost:5246/api/automoviles?tipo=4x4&pagina=1&tamanoPagina=100
+End processing HTTP request after 11.0313ms - 200
+Start processing HTTP request GET http://localhost:5246/api/automoviles/2
+End processing HTTP request after 39.1019ms - 200
+Start processing HTTP request GET http://localhost:5246/api/automoviles/5
+End processing HTTP request after 6.9382ms - 200
+Start processing HTTP request GET http://localhost:5246/api/automoviles?tipo=moto&pagina=1&tamanoPagina=100
+End processing HTTP request after 12.4889ms - 200
+Start processing HTTP request GET http://localhost:5246/api/automoviles/7
+End processing HTTP request after 2.6711ms - 200
+Start processing HTTP request GET http://localhost:5246/api/automoviles/6
+End processing HTTP request after 3.2518ms - 200
+Start processing HTTP request GET http://localhost:5246/api/automoviles?tipo=sed%C3%A1n&pagina=1&tamanoPagina=100
+End processing HTTP request after 12.9441ms - 200
+Start processing HTTP request GET http://localhost:5246/api/automoviles?tipo=sed%C3%A1n&pagina=1&tamanoPagina=100
+End processing HTTP request after 15.0913ms - 200
+
+## MVC en http://localhost:5131 → API BaseDatos (PostgreSQL local) en http://localhost:5247/
+Start processing HTTP request GET http://localhost:5247/api/automoviles?pagina=1&tamanoPagina=1
+End processing HTTP request after 172.1464ms - 200
+Start processing HTTP request GET http://localhost:5247/api/automoviles?tipo=sed%C3%A1n&pagina=1&tamanoPagina=100
+End processing HTTP request after 67.8498ms - 200
+Start processing HTTP request GET http://localhost:5247/api/automoviles?tipo=moto&pagina=1&tamanoPagina=100
+End processing HTTP request after 10.4176ms - 200
+Start processing HTTP request GET http://localhost:5247/api/automoviles?tipo=4x4&pagina=1&tamanoPagina=100
+End processing HTTP request after 10.3218ms - 200
+Start processing HTTP request GET http://localhost:5247/api/automoviles/2
+End processing HTTP request after 138.4205ms - 200
+Start processing HTTP request GET http://localhost:5247/api/automoviles/5
+End processing HTTP request after 13.558ms - 200
+Start processing HTTP request GET http://localhost:5247/api/automoviles?tipo=moto&pagina=1&tamanoPagina=100
+End processing HTTP request after 11.5188ms - 200
+Start processing HTTP request GET http://localhost:5247/api/automoviles/150
+End processing HTTP request after 9.34ms - 200
+Start processing HTTP request GET http://localhost:5247/api/automoviles/6
+End processing HTTP request after 11.5318ms - 200
+Start processing HTTP request GET http://localhost:5247/api/automoviles?tipo=sed%C3%A1n&pagina=1&tamanoPagina=100
+End processing HTTP request after 11.5349ms - 200
+Start processing HTTP request GET http://localhost:5247/api/automoviles?tipo=sed%C3%A1n&pagina=1&tamanoPagina=100
+End processing HTTP request after 8.62ms - 200

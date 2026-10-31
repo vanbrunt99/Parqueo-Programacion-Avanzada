@@ -1,0 +1,58 @@
+# Prueba real en navegador (Chromium headless con Playwright) del maestro/detalle con JavaScript.
+# Origen del API: BaseDatos = PostgreSQL LOCAL del agente, esquema user_13 (API en 5247; MVC en 5131 con --Api:UrlBase=http://localhost:5247/).
+# Script: pruebas-navegador/etapa2-maestro-detalle.cjs. Salida real, sin editar.
+
+Prueba en navegador — etapa 2 (maestro/detalle con JavaScript) — MVC http://localhost:5131 — API http://localhost:5247 — origen esperado BaseDatos
+Chromium 141.0.7390.37 (Playwright), fecha 2026-10-31T22:45:34.114Z
+
+1. Pantalla inicial y combo de tipos
+  [OK]    El combo ofrece los tipos sedán, 4x4 y moto (valores exactos)
+  [OK]    El detalle empieza vacío con una indicación
+  [OK]    Consultar sin tipo pide elegir uno
+  [captura] etapa2-basedatos-01-inicial.png: pantalla maestro/detalle antes de consultar
+2. Consulta por cada tipo
+  [OK]    Tipo sedán: automóviles 1 y 3
+  [OK]    Tipo sedán: el estado muestra el origen BaseDatos
+  [OK]    Tipo moto: automóviles 4 y 6
+  [OK]    Tipo moto: el estado muestra el origen BaseDatos
+  [OK]    Tipo 4x4: automóviles 2 y 5
+  [OK]    Tipo 4x4: el estado muestra el origen BaseDatos
+  [captura] etapa2-basedatos-02-maestro-4x4.png: tabla maestra con los automóviles 4x4
+3. Selección y detalle (solo los ingresos del automóvil elegido)
+  [OK]    El detalle se actualizó sin recargar ni cambiar de página
+  [OK]    El detalle corresponde al automóvil 2
+  [OK]    Automóvil 2: ingresos 2, 6 y 16 (orden de entrada)
+  [OK]    Ingreso 6: id del parqueo 1 (tomado de ingreso.parqueo.id)
+  [OK]    Ingreso 6: entrada 05/10/2026 12:00 y salida 13:20, sin desfase horario
+  [OK]    Ingreso 6: 80 minutos, 1,3333 horas y ₡1 666,67 (valores del API)
+  [OK]    Ingreso 16 sin salida: textos "Sin salida", "En curso" y "Pendiente" (no 0 ni NaN)
+  [OK]    La fila seleccionada queda marcada (aria-pressed)
+  [captura] etapa2-basedatos-03-detalle-automovil-2.png: detalle del automóvil 2 con id de parqueo, entrada, salida, minutos, horas y monto
+  [OK]    Al elegir otro automóvil, el detalle cambia al 5
+  [OK]    Automóvil 5: ingresos 4, 11 y 15
+  [OK]    La selección anterior se desmarca
+  [captura] etapa2-basedatos-04-detalle-automovil-5.png: detalle del automóvil 5
+4. Cambiar el filtro limpia la selección
+  [OK]    Al cambiar el tipo, el detalle anterior desaparece
+  [OK]    La tabla del tipo anterior se limpia hasta consultar de nuevo
+5. Automóvil sin ingresos
+  [OK]    Automóvil temporal #150 creado en el API para la prueba
+  [OK]    Sin ingresos: mensaje claro y sin tabla
+  [captura] etapa2-basedatos-05-sin-ingresos.png: automóvil #150 sin ingresos
+6. Respuesta tardía: no sobrescribe la selección vigente
+  [OK]    La solicitud del automóvil 4 se demoró 1,5 s a propósito
+  [OK]    Tras la respuesta tardía, el detalle sigue siendo del automóvil 6
+  [OK]    Se muestran solo los ingresos del 6 (7 y 12)
+  [OK]    El título del panel indica el automóvil 6
+  [captura] etapa2-basedatos-06-respuesta-tardia.png: el detalle conserva la última selección (automóvil 6)
+7. Errores HTTP y de conexión
+  [OK]    Error 503: mensaje en español sin datos engañosos
+  [captura] etapa2-basedatos-07-error-503.png: mensaje ante un error HTTP 503
+  [OK]    Sin conexión: mensaje "No se pudo conectar con el servidor"
+  [OK]    Al restablecerse la conexión, la consulta vuelve a funcionar
+8. Seguridad: los datos se escriben como texto
+  [OK]    Un color con HTML se muestra como texto (textContent): no se ejecuta ni se interpreta
+
+  [OK]    Sin errores de JavaScript en la consola (salvo los provocados a propósito: 503 y conexión rechazada)
+
+RESULTADO: todas las verificaciones pasaron.

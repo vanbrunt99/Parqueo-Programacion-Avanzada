@@ -58,3 +58,10 @@ public sealed class IngresoFormularioViewModel
 
 /// <summary>Confirmación de borrado de un ingreso.</summary>
 public sealed record BorrarIngresoViewModel(IngresoApi Ingreso, string? Error = null);
+
+/// <summary>Pantalla maestro/detalle: combo de tipos y rutas de las consultas de JavaScript.</summary>
+public sealed record MaestroDetalleViewModel(
+    IReadOnlyList<SelectListItem> Tipos,
+    string UrlAutomoviles,
+    string UrlIngresos,
+    string UrlDetallesAutomovil);

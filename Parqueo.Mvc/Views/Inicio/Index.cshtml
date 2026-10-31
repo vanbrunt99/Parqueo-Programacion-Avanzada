@@ -16,7 +16,7 @@
 </div>
 
 <div class="row g-3">
-    <div class="col-md-6">
+    <div class="col-md-4">
         <div class="card h-100">
             <div class="card-body">
                 <h2 class="h5 card-title">Automóviles</h2>
@@ -25,12 +25,21 @@
             </div>
         </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
         <div class="card h-100">
             <div class="card-body">
                 <h2 class="h5 card-title">Ingresos</h2>
                 <p class="card-text">Entradas y salidas de los automóviles en los parqueos, con duración y monto calculados por el API.</p>
                 <a class="btn btn-primary" asp-controller="Ingresos" asp-action="Index">Ir a ingresos</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h2 class="h5 card-title">Maestro / detalle</h2>
+                <p class="card-text">Automóviles por tipo y, al seleccionar uno, sus ingresos con estadía y monto, actualizados con JavaScript.</p>
+                <a class="btn btn-primary" asp-controller="MaestroDetalle" asp-action="Index">Ir a la consulta</a>
             </div>
         </div>
     </div>

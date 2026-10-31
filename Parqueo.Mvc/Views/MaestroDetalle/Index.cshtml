@@ -1,0 +1,83 @@
+@model MaestroDetalleViewModel
+@{
+    ViewData["Title"] = "Maestro / detalle";
+}
+<h1 class="h3">Automóviles por tipo e historial de ingresos</h1>
+<p class="text-muted">
+    Elija un tipo y presione Consultar. Al seleccionar un automóvil, el panel inferior muestra sus ingresos a los
+    parqueos sin recargar la página. Los datos vienen del API; la duración y el monto los calcula el API.
+</p>
+
+<form id="form-tipo" class="card card-body mb-3" novalidate>
+    <div class="row g-3 align-items-end">
+        <div class="col-sm-6 col-md-4">
+            <label for="tipo-automovil" class="form-label">Tipo de automóvil</label>
+            <select id="tipo-automovil" name="tipo" asp-items="Model.Tipos" class="form-select" required>
+                <option value="">Seleccione un tipo…</option>
+            </select>
+        </div>
+        <div class="col-sm-6 col-md-4">
+            <button id="boton-consultar" type="submit" class="btn btn-primary">Consultar</button>
+        </div>
+    </div>
+</form>
+
+<section class="card mb-4" aria-labelledby="titulo-maestro">
+    <div class="card-header">
+        <h2 id="titulo-maestro" class="h5 mb-0">Automóviles</h2>
+    </div>
+    <div class="card-body">
+        <p id="estado-maestro" class="text-muted mb-2" role="status" aria-live="polite">Seleccione un tipo y presione Consultar.</p>
+        <div class="table-responsive">
+            <table id="tabla-maestro" class="table table-hover align-middle mb-0 tabla-datos" hidden>
+                <thead>
+                    <tr>
+                        <th scope="col" class="numero">Id</th>
+                        <th scope="col">Color</th>
+                        <th scope="col" class="numero">Año</th>
+                        <th scope="col">Fabricante</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col"><span class="visually-hidden">Seleccionar</span></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<section id="panel-detalle" class="card" aria-labelledby="titulo-detalle">
+    <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
+        <h2 id="titulo-detalle" class="h5 mb-0">Ingresos del automóvil seleccionado</h2>
+        <a id="enlace-detalles" class="btn btn-sm btn-outline-secondary" href="#" hidden>Ver ficha del automóvil</a>
+    </div>
+    <div class="card-body">
+        <p id="estado-detalle" class="text-muted mb-2" role="status" aria-live="polite">Seleccione un automóvil de la tabla superior.</p>
+        <div class="table-responsive">
+            <table id="tabla-detalle" class="table table-sm table-striped align-middle mb-0 tabla-datos" hidden>
+                <thead>
+                    <tr>
+                        <th scope="col" class="numero">Consecutivo</th>
+                        <th scope="col" class="numero">Id del parqueo</th>
+                        <th scope="col">Parqueo</th>
+                        <th scope="col">Fecha y hora de entrada</th>
+                        <th scope="col">Fecha y hora de salida</th>
+                        <th scope="col" class="numero">Duración (minutos)</th>
+                        <th scope="col" class="numero">Duración (horas)</th>
+                        <th scope="col" class="numero">Monto a cancelar</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<div id="maestro-detalle-urls" hidden
+     data-url-automoviles="@Model.UrlAutomoviles"
+     data-url-ingresos="@Model.UrlIngresos"
+     data-url-detalles="@Model.UrlDetallesAutomovil"></div>
+
+@section Scripts {
+    <script src="~/js/maestro-detalle.js" asp-append-version="true"></script>
+}

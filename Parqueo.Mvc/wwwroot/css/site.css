@@ -43,3 +43,8 @@ tr.fila-seleccionable:focus-visible {
 .validation-summary-errors ul {
   margin-bottom: 0;
 }
+
+/* Maestro/detalle: el nombre del parqueo no se parte en muchas líneas. */
+#tabla-detalle td:nth-child(3) {
+  min-width: 13rem;
+}
