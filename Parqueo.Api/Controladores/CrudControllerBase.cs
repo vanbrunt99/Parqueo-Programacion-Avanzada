@@ -83,6 +83,17 @@ public abstract class CrudControllerBase<TEntidad, TSolicitud, TRespuesta> : Con
         return await Repositorio.BorrarAsync(id, cancelacion) ? NoContent() : NoEncontrado(id);
     }
 
+    /// <summary>Nombre del encabezado con el total de registros de un listado paginado.</summary>
+    public const string EncabezadoTotal = "X-Total-Registros";
+
+    /// <summary>
+    /// Informa en <see cref="EncabezadoTotal"/> cuántos registros cumplen el filtro, sin
+    /// paginación. El cuerpo sigue siendo la lista de la página pedida (compatible con el
+    /// Trabajo 03); el encabezado permite a los clientes (MVC, Postman) calcular las páginas.
+    /// </summary>
+    protected void InformarTotal(int total) =>
+        Response.Headers[EncabezadoTotal] = total.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
     protected ObjectResult NoEncontrado(int id) =>
         Problem(
             statusCode: StatusCodes.Status404NotFound,

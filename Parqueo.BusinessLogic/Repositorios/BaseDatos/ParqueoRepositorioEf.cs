@@ -35,4 +35,7 @@ public sealed class ParqueoRepositorioEf : RepositorioEfBase<PrqParqueo>, IParqu
             .Paginar(paginacion)
             .ToListAsync(cancelacion);
     }
+
+    public Task<int> ContarAsync(FiltroParqueo filtro, CancellationToken cancelacion = default) =>
+        Reglas.FiltrarParqueos(Entidades.AsNoTracking(), filtro).CountAsync(cancelacion);
 }

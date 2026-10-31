@@ -105,6 +105,29 @@ public abstract class ConsultasRepositoriosPruebasBase : IDisposable
         Assert.Equal(esperados, resultado.Select(a => a.Id));
     }
 
+    [SkippableTheory]
+    [InlineData(null, null, null, 6)]
+    [InlineData(2015, 2019, null, 3)]
+    [InlineData(null, null, "4x4", 2)]
+    [InlineData(2030, null, null, 0)]
+    public async Task Automovil_ContarCoincideConLaBusquedaSinPaginar(int? desde, int? hasta, string? tipo, int esperado)
+    {
+        var filtro = new FiltroAutomovil(AnioDesde: desde, AnioHasta: hasta, Tipo: tipo);
+
+        int total = await Repos.Automoviles.ContarAsync(filtro);
+
+        Assert.Equal(esperado, total);
+        Assert.Equal((await Repos.Automoviles.BuscarAsync(filtro)).Count, total);
+    }
+
+    [SkippableFact]
+    public async Task Parqueo_E_Ingreso_ContarDevuelveLosTotales()
+    {
+        Assert.Equal(3, await Repos.Parqueos.ContarAsync(new FiltroParqueo()));
+        Assert.Equal(2, await Repos.Parqueos.ContarAsync(new FiltroParqueo(PrecioMinimo: 700)));
+        Assert.Equal(17, await Repos.Ingresos.ContarAsync());
+    }
+
     [SkippableFact]
     public async Task Automovil_BuscarConFiltrosCombinados()
     {

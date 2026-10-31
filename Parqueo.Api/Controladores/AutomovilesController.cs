@@ -34,7 +34,8 @@ public sealed class AutomovilesController : CrudControllerBase<PrqAutomovil, Aut
     /// Lista de automóviles por color, intervalo de año, nombre del fabricante y nombre
     /// del tipo. Todos los filtros son opcionales y se combinan; los de texto son
     /// aproximados (sin distinguir mayúsculas ni tildes) y el intervalo de años incluye
-    /// ambos extremos. Sin filtros devuelve todos, paginados.
+    /// ambos extremos. Sin filtros devuelve todos, paginados. El encabezado
+    /// X-Total-Registros indica cuántos cumplen el filtro en total.
     /// </summary>
     /// <example>GET /api/automoviles?tipo=sedan&amp;anioDesde=2015&amp;anioHasta=2019</example>
     [HttpGet]
@@ -51,6 +52,7 @@ public sealed class AutomovilesController : CrudControllerBase<PrqAutomovil, Aut
     {
         var filtro = new FiltroAutomovil(color, anioDesde, anioHasta, fabricante, tipo);
         var automoviles = await _automoviles.BuscarAsync(filtro, paginacion.ACriterio(), cancelacion);
+        InformarTotal(await _automoviles.ContarAsync(filtro, cancelacion));
         return Ok(automoviles.Select(a => a.ARespuesta()).ToList());
     }
 }

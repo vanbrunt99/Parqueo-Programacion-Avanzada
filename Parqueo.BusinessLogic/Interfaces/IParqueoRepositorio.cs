@@ -15,4 +15,7 @@ public interface IParqueoRepositorio : IRepositorio<PrqParqueo>
         FiltroParqueo filtro,
         Paginacion? paginacion = null,
         CancellationToken cancelacion = default);
+
+    /// <summary>Cantidad total de parqueos que cumplen el filtro, sin paginación.</summary>
+    Task<int> ContarAsync(FiltroParqueo filtro, CancellationToken cancelacion = default);
 }

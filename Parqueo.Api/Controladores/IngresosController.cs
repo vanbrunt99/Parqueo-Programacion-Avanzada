@@ -42,6 +42,7 @@ public sealed class IngresosController : CrudControllerBase<PrqIngresoAutomovil,
         CancellationToken cancelacion)
     {
         var ingresos = await _ingresos.ListarAsync(paginacion.ACriterio(), cancelacion);
+        InformarTotal(await _ingresos.ContarAsync(cancelacion));
         return Ok(ingresos.Select(i => i.ARespuesta()).ToList());
     }
 

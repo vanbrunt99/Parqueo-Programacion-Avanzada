@@ -15,6 +15,16 @@ public abstract class ParqueosApiPruebasBase : ApiPruebasBase
     }
 
     [SkippableFact]
+    public async Task Get_InformaElTotalDeRegistrosEnElEncabezado()
+    {
+        var todos = await Cliente.GetAsync($"{Ruta}?tamanoPagina=1");
+        var filtrados = await Cliente.GetAsync($"{Ruta}?precioMinimo=700");
+
+        Assert.Equal("3", todos.Headers.GetValues("X-Total-Registros").Single());
+        Assert.Equal("2", filtrados.Headers.GetValues("X-Total-Registros").Single());
+    }
+
+    [SkippableFact]
     public async Task Get_SinFiltros_DevuelveTodos()
     {
         var respuesta = await Cliente.GetAsync(Ruta);

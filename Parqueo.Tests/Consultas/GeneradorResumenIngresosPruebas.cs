@@ -59,6 +59,9 @@ public class GeneradorResumenIngresosPruebas
         public Task<IReadOnlyList<PrqIngresoAutomovil>> ListarAsync(Paginacion? paginacion = null, CancellationToken cancelacion = default) =>
             throw new NotSupportedException();
 
+        public Task<int> ContarAsync(CancellationToken cancelacion = default) =>
+            throw new NotSupportedException();
+
         public Task<PrqIngresoAutomovil> InsertarAsync(PrqIngresoAutomovil entidad, CancellationToken cancelacion = default) =>
             throw new NotSupportedException();
 

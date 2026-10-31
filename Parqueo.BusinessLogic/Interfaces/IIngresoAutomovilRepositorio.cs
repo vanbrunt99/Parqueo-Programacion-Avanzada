@@ -26,6 +26,9 @@ public interface IIngresoAutomovilRepositorio : IRepositorio<PrqIngresoAutomovil
         Paginacion? paginacion = null,
         CancellationToken cancelacion = default);
 
+    /// <summary>Cantidad total de ingresos, sin paginación (acompaña a <see cref="ListarAsync"/>).</summary>
+    Task<int> ContarAsync(CancellationToken cancelacion = default);
+
     /// <summary>
     /// Automóviles de un tipo (búsqueda aproximada) que ingresaron dentro del
     /// intervalo [desde, hasta] (ambos extremos incluidos, según la fecha y hora de

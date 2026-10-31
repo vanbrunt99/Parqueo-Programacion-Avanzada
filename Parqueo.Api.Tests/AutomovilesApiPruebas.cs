@@ -35,6 +35,20 @@ public abstract class AutomovilesApiPruebasBase : ApiPruebasBase
     }
 
     [SkippableTheory]
+    [InlineData("", 6)]
+    [InlineData("?pagina=2&tamanoPagina=4", 6)]          // el total no depende de la página
+    [InlineData("?anioDesde=2015&anioHasta=2019", 3)]    // sí depende del filtro
+    [InlineData("?tipo=4x4&tamanoPagina=1", 2)]
+    [InlineData("?anioDesde=2030", 0)]
+    public async Task Get_InformaElTotalDeRegistrosEnElEncabezado(string consulta, int total)
+    {
+        var respuesta = await Cliente.GetAsync($"{Ruta}{consulta}");
+
+        Assert.Equal(HttpStatusCode.OK, respuesta.StatusCode);
+        Assert.Equal(total.ToString(), respuesta.Headers.GetValues("X-Total-Registros").Single());
+    }
+
+    [SkippableTheory]
     [InlineData("color=ro", new[] { 1, 3 })]
     [InlineData("anioDesde=2015&anioHasta=2019", new[] { 1, 3, 5 })]
     [InlineData("fabricante=DA", new[] { 2, 6 })]

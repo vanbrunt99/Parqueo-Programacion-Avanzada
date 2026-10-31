@@ -33,6 +33,16 @@ public abstract class IngresosApiPruebasBase : ApiPruebasBase
     }
 
     [SkippableFact]
+    public async Task Get_Listado_InformaElTotalDeRegistrosEnElEncabezado()
+    {
+        var respuesta = await Cliente.GetAsync($"{Ruta}?pagina=2");
+
+        Assert.Equal(HttpStatusCode.OK, respuesta.StatusCode);
+        Assert.Equal("17", respuesta.Headers.GetValues("X-Total-Registros").Single());
+        Assert.Equal(7, (await respuesta.LeerJsonAsync()).GetArrayLength());
+    }
+
+    [SkippableFact]
     public async Task Get_ListadoPorDefecto_DevuelveLaPrimeraPaginaDeDiez()
     {
         var cuerpo = await (await Cliente.GetAsync(Ruta)).LeerJsonAsync();

@@ -49,6 +49,7 @@ public sealed class ParqueosController : CrudControllerBase<PrqParqueo, ParqueoS
     {
         var filtro = new FiltroParqueo(provincia, nombre, precioMinimo, precioMaximo);
         var parqueos = await _parqueos.BuscarAsync(filtro, paginacion.ACriterio(), cancelacion);
+        InformarTotal(await _parqueos.ContarAsync(filtro, cancelacion));
         return Ok(parqueos.Select(p => p.ARespuesta()).ToList());
     }
 }

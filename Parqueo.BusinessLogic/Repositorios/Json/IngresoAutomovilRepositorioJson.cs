@@ -56,6 +56,9 @@ public sealed class IngresoAutomovilRepositorioJson : RepositorioJsonBase<PrqIng
             .ToList();
     }
 
+    public async Task<int> ContarAsync(CancellationToken cancelacion = default) =>
+        (await LeerTodosAsync(cancelacion)).Count;
+
     public async Task<IReadOnlyList<IngresoAutomovilResumen>> ListarPorTipoAsync(
         string tipo, DateTime desde, DateTime hasta, Paginacion? paginacion = null, CancellationToken cancelacion = default)
     {

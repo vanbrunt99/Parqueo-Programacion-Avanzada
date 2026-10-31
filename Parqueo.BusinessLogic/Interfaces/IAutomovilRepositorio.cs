@@ -15,4 +15,10 @@ public interface IAutomovilRepositorio : IRepositorio<PrqAutomovil>
         FiltroAutomovil filtro,
         Paginacion? paginacion = null,
         CancellationToken cancelacion = default);
+
+    /// <summary>
+    /// Cantidad total de automóviles que cumplen el filtro, sin paginación. Permite a los
+    /// clientes del API saber cuántas páginas hay (Trabajo 04).
+    /// </summary>
+    Task<int> ContarAsync(FiltroAutomovil filtro, CancellationToken cancelacion = default);
 }

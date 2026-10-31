@@ -52,4 +52,10 @@ public sealed class AutomovilRepositorioJson : RepositorioJsonBase<PrqAutomovil>
             .Paginar(paginacion)
             .ToList();
     }
+
+    public async Task<int> ContarAsync(FiltroAutomovil filtro, CancellationToken cancelacion = default)
+    {
+        var automoviles = await LeerTodosAsync(cancelacion);
+        return Reglas.FiltrarAutomoviles(automoviles.AsQueryable(), filtro).Count();
+    }
 }

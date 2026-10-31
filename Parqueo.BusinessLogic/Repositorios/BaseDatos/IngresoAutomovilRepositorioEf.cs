@@ -54,6 +54,9 @@ public sealed class IngresoAutomovilRepositorioEf : RepositorioEfBase<PrqIngreso
             .ToListAsync(cancelacion);
     }
 
+    public Task<int> ContarAsync(CancellationToken cancelacion = default) =>
+        Entidades.AsNoTracking().CountAsync(cancelacion);
+
     public async Task<IReadOnlyList<IngresoAutomovilResumen>> ListarPorTipoAsync(
         string tipo, DateTime desde, DateTime hasta, Paginacion? paginacion = null, CancellationToken cancelacion = default)
     {

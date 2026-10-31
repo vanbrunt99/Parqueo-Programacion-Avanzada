@@ -35,4 +35,7 @@ public sealed class AutomovilRepositorioEf : RepositorioEfBase<PrqAutomovil>, IA
             .Paginar(paginacion)
             .ToListAsync(cancelacion);
     }
+
+    public Task<int> ContarAsync(FiltroAutomovil filtro, CancellationToken cancelacion = default) =>
+        Reglas.FiltrarAutomoviles(Entidades.AsNoTracking(), filtro).CountAsync(cancelacion);
 }

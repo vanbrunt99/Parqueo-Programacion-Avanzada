@@ -52,4 +52,10 @@ public sealed class ParqueoRepositorioJson : RepositorioJsonBase<PrqParqueo>, IP
             .Paginar(paginacion)
             .ToList();
     }
+
+    public async Task<int> ContarAsync(FiltroParqueo filtro, CancellationToken cancelacion = default)
+    {
+        var parqueos = await LeerTodosAsync(cancelacion);
+        return Reglas.FiltrarParqueos(parqueos.AsQueryable(), filtro).Count();
+    }
 }
