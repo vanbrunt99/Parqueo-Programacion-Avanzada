@@ -302,7 +302,8 @@ decisiones de alcance. Las acciones, en orden, fueron:
   configuraron en español los mensajes del proveedor de enlace (incluidas las variantes sin
   nombre de propiedad) y el filtro valida y explica el valor recibido.
 - jQuery Validate registraba un error de consola con `step` en los campos `datetime-local` →
-  se quitó el atributo; los minutos se envían sin segundos.
+  se quitó el atributo (los segundos de un registro que ya los tiene se conservan desde la
+  corrección de la sección 5).
 - El registro del `HttpClient` ocultaba la cadena de consulta (`?*`), lo que impedía mostrar
   qué filtro llegaba al API → se activó `System.Net.Http.DisableUriRedaction` solo en el MVC.
 - El pie de página absoluto dejaba un espacio en blanco en las capturas → pie estático.

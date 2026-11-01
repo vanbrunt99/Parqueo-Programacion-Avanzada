@@ -240,7 +240,8 @@ instancia del profesor):
   la corrección de la revisión independiente (reproduce el hallazgo).
 - `final-dotnet-test.txt` y `final-navegador-*`: pruebas de toda la solución y en navegador
   al cerrar el trabajo, en ambos orígenes.
-- `capturas/`: capturas de pantalla de Chromium usadas en el informe.
+- `capturas/`: capturas de Chromium de cada checkpoint, de la verificación por configuración y
+  de la corrida final (prefijo `final-`, las que usa el informe).
 
 ---
 

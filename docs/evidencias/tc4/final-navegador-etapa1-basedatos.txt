@@ -1,7 +1,7 @@
 # Corrida final en navegador (Chromium headless con Playwright), después de las correcciones de la revisión independiente.
 # Script: pruebas-navegador/etapa1-automoviles-ingresos.cjs. MVC http://localhost:5131 → API http://localhost:5247.
 # Origen: BaseDatos = PostgreSQL LOCAL del agente, esquema user_13; no es la base del profesor.
-# Las capturas de esta corrida no se guardan; las del informe son las de cada checkpoint. Salida real, sin editar.
+# De esta corrida se guardaron en capturas/ (prefijo final-) las siete capturas usadas en el informe. Salida real, sin editar.
 
 Prueba en navegador — etapa 1 — MVC http://localhost:5131 — origen esperado BaseDatos
 Chromium 141.0.7390.37 (Playwright), fecha 2026-11-01T13:44:47.965Z
