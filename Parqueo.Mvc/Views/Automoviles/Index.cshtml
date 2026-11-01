@@ -3,6 +3,10 @@
     ViewData["Title"] = "Automóviles";
     string volver = Context.Request.Path + Context.Request.QueryString;
     var filtro = new Dictionary<string, string>();
+    // Campos marcados como inválidos para lectores de pantalla (error propio o intervalo invertido).
+    bool intervaloInvalido = ViewData.ModelState[string.Empty]?.Errors.Count > 0;
+    string? invalidoDesde = intervaloInvalido || ViewData.ModelState["anioDesde"]?.Errors.Count > 0 ? "true" : null;
+    string? invalidoHasta = intervaloInvalido || ViewData.ModelState["anioHasta"]?.Errors.Count > 0 ? "true" : null;
     if (Model.AnioDesde is int desde) { filtro["anioDesde"] = desde.ToString(System.Globalization.CultureInfo.InvariantCulture); }
     if (Model.AnioHasta is int hasta) { filtro["anioHasta"] = hasta.ToString(System.Globalization.CultureInfo.InvariantCulture); }
 }
@@ -18,12 +22,12 @@
             <div class="col-sm-4 col-md-3">
                 <label for="anioDesde" class="form-label">Año inferior</label>
                 <input id="anioDesde" name="anioDesde" type="number" inputmode="numeric" min="@AutomovilesIndexViewModel.AnioMinimo" max="@AutomovilesIndexViewModel.AnioMaximo"
-                       class="form-control" value="@(Model.AnioDesde?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? Context.Request.Query["anioDesde"].ToString())" placeholder="Ej. 2015" />
+                       class="form-control" aria-invalid="@invalidoDesde" value="@(Model.AnioDesde?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? Context.Request.Query["anioDesde"].ToString())" placeholder="Ej. 2015" />
             </div>
             <div class="col-sm-4 col-md-3">
                 <label for="anioHasta" class="form-label">Año superior</label>
                 <input id="anioHasta" name="anioHasta" type="number" inputmode="numeric" min="@AutomovilesIndexViewModel.AnioMinimo" max="@AutomovilesIndexViewModel.AnioMaximo"
-                       class="form-control" value="@(Model.AnioHasta?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? Context.Request.Query["anioHasta"].ToString())" placeholder="Ej. 2019" />
+                       class="form-control" aria-invalid="@invalidoHasta" value="@(Model.AnioHasta?.ToString(System.Globalization.CultureInfo.InvariantCulture) ?? Context.Request.Query["anioHasta"].ToString())" placeholder="Ej. 2019" />
             </div>
             <div class="col-sm-4 col-md-6 d-flex gap-2">
                 <button type="submit" class="btn btn-primary">Consultar</button>

@@ -51,6 +51,26 @@ public abstract class AutomovilesMvcPruebasBase : MvcPruebasBase
     }
 
     [SkippableFact]
+    public async Task Index_PaginaEnorme_LlevaALaUltimaPaginaSinErrorDelApi()
+    {
+        var respuesta = await Navegador.GetAsync("/Automoviles?anioDesde=2012&pagina=2147483647");
+
+        Assert.Equal(HttpStatusCode.Redirect, respuesta.StatusCode);
+        Assert.Contains("pagina=1", respuesta.Headers.Location!.ToString());
+        Assert.Contains("anioDesde=2012", respuesta.Headers.Location!.ToString());
+    }
+
+    [SkippableFact]
+    public async Task Index_PrimeraPagina_AnteriorNoEsEnlace()
+    {
+        string html = await HtmlAsync("/Automoviles?tamanoPagina=4");
+
+        Assert.Contains("<span class=\"page-link\" aria-disabled=\"true\">Anterior</span>", html);
+        Assert.DoesNotContain("pagina=0", html);
+        Assert.Contains("aria-label=\"Página siguiente\"", html);
+    }
+
+    [SkippableFact]
     public async Task Index_Paginado_ConservaElFiltroYMuestraElTotal()
     {
         string pagina1 = await HtmlAsync("/Automoviles?anioDesde=2012&tamanoPagina=4");

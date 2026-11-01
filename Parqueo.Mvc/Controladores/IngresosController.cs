@@ -25,7 +25,7 @@ public sealed class IngresosController : ControladorBase
     [HttpGet]
     public async Task<IActionResult> Index(int pagina = 1, int tamanoPagina = TamanoPaginaPredeterminado, CancellationToken cancelacion = default)
     {
-        pagina = Math.Max(1, pagina);
+        pagina = Math.Clamp(pagina, 1, PaginaMaxima);
         tamanoPagina = Math.Clamp(tamanoPagina, 1, ClienteApiParqueo.TamanoMaximoPagina);
         var respuesta = await Api.ListarIngresosAsync(pagina, tamanoPagina, cancelacion);
         RegistrarOrigen(respuesta);
@@ -74,9 +74,9 @@ public sealed class IngresosController : ControladorBase
     public async Task<IActionResult> Crear(IngresoFormularioViewModel formulario, string? volver, CancellationToken cancelacion)
     {
         ViewData["Volver"] = UrlVolver(volver);
-        if (ModelState.IsValid)
+        if (ModelState.IsValid
+            && await EnviarFormularioAsync(() => Api.CrearIngresoAsync(formulario.ASolicitud(), cancelacion)) is { } respuesta)
         {
-            var respuesta = await Api.CrearIngresoAsync(formulario.ASolicitud(), cancelacion);
             RegistrarOrigen(respuesta);
             if (respuesta.Exito)
             {
@@ -114,9 +114,9 @@ public sealed class IngresosController : ControladorBase
     {
         formulario.Consecutivo = id;
         ViewData["Volver"] = UrlVolver(volver);
-        if (ModelState.IsValid)
+        if (ModelState.IsValid
+            && await EnviarFormularioAsync(() => Api.ActualizarIngresoAsync(id, formulario.ASolicitud(), cancelacion)) is { } respuesta)
         {
-            var respuesta = await Api.ActualizarIngresoAsync(id, formulario.ASolicitud(), cancelacion);
             RegistrarOrigen(respuesta);
             if (respuesta.NoEncontrado)
             {
@@ -181,6 +181,14 @@ public sealed class IngresosController : ControladorBase
     /// <summary>Carga del API las opciones de automóvil y parqueo (todas las páginas) y muestra el formulario.</summary>
     private async Task<IActionResult> MostrarFormularioAsync(IngresoFormularioViewModel formulario, CancellationToken cancelacion)
     {
+        if (Response.StatusCode == StatusCodes.Status503ServiceUnavailable)
+        {
+            // El API no respondió al guardar: se muestra lo escrito sin volver a pedir las listas.
+            formulario.Automoviles = OpcionSeleccionada(formulario.IdAutomovil, "automóviles");
+            formulario.Parqueos = OpcionSeleccionada(formulario.IdParqueo, "parqueos");
+            return View(formulario);
+        }
+
         var automoviles = await Api.ListarTodosLosAutomovilesAsync(null, cancelacion);
         var parqueos = await Api.ListarTodosLosParqueosAsync(cancelacion);
         RegistrarOrigen(parqueos);
@@ -202,4 +210,9 @@ public sealed class IngresosController : ControladorBase
             .ToList();
         return View(formulario);
     }
+
+    private static List<SelectListItem> OpcionSeleccionada(int? id, string entidad) =>
+        id is int valor
+            ? [new SelectListItem($"#{valor} (no se pudo cargar la lista de {entidad} del API)", valor.ToString(System.Globalization.CultureInfo.InvariantCulture), true)]
+            : [];
 }

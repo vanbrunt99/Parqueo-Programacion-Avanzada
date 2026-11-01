@@ -20,8 +20,9 @@
     const cuerpoDetalle = tablaDetalle.querySelector('tbody');
     const enlaceDetalles = document.getElementById('enlace-detalles');
 
-    // Control de solicitudes vigentes: cada consulta nueva cancela la anterior y además se
-    // compara un número de solicitud, así una respuesta tardía nunca sobrescribe la actual.
+    // Control de solicitudes vigentes: cada consulta nueva, y también cada cancelación (cambio de
+    // tipo, limpieza del detalle), cancela la anterior y aumenta un número de solicitud. Una
+    // respuesta cuyo número ya no es el vigente se descarta, aunque llegue después de cancelar.
     let solicitudMaestro = { controlador: null, numero: 0 };
     let solicitudDetalle = { controlador: null, numero: 0 };
     let automovilSeleccionado = null;
@@ -31,10 +32,18 @@
     const formatoHoras = new Intl.NumberFormat('es-CR', { maximumFractionDigits: 4 });
     const formatoColones = new Intl.NumberFormat('es-CR', { style: 'currency', currency: 'CRC', minimumFractionDigits: 2 });
 
-    /** "2026-10-05T12:00:00" (hora local sin zona) → "05/10/2026 12:00", sin conversiones horarias. */
+    /**
+     * "2026-10-05T12:00:00" (hora local sin zona) → "05/10/2026 12:00", sin conversiones horarias.
+     * Los segundos se muestran solo si el registro los tiene ("…T10:00:45" → "… 10:00:45").
+     */
     function fechaHora(texto) {
-        const partes = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(texto ?? '');
-        return partes ? `${partes[3]}/${partes[2]}/${partes[1]} ${partes[4]}:${partes[5]}` : String(texto ?? '');
+        const partes = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?/.exec(texto ?? '');
+        if (!partes) {
+            return String(texto ?? '');
+        }
+
+        const segundos = partes[6] && partes[6] !== '00' ? `:${partes[6]}` : '';
+        return `${partes[3]}/${partes[2]}/${partes[1]} ${partes[4]}:${partes[5]}${segundos}`;
     }
 
     /** Un valor null (estadía en curso) se muestra como texto, nunca como 0 ni NaN. */
@@ -59,12 +68,20 @@
     }
 
     // ---------------------------------------------------------------- Comunicación con el MVC
+    const esCancelacion = (error) => error?.name === 'AbortError';
+
     async function obtenerJson(url, senal) {
         const respuesta = await fetch(url, { headers: { Accept: 'application/json' }, signal: senal });
         let cuerpo = null;
         try {
             cuerpo = await respuesta.json();
-        } catch {
+        } catch (error) {
+            // Una cancelación mientras llega el cuerpo se propaga como cancelación; un cuerpo que
+            // no es JSON (por ejemplo, una página de error de un proxy) se trata como vacío.
+            if (esCancelacion(error)) {
+                throw error;
+            }
+
             cuerpo = null;
         }
 
@@ -73,15 +90,23 @@
             throw new Error(mensaje);
         }
 
+        if (cuerpo === null) {
+            throw new Error('El servidor envió una respuesta que no es JSON.');
+        }
+
         return cuerpo;
     }
 
-    function nuevaSolicitud(anterior) {
+    /** Cancela la solicitud vigente e invalida su número: su respuesta ya no se mostrará. */
+    function cancelar(anterior) {
         anterior.controlador?.abort();
-        return { controlador: new AbortController(), numero: anterior.numero + 1 };
+        return { controlador: null, numero: anterior.numero + 1 };
     }
 
-    const esCancelacion = (error) => error?.name === 'AbortError';
+    function nuevaSolicitud(anterior) {
+        const { numero } = cancelar(anterior);
+        return { controlador: new AbortController(), numero };
+    }
 
     const mensajeError = (error) => error instanceof TypeError
         ? 'No se pudo conectar con el servidor. Verifique que el MVC y el API estén en ejecución.'
@@ -89,7 +114,7 @@
 
     // ---------------------------------------------------------------- Detalle
     function limpiarDetalle(texto = 'Seleccione un automóvil de la tabla superior.') {
-        solicitudDetalle.controlador?.abort();
+        solicitudDetalle = cancelar(solicitudDetalle);
         automovilSeleccionado = null;
         cuerpoDetalle.replaceChildren();
         tablaDetalle.hidden = true;
@@ -248,7 +273,7 @@
 
     // Cambiar el tipo invalida la tabla y el detalle mostrados: no quedan datos de otro tipo.
     comboTipo.addEventListener('change', () => {
-        solicitudMaestro.controlador?.abort();
+        solicitudMaestro = cancelar(solicitudMaestro);
         limpiarDetalle();
         cuerpoMaestro.replaceChildren();
         tablaMaestro.hidden = true;

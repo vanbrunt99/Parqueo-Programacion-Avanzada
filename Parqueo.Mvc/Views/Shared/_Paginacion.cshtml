@@ -13,18 +13,33 @@
     @if (Model.TotalPaginas > 1)
     {
         <ul class="pagination mb-0">
-            <li class="page-item @(Model.Pagina <= 1 ? "disabled" : "")">
-                <a class="page-link" asp-controller="@Model.Controlador" asp-action="Index" asp-all-route-data="Model.RutaDe(Model.Pagina - 1)" aria-label="Página anterior">Anterior</a>
-            </li>
+            @* En la primera y la última página el extremo deshabilitado no es un enlace: no recibe foco ni apunta a una página inexistente. *@
+            @if (Model.Pagina <= 1)
+            {
+                <li class="page-item disabled"><span class="page-link" aria-disabled="true">Anterior</span></li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-controller="@Model.Controlador" asp-action="Index" asp-all-route-data="Model.RutaDe(Model.Pagina - 1)" aria-label="Página anterior">Anterior</a>
+                </li>
+            }
             @for (int numero = 1; numero <= Model.TotalPaginas; numero++)
             {
                 <li class="page-item @(numero == Model.Pagina ? "active" : "")">
                     <a class="page-link" asp-controller="@Model.Controlador" asp-action="Index" asp-all-route-data="Model.RutaDe(numero)" aria-current="@(numero == Model.Pagina ? "page" : null)">@numero</a>
                 </li>
             }
-            <li class="page-item @(Model.Pagina >= Model.TotalPaginas ? "disabled" : "")">
-                <a class="page-link" asp-controller="@Model.Controlador" asp-action="Index" asp-all-route-data="Model.RutaDe(Model.Pagina + 1)" aria-label="Página siguiente">Siguiente</a>
-            </li>
+            @if (Model.Pagina >= Model.TotalPaginas)
+            {
+                <li class="page-item disabled"><span class="page-link" aria-disabled="true">Siguiente</span></li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <a class="page-link" asp-controller="@Model.Controlador" asp-action="Index" asp-all-route-data="Model.RutaDe(Model.Pagina + 1)" aria-label="Página siguiente">Siguiente</a>
+                </li>
+            }
         </ul>
     }
 </nav>

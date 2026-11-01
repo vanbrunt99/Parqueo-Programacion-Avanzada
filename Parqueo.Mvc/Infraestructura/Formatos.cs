@@ -11,7 +11,18 @@ public static class Formatos
 {
     public static readonly CultureInfo Cultura = CultureInfo.GetCultureInfo("es-CR");
 
-    public static string FechaHora(DateTime fecha) => fecha.ToString("dd/MM/yyyy HH:mm", Cultura);
+    /// <summary>"05/10/2026 12:00"; los segundos se muestran solo si el registro los tiene.</summary>
+    public static string FechaHora(DateTime fecha) =>
+        fecha.ToString(TieneSegundos(fecha) ? "dd/MM/yyyy HH:mm:ss" : "dd/MM/yyyy HH:mm", Cultura);
+
+    /// <summary>
+    /// Formato del valor de un input datetime-local: con segundos solo si el registro los tiene,
+    /// para que guardar un formulario sin cambios no recorte los segundos (ni altere el monto).
+    /// </summary>
+    public static string FormatoEntradaFecha(DateTime? fecha) =>
+        fecha is DateTime valor && TieneSegundos(valor) ? "{0:yyyy-MM-ddTHH:mm:ss}" : "{0:yyyy-MM-ddTHH:mm}";
+
+    private static bool TieneSegundos(DateTime fecha) => fecha.Second != 0 || fecha.Millisecond != 0;
 
     public static string Salida(DateTime? fecha) => fecha is DateTime valor ? FechaHora(valor) : "Sin salida (en curso)";
 

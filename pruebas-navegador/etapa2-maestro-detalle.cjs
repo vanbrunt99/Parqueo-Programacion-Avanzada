@@ -1,5 +1,6 @@
 // Prueba en navegador de la segunda etapa: maestro/detalle con JavaScript.
 // Uso: node etapa2-maestro-detalle.cjs <urlMvc> <urlApi> <origenEsperado> <archivoSalida> <carpetaCapturas>
+const http = require('http');
 const { chromium } = require('playwright');
 const { crearRegistro, idsDeFilas } = require('./comun.cjs');
 
@@ -133,6 +134,53 @@ async function seleccionar(pagina, id) {
     const celdaColor = await pagina.$eval(`#tabla-maestro tr[data-id="${idMalicioso}"] td:nth-child(2)`, (c) => ({ texto: c.textContent, hijos: c.children.length }));
     r.verificar(celdaColor.texto === '<img src=x onerror=alert(1)>' && celdaColor.hijos === 0 && dialogos === 0, 'Un color con HTML se muestra como texto (textContent): no se ejecuta ni se interpreta');
     await pagina.request.delete(`${urlApi}/api/automoviles/${idMalicioso}`);
+
+    r.registrar('9. Cambio de tipo mientras llega una respuesta lenta (encabezados enseguida, cuerpo 1,5 s después)');
+    // Proxy local delante del MVC: reproduce una red lenta en la que la cancelación ocurre mientras
+    // se lee el cuerpo (no antes de la respuesta), el caso que una ruta simulada no cubre.
+    const destino = new URL(urlMvc);
+    const proxy = http.createServer((solicitud, respuesta) => {
+      const reenvio = http.request({ host: destino.hostname, port: destino.port, path: solicitud.url, method: solicitud.method, headers: solicitud.headers }, (original) => {
+        const lenta = /^\/MaestroDetalle\/(Ingresos|Automoviles)/.test(solicitud.url);
+        const encabezados = { ...original.headers };
+        delete encabezados['content-length'];
+        respuesta.writeHead(original.statusCode, encabezados);
+        if (lenta) respuesta.flushHeaders();
+        const trozos = [];
+        original.on('data', (trozo) => (lenta ? trozos.push(trozo) : respuesta.write(trozo)));
+        original.on('end', () => (lenta ? setTimeout(() => respuesta.end(Buffer.concat(trozos)), 1500) : respuesta.end()));
+      });
+      reenvio.on('error', () => respuesta.destroy());
+      solicitud.pipe(reenvio);
+    });
+    await new Promise((listo) => proxy.listen(0, '127.0.0.1', listo));
+    const lenta = await contexto.newPage();
+    lenta.on('pageerror', (e) => erroresConsola.push(e.message));
+    try {
+      await lenta.goto(`http://127.0.0.1:${proxy.address().port}/MaestroDetalle`);
+      await lenta.selectOption('#tipo-automovil', 'sedán');
+      await lenta.click('#boton-consultar');
+      await lenta.waitForTimeout(500);
+      r.verificar((await textoDe(lenta, '#estado-maestro')).startsWith('Cargando'), 'Consulta de sedán en curso: encabezados recibidos, cuerpo demorado');
+      await lenta.selectOption('#tipo-automovil', 'moto');
+      await lenta.waitForTimeout(2000);
+      const estadoMaestro = await textoDe(lenta, '#estado-maestro');
+      r.verificar(estadoMaestro.startsWith('Presione Consultar'), 'Cambiar el tipo durante la carga no muestra un error falso de conexión', estadoMaestro);
+      r.verificar(await lenta.isHidden('#tabla-maestro'), 'No aparecen automóviles sedán con el tipo moto elegido');
+      await lenta.click('#boton-consultar');
+      await lenta.waitForFunction(() => !document.querySelector('#estado-maestro').textContent.startsWith('Cargando'), null, { timeout: 10000 });
+      await lenta.click('#tabla-maestro tr[data-id="4"] button');
+      await lenta.waitForTimeout(500);
+      r.verificar((await textoDe(lenta, '#estado-detalle')).startsWith('Cargando'), 'Detalle del automóvil 4 en curso');
+      await lenta.selectOption('#tipo-automovil', '4x4');
+      await lenta.waitForTimeout(2000);
+      const estadoDetalle = await textoDe(lenta, '#estado-detalle');
+      r.verificar(estadoDetalle.startsWith('Seleccione un automóvil') && (await lenta.isHidden('#tabla-detalle')),
+        'Cambiar el tipo mientras llega el detalle deja el panel limpio, sin error falso ni ingresos del automóvil anterior', estadoDetalle);
+    } finally {
+      await lenta.close();
+      proxy.close();
+    }
 
     r.registrar('');
     r.verificar(erroresConsola.filter((e) => !e.includes('503') && !e.includes('ERR_CONNECTION_REFUSED')).length === 0,

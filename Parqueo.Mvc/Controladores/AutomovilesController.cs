@@ -26,7 +26,7 @@ public sealed class AutomovilesController : ControladorBase
     [HttpGet]
     public async Task<IActionResult> Index(int? anioDesde, int? anioHasta, int pagina = 1, int tamanoPagina = TamanoPaginaPredeterminado, CancellationToken cancelacion = default)
     {
-        pagina = Math.Max(1, pagina);
+        pagina = Math.Clamp(pagina, 1, PaginaMaxima);
         tamanoPagina = Math.Clamp(tamanoPagina, 1, ClienteApiParqueo.TamanoMaximoPagina);
         ValidarFiltro(anioDesde, anioHasta);
 
@@ -40,6 +40,13 @@ public sealed class AutomovilesController : ControladorBase
         RegistrarOrigen(respuesta);
         if (!respuesta.Exito)
         {
+            // Un 400 es un filtro rechazado por el API y se muestra junto al formulario; otros
+            // errores (500, 503 si la base de datos no responde) conservan su código HTTP.
+            if (respuesta.Estado != System.Net.HttpStatusCode.BadRequest)
+            {
+                return ErrorApi(respuesta);
+            }
+
             ModelState.AddModelError(string.Empty, $"El API rechazó la consulta: {respuesta.MensajeError}");
             return View(modelo);
         }
@@ -91,9 +98,9 @@ public sealed class AutomovilesController : ControladorBase
     {
         ViewData["Volver"] = UrlVolver(volver);
         ValidarTipo(formulario);
-        if (ModelState.IsValid)
+        if (ModelState.IsValid
+            && await EnviarFormularioAsync(() => Api.CrearAutomovilAsync(formulario.ASolicitud(), cancelacion)) is { } respuesta)
         {
-            var respuesta = await Api.CrearAutomovilAsync(formulario.ASolicitud(), cancelacion);
             RegistrarOrigen(respuesta);
             if (respuesta.Exito)
             {
@@ -136,9 +143,9 @@ public sealed class AutomovilesController : ControladorBase
         formulario.Id = id;
         ViewData["Volver"] = UrlVolver(volver);
         ValidarTipo(formulario);
-        if (ModelState.IsValid)
+        if (ModelState.IsValid
+            && await EnviarFormularioAsync(() => Api.ActualizarAutomovilAsync(id, formulario.ASolicitud(), cancelacion)) is { } respuesta)
         {
-            var respuesta = await Api.ActualizarAutomovilAsync(id, formulario.ASolicitud(), cancelacion);
             RegistrarOrigen(respuesta);
             if (respuesta.NoEncontrado)
             {
@@ -207,7 +214,7 @@ public sealed class AutomovilesController : ControladorBase
         }
 
         string motivo = respuesta.Conflicto
-            ? $"No se puede borrar: {respuesta.MensajeError} Primero deben borrarse sus ingresos desde la pantalla de ingresos."
+            ? $"El API rechazó el borrado (409 Conflict). {respuesta.MensajeError} Primero deben borrarse sus ingresos desde la pantalla de ingresos."
             : $"El API no pudo borrar el automóvil: {respuesta.MensajeError}";
         return View(new BorrarAutomovilViewModel(automovil.Datos!, motivo));
     }

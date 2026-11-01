@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Parqueo.Mvc.Infraestructura;
 using Parqueo.Mvc.Modelos;
 using Parqueo.Mvc.Servicios;
 
@@ -16,6 +17,34 @@ public abstract class ControladorBase : Controller
     }
 
     protected ClienteApiParqueo Api { get; }
+
+    /// <summary>
+    /// Página más alta que se pide al API. Un número mayor (por ejemplo 2147483647) desbordaría
+    /// el cálculo del desplazamiento en el API; con este límite el API responde una página vacía
+    /// y el listado lleva a la última página real.
+    /// </summary>
+    protected const int PaginaMaxima = 100_000;
+
+    /// <summary>
+    /// Envía un formulario al API. Si el API no responde, agrega el motivo al resumen de errores,
+    /// fija el código 503 y devuelve null: la acción vuelve a mostrar el formulario con lo escrito
+    /// en lugar de perderlo en la página genérica de "API no disponible".
+    /// </summary>
+    protected async Task<RespuestaApi<T>?> EnviarFormularioAsync<T>(Func<Task<RespuestaApi<T>>> llamada)
+    {
+        try
+        {
+            return await llamada();
+        }
+        catch (Exception error) when (FiltroApiNoDisponible.EsApiNoDisponible(error, HttpContext))
+        {
+            HttpContext.RequestServices.GetRequiredService<ILogger<ControladorBase>>()
+                .LogWarning(error, "No se pudo comunicar con el API en {Url} al enviar un formulario", Api.UrlBase);
+            ModelState.AddModelError(string.Empty, FiltroApiNoDisponible.Mensaje(Api.UrlBase) + " Los datos escritos se conservan; vuelva a guardar cuando el API esté disponible.");
+            Response.StatusCode = StatusCodes.Status503ServiceUnavailable;
+            return null;
+        }
+    }
 
     /// <summary>
     /// Muestra en la página qué origen atendió la solicitud según el encabezado X-Origen-Datos

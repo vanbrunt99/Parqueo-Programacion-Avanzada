@@ -148,6 +148,29 @@ const r = crearRegistro(salida, capturas, prefijo);
     r.verificar((await pagina.request.get(`${urlMvc}/Ingresos/Detalles/${consecutivo}`)).status() === 404, `Ingreso temporal #${consecutivo} borrado`);
     r.verificar((await pagina.request.get(`${urlMvc}/Ingresos/Detalles/999`)).status() === 404, 'Consecutivo inexistente (999): 404');
 
+    r.registrar('9. Segundos de un registro: guardar sin cambios no los recorta');
+    await pagina.goto(`${urlMvc}/Ingresos/Crear`);
+    await pagina.selectOption('#IdAutomovil', '4');
+    await pagina.selectOption('#IdParqueo', '1');
+    await pagina.fill('#FechaHoraEntrada', '2026-10-31T08:00:45');
+    await pagina.fill('#FechaHoraSalida', '2026-10-31T09:20:15');
+    await pagina.click('button[type=submit]');
+    await pagina.waitForURL(/\/Ingresos\/Detalles\/\d+/);
+    const conSegundos = Number(pagina.url().match(/Detalles\/(\d+)/)[1]);
+    r.verificar((await pagina.textContent('#datos-ingreso')).includes('31/10/2026 08:00:45'), `Ingreso #${conSegundos} con segundos: se muestran en los detalles`);
+    await pagina.click('main a:has-text("Editar")');
+    r.verificar((await pagina.inputValue('#FechaHoraEntrada')) === '2026-10-31T08:00:45' && (await pagina.inputValue('#FechaHoraSalida')) === '2026-10-31T09:20:15',
+      'El formulario de edición conserva los segundos de entrada y salida');
+    await pagina.click('button[type=submit]');
+    await pagina.waitForURL(new RegExp(`/Ingresos/Detalles/${conSegundos}`));
+    const trasGuardar = (await pagina.textContent('#datos-ingreso')).replace(/\s+/g, ' ');
+    r.verificar(trasGuardar.includes('08:00:45') && trasGuardar.includes('09:20:15') && trasGuardar.includes('79,5') && trasGuardar.includes('656,25'),
+      'Guardar sin cambios mantiene 79,5 minutos y ₡1 656,25 calculados por el API', trasGuardar);
+    await pagina.click('main a:has-text("Borrar")');
+    await pagina.click('button:has-text("Confirmar borrado")');
+    await pagina.waitForURL(/\/Ingresos/);
+    r.verificar((await pagina.request.get(`${urlMvc}/Ingresos/Detalles/${conSegundos}`)).status() === 404, `Ingreso temporal #${conSegundos} borrado`);
+
     r.registrar('');
     r.verificar(erroresConsola.length === 0, 'Sin errores de JavaScript en la consola del navegador', erroresConsola.join(' | '));
   } catch (error) {

@@ -17,12 +17,12 @@
     </div>
     <div class="col-md-6">
         <label asp-for="FechaHoraEntrada" class="form-label"></label>
-        <input asp-for="FechaHoraEntrada" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" class="form-control" />
+        <input asp-for="FechaHoraEntrada" type="datetime-local" asp-format="@Formatos.FormatoEntradaFecha(Model.FechaHoraEntrada)" class="form-control" />
         <span asp-validation-for="FechaHoraEntrada" class="text-danger small"></span>
     </div>
     <div class="col-md-6">
         <label asp-for="FechaHoraSalida" class="form-label"></label>
-        <input asp-for="FechaHoraSalida" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" class="form-control" />
+        <input asp-for="FechaHoraSalida" type="datetime-local" asp-format="@Formatos.FormatoEntradaFecha(Model.FechaHoraSalida)" class="form-control" />
         <span asp-validation-for="FechaHoraSalida" class="text-danger small"></span>
         <div class="form-text">Déjela vacía si el automóvil sigue en el parqueo.</div>
     </div>

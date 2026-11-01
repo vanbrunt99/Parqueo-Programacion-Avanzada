@@ -10,7 +10,7 @@ namespace Parqueo.Mvc.Modelos;
 /// los calcula el API. Las fechas se manejan sin zona horaria (input datetime-local), igual que
 /// el contrato del API.
 /// </summary>
-public sealed class IngresoFormularioViewModel
+public sealed class IngresoFormularioViewModel : IValidatableObject
 {
     public int Consecutivo { get; set; }
 
@@ -37,14 +37,34 @@ public sealed class IngresoFormularioViewModel
     public IReadOnlyList<SelectListItem> Parqueos { get; set; } = [];
 
     /// <summary>
-    /// Convierte al cuerpo del API. Las fechas conservan DateTimeKind.Unspecified (sin "Z" ni
-    /// conversión a UTC), como exige el API.
+    /// Convierte al cuerpo del API. Las fechas ya validadas sin zona se envían como
+    /// DateTimeKind.Unspecified (sin "Z" ni conversión a UTC), como exige el API.
     /// </summary>
     public IngresoSolicitudApi ASolicitud() => new(
         IdParqueo!.Value,
         IdAutomovil!.Value,
         DateTime.SpecifyKind(FechaHoraEntrada!.Value, DateTimeKind.Unspecified),
         FechaHoraSalida is DateTime salida ? DateTime.SpecifyKind(salida, DateTimeKind.Unspecified) : null);
+
+    /// <summary>
+    /// Una fecha con zona horaria ("Z" o "+02:00") llega del enlace de modelos ya convertida a
+    /// UTC. Se rechaza en lugar de enviarla con otra hora: el contrato del API es hora local sin
+    /// zona (datetime-local nunca envía zona; solo una solicitud armada a mano puede hacerlo).
+    /// </summary>
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        if (FechaHoraEntrada is DateTime entrada && entrada.Kind != DateTimeKind.Unspecified)
+        {
+            yield return new ValidationResult(
+                "La fecha y hora de entrada debe escribirse sin zona horaria (hora local de Costa Rica).", [nameof(FechaHoraEntrada)]);
+        }
+
+        if (FechaHoraSalida is DateTime salida && salida.Kind != DateTimeKind.Unspecified)
+        {
+            yield return new ValidationResult(
+                "La fecha y hora de salida debe escribirse sin zona horaria (hora local de Costa Rica).", [nameof(FechaHoraSalida)]);
+        }
+    }
 
     public static IngresoFormularioViewModel Desde(IngresoApi ingreso) => new()
     {

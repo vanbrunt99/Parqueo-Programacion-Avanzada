@@ -27,16 +27,13 @@ public sealed class FiltroApiNoDisponible : IExceptionFilter
 
     public void OnException(ExceptionContext contexto)
     {
-        bool apiCaido = contexto.Exception is HttpRequestException
-            || (contexto.Exception is TaskCanceledException && !contexto.HttpContext.RequestAborted.IsCancellationRequested);
-        if (!apiCaido)
+        if (!EsApiNoDisponible(contexto.Exception, contexto.HttpContext))
         {
             return;
         }
 
-        string url = _api.UrlBase?.ToString() ?? "(sin configurar)";
-        _log.LogWarning(contexto.Exception, "No se pudo comunicar con el API en {Url}", url);
-        string detalle = $"No se pudo comunicar con el API del parqueo en {url}. Verifique que el API esté en ejecución y que Api:UrlBase apunte a él.";
+        _log.LogWarning(contexto.Exception, "No se pudo comunicar con el API en {Url}", _api.UrlBase);
+        string detalle = Mensaje(_api.UrlBase);
 
         if (EsSolicitudDeDatos(contexto.HttpContext.Request))
         {
@@ -60,6 +57,18 @@ public sealed class FiltroApiNoDisponible : IExceptionFilter
 
         contexto.ExceptionHandled = true;
     }
+
+    /// <summary>
+    /// El API no respondió: no está levantado, la URL es incorrecta o se agotó el tiempo. Una
+    /// cancelación porque el navegador abandonó la solicitud no cuenta.
+    /// </summary>
+    public static bool EsApiNoDisponible(Exception error, HttpContext contexto) =>
+        error is HttpRequestException
+        || (error is TaskCanceledException && !contexto.RequestAborted.IsCancellationRequested);
+
+    public static string Mensaje(Uri? urlApi) =>
+        $"No se pudo comunicar con el API del parqueo en {urlApi?.ToString() ?? "(sin configurar)"}. "
+        + "Verifique que el API esté en ejecución y que Api:UrlBase apunte a él.";
 
     // Las consultas de JavaScript piden JSON (encabezado Accept: application/json).
     private static bool EsSolicitudDeDatos(HttpRequest solicitud) =>

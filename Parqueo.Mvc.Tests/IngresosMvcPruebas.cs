@@ -1,4 +1,5 @@
 using System.Net;
+using Parqueo.Mvc.Servicios;
 using Parqueo.Mvc.Tests.Infraestructura;
 
 namespace Parqueo.Mvc.Tests;
@@ -110,6 +111,100 @@ public abstract class IngresosMvcPruebasBase : MvcPruebasBase
 
         Assert.Contains("Seleccione el automóvil.", html);
         Assert.Contains("La fecha y hora de entrada es obligatoria.", html);
+        Assert.Equal(17, (await ClienteApi.ListarIngresosAsync(1, 1, default)).Datos!.Total);
+    }
+
+    [SkippableFact]
+    public async Task Editar_SinCambios_ConservaLosSegundosYElMontoDelApi()
+    {
+        // Un registro creado por el API o por Postman puede tener segundos (columna timestamp).
+        var entrada = new DateTime(2026, 10, 20, 10, 0, 45);
+        var salida = new DateTime(2026, 10, 20, 11, 20, 15); // 79,5 minutos
+        int consecutivo = (await ClienteApi.CrearIngresoAsync(new IngresoSolicitudApi(1, 1, entrada, salida), default)).Datos!.Consecutivo;
+        try
+        {
+            string formulario = await HtmlAsync($"/Ingresos/Editar/{consecutivo}");
+            Assert.Contains("value=\"2026-10-20T10:00:45\"", formulario);
+            Assert.Contains("value=\"2026-10-20T11:20:15\"", formulario);
+
+            // Guardar sin cambios, como lo haría el navegador con los valores del formulario.
+            var respuesta = await EnviarFormularioAsync($"/Ingresos/Editar/{consecutivo}", $"/Ingresos/Editar/{consecutivo}", new Dictionary<string, string>
+            {
+                ["IdAutomovil"] = "1",
+                ["IdParqueo"] = "1",
+                ["FechaHoraEntrada"] = "2026-10-20T10:00:45",
+                ["FechaHoraSalida"] = "2026-10-20T11:20:15",
+            });
+            Assert.Equal(consecutivo, IdDeRedireccion(respuesta));
+
+            var guardado = (await ClienteApi.ObtenerIngresoAsync(consecutivo, default)).Datos!;
+            Assert.Equal(entrada, guardado.FechaHoraEntrada);
+            Assert.Equal(salida, guardado.FechaHoraSalida);
+            Assert.Equal(79.5m, guardado.DuracionEstadiaMinutos);
+            Assert.Equal(1656.25m, guardado.MontoTotalAPagar);
+            Assert.Contains("20/10/2026 10:00:45", await HtmlAsync($"/Ingresos/Detalles/{consecutivo}"));
+        }
+        finally
+        {
+            await ClienteApi.BorrarIngresoAsync(consecutivo, default);
+        }
+    }
+
+    [SkippableTheory]
+    [InlineData("2026-10-17T09:20+02:00")]
+    [InlineData("2026-10-17T09:20Z")]
+    public async Task Editar_FechaConZonaHoraria_SeRechazaSinConvertir(string entradaConZona)
+    {
+        var antes = (await ClienteApi.ObtenerIngresoAsync(17, default)).Datos!;
+
+        var respuesta = await EnviarFormularioAsync("/Ingresos/Editar/17", "/Ingresos/Editar/17", new Dictionary<string, string>
+        {
+            ["IdAutomovil"] = antes.IdAutomovil.ToString(System.Globalization.CultureInfo.InvariantCulture),
+            ["IdParqueo"] = antes.IdParqueo.ToString(System.Globalization.CultureInfo.InvariantCulture),
+            ["FechaHoraEntrada"] = entradaConZona,
+        });
+        string html = await respuesta.Content.ReadAsStringAsync();
+
+        Assert.Equal(HttpStatusCode.OK, respuesta.StatusCode);
+        Assert.Contains("debe escribirse sin zona horaria", html);
+        Assert.Contains($"value=\"{entradaConZona.Replace("+", "&#x2B;")}\"", html); // se conserva lo escrito (Razor codifica el "+")
+        Assert.Equal(antes.FechaHoraEntrada, (await ClienteApi.ObtenerIngresoAsync(17, default)).Datos!.FechaHoraEntrada);
+    }
+
+    [SkippableTheory]
+    [InlineData("999", "1")]   // parqueo inexistente
+    [InlineData("1", "999")]   // automóvil inexistente
+    public async Task Crear_LlaveForaneaInexistente_MuestraElRechazoDelApiYNoCrea(string idParqueo, string idAutomovil)
+    {
+        var respuesta = await EnviarFormularioAsync("/Ingresos/Crear", "/Ingresos/Crear", new Dictionary<string, string>
+        {
+            ["IdAutomovil"] = idAutomovil,
+            ["IdParqueo"] = idParqueo,
+            ["FechaHoraEntrada"] = "2026-10-20T08:00",
+        });
+        string html = await respuesta.Content.ReadAsStringAsync();
+
+        Assert.Equal(HttpStatusCode.OK, respuesta.StatusCode); // se vuelve a mostrar el formulario
+        Assert.Contains("El API rechazó la operación", html);
+        Assert.Contains("999", html);
+        Assert.Contains("value=\"2026-10-20T08:00\"", html);
+        Assert.Equal(17, (await ClienteApi.ListarIngresosAsync(1, 1, default)).Datos!.Total);
+    }
+
+    [SkippableFact]
+    public async Task Crear_FechaMalEscrita_NoLlamaAlApi()
+    {
+        var respuesta = await EnviarFormularioAsync("/Ingresos/Crear", "/Ingresos/Crear", new Dictionary<string, string>
+        {
+            ["IdAutomovil"] = "1",
+            ["IdParqueo"] = "1",
+            ["FechaHoraEntrada"] = "2026-13-45T25:00",
+        });
+        string html = await respuesta.Content.ReadAsStringAsync();
+
+        Assert.Equal(HttpStatusCode.OK, respuesta.StatusCode);
+        Assert.Contains("2026-13-45T25:00", html);
+        Assert.Contains("no es válido", html);
         Assert.Equal(17, (await ClienteApi.ListarIngresosAsync(1, 1, default)).Datos!.Total);
     }
 
