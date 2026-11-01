@@ -1,0 +1,13 @@
+{
+  "name": "parqueo-pruebas-navegador",
+  "private": true,
+  "description": "Pruebas en navegador (Playwright + Chromium) del MVC del Trabajo en Clase 04.",
+  "scripts": {
+    "etapa1": "node etapa1-automoviles-ingresos.cjs",
+    "etapa2": "node etapa2-maestro-detalle.cjs",
+    "verificacion": "node verificacion-origen.cjs"
+  },
+  "devDependencies": {
+    "playwright": "1.56.0"
+  }
+}

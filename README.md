@@ -2,17 +2,20 @@
 
 - Estudiante: Jonathan Van Brunt Valerio
 - Profesor: MSc. Héctor Egérico Fernández Méndez
-- Tecnología: C# · .NET 10 · ASP.NET Core · Entity Framework Core 10 · Npgsql · PostgreSQL · xUnit · Postman
+- Tecnología: C# · .NET 10 · ASP.NET Core (API y MVC con Razor) · JavaScript · Entity Framework Core 10 · Npgsql · PostgreSQL · xUnit · Postman · Playwright
 
 | Trabajo | Tema | Rama |
 |---|---|---|
 | Trabajo en Clase N.º 2 | Diseño de tablas en el motor default y clases de modelo repositorio en C# | `feature/trabajo-en-clase-02` (fusionada en `main`) |
 | Trabajo en Clase N.º 3 | Diseño de API's en C# | `feature/trabajo-en-clase-03` |
+| Trabajo en Clase N.º 4 | Diseño de controladores MVC utilizando JavaScript en C# | `feature/trabajo-en-clase-04` (creada desde `feature/trabajo-en-clase-03`) |
 
 Sistema de parqueo de automóviles con tres tablas de prefijo `PRQ`, scaffold de Entity
 Framework Core, campos calculados de la estadía, repositorios que trabajan igual con
-PostgreSQL (contexto de EF) y con archivos JSON locales, y un API REST que expone
-consultas, inserción, actualización y borrado de las tres tablas.
+PostgreSQL (contexto de EF) y con archivos JSON locales, un API REST que expone
+consultas, inserción, actualización y borrado de las tres tablas, y una aplicación
+ASP.NET Core MVC que consume ese API por HTTP (mantenimientos y una consulta
+maestro/detalle con JavaScript).
 
 ## Estructura
 
@@ -42,6 +45,15 @@ Parqueo-Programacion-Avanzada/
 │   ├── Dtos/                         # solicitudes, respuestas y conversión desde las entidades
 │   ├── Infraestructura/              # manejo de errores (ProblemDetails)
 │   └── Program.cs                    # origen de datos, secreto, controladores
+├── Parqueo.Mvc/                      # aplicación MVC (Trabajo 04); no referencia repositorios ni EF
+│   ├── Controladores/                # Inicio, Automoviles, Ingresos, MaestroDetalle
+│   ├── Servicios/ClienteApiParqueo.cs# cliente HTTP tipado (IHttpClientFactory) y contratos del API
+│   ├── Infraestructura/              # formatos es-CR, tipos permitidos, filtro "API no disponible"
+│   ├── Modelos/                      # modelos de vista con validaciones
+│   ├── Views/                        # Razor: listados, formularios, confirmaciones, maestro/detalle
+│   └── wwwroot/js/maestro-detalle.js # consulta del detalle con fetch
+├── Parqueo.Mvc.Tests/                # integración MVC → API en memoria (JSON y PostgreSQL) y cliente HTTP
+├── pruebas-navegador/                # pruebas reales en Chromium con Playwright (Node.js)
 ├── Parqueo.AppConsole/               # consola de verificación del Trabajo 02
 ├── Parqueo.Tests/                    # pruebas de modelo y repositorios (JSON y PostgreSQL)
 ├── Parqueo.Api.Tests/                # pruebas HTTP del API (JSON y PostgreSQL)
@@ -78,12 +90,157 @@ omisiones).
 - .NET SDK 10 (`dotnet --list-sdks`)
 - Postman (aplicación de escritorio o web) para las pruebas del API
 - Para el origen `BaseDatos`: acceso a la base PostgreSQL del curso con las tablas PRQ
+- Opcional, para las pruebas en navegador del MVC: Node.js 18 o superior
 
 ```powershell
 dotnet tool restore     # instala dotnet-ef 10.0.13 desde dotnet-tools.json
 dotnet restore
 dotnet build Parqueo.slnx
 ```
+
+---
+
+# Trabajo en Clase N.º 4 — Controladores MVC con JavaScript
+
+## Recorrido de una consulta
+
+```
+Navegador (vista Razor o maestro-detalle.js)
+  → controlador MVC (Parqueo.Mvc, puerto 5130)
+  → ClienteApiParqueo: HttpClient tipado de IHttpClientFactory, URL base = Api:UrlBase
+  → API REST (Parqueo.Api, puerto 5246)
+  → repositorios (Parqueo.BusinessLogic)
+  → JSON (Datos/) o PostgreSQL (esquema user_13), según OrigenDatos
+```
+
+El MVC no referencia los repositorios, el contexto de EF ni la cadena de conexión: todo lo
+obtiene del API. La duración, las horas y el monto llegan calculados por el API; el MVC
+solo les da formato (`es-CR`, colones).
+
+## Ejecutar el API y el MVC
+
+Cada comando en su propia ventana, desde la carpeta de la solución:
+
+```powershell
+dotnet build Parqueo.slnx
+dotnet run --project Parqueo.Api --launch-profile http --no-build     # http://localhost:5246
+dotnet run --project Parqueo.Mvc --launch-profile http --no-build     # http://localhost:5130
+```
+
+Abra `http://localhost:5130`. Si el API no está levantado, el MVC responde con la página
+"API no disponible" (503) en lugar de una excepción.
+
+## Dónde se configura cada cosa
+
+Son dos responsabilidades distintas, en dos archivos distintos:
+
+| Qué | Dónde | Valor entregado |
+|---|---|---|
+| Origen de datos que usa el API | `Parqueo.Api/appsettings.json` → `"OrigenDatos"` (`Json` o `BaseDatos`) | `Json` |
+| URL del API que consume el MVC | `Parqueo.Mvc/appsettings.json` → `"Api": { "UrlBase" }` | `http://localhost:5246/` |
+
+Para consultar PostgreSQL desde el MVC basta con cambiar `"OrigenDatos": "BaseDatos"` en
+`Parqueo.Api/appsettings.json` y reiniciar el API; el MVC no cambia. La cadena de conexión
+sigue en User Secrets (`ConnectionStrings:ParqueoDb`), nunca en `appsettings.json`.
+
+ASP.NET Core aplica las fuentes de configuración en este orden (la última gana):
+`appsettings.json` → `appsettings.Development.json` → User Secrets (solo en Development) →
+variables de entorno → argumentos de línea de comandos. Por eso, para demostrar el valor de
+`appsettings.json`, el API se inicia **sin** `--OrigenDatos` y sin una variable de entorno
+`OrigenDatos`. Al arrancar, el API escribe en la consola `Origen de datos: Json (carpeta …)` o
+`Origen de datos: BaseDatos`, y cada respuesta trae el encabezado `X-Origen-Datos`. El pie de
+las páginas del MVC y el estado del maestro/detalle muestran el valor de ese encabezado
+recibido en cada respuesta, no una etiqueta fija.
+
+Alternativa con los dos orígenes a la vez (dos procesos del API en puertos distintos y un
+segundo MVC que apunta al segundo API):
+
+```powershell
+dotnet run --project Parqueo.Api --launch-profile http --no-build -- --OrigenDatos=BaseDatos --urls=http://localhost:5247
+dotnet run --project Parqueo.Mvc --launch-profile http --no-build -- --Api:UrlBase=http://localhost:5247/ --urls=http://localhost:5131
+```
+
+## Pantallas
+
+| Ruta | Contenido |
+|---|---|
+| `/` | Estado del API y accesos a las tres secciones |
+| `/Automoviles` | Filtro por intervalo de años inclusivo (`anioDesde`, `anioHasta`) con validación de números, rango 1886–2100 e intervalo invertido; paginación que conserva el filtro; detalles con los ingresos del automóvil; crear, editar y borrar con confirmación. Si el automóvil tiene ingresos, el API responde 409 y el MVC muestra el motivo. |
+| `/Ingresos` | Listado paginado, detalles, registro, edición y borrado de ingresos. Automóvil y parqueo se eligen de combos; la salida es opcional (estadía en curso). Las fechas se envían sin zona horaria (una fecha con zona se rechaza en lugar de convertirla) y conservan los segundos cuando el registro los tiene. |
+| `/MaestroDetalle` | Combo con los tipos permitidos (`sedán`, `4x4`, `moto`) y botón **Consultar**; tabla maestra de automóviles del tipo y panel de detalle con los ingresos del automóvil seleccionado (id del parqueo, entrada, salida, minutos, horas y monto), actualizado con JavaScript sin recargar la página. |
+
+Detalles de implementación:
+
+- Todos los formularios POST llevan token antifalsificación (`AutoValidateAntiforgeryToken`
+  global); borrar siempre pasa por una página de confirmación.
+- Si el API no responde al guardar, el formulario se vuelve a mostrar con lo escrito y el
+  motivo (503); los errores del API (400, 404, 409, 503) se muestran con su mensaje.
+- `maestro-detalle.js` usa `fetch` contra `/MaestroDetalle/Automoviles?tipo=` y
+  `/MaestroDetalle/Ingresos/{id}` (JSON generado por el MVC a partir del API). Muestra estados
+  de carga, vacío y error; cada consulta nueva o cancelación (cambio de tipo) aborta la
+  anterior con `AbortController` e invalida su número de solicitud, así una respuesta tardía
+  nunca se muestra; escribe las celdas con `textContent` (un
+  texto con HTML se muestra como texto) y presenta los valores nulos de una estadía en curso
+  como "Sin salida (en curso)", "En curso" y "Pendiente (sin salida)", nunca como 0.
+- Las fechas se muestran tal como las envía el API, sin conversión de zona horaria.
+
+## Ampliación compatible del API
+
+Los listados del API ahora informan el total de registros que cumplen el filtro en el
+encabezado **`X-Total-Registros`** (el cuerpo sigue siendo el mismo arreglo, así que la
+colección de Postman del Trabajo 03 no cambia). El MVC lo usa para calcular el número de
+páginas. Los repositorios JSON y de base de datos tienen un método `ContarAsync` con los
+mismos filtros que el listado.
+
+## Pruebas del Trabajo 04
+
+```powershell
+dotnet test Parqueo.slnx      # incluye Parqueo.Mvc.Tests
+```
+
+`Parqueo.Mvc.Tests` (121 pruebas) levanta el API y el MVC en memoria con
+`WebApplicationFactory` y conecta el `HttpClient` del MVC al API de prueba, así que cada
+prueba recorre MVC → API → repositorio. Las pruebas se ejecutan con JSON (copia temporal) y,
+si existe `PARQUEO_PRUEBAS_BD`, también con PostgreSQL; sin esa variable las de PostgreSQL
+aparecen como **omitidas** (65 aprobadas y 56 omitidas). Incluyen pruebas unitarias del
+cliente HTTP con un manejador simulado (recorrer páginas de 100 registros, codificar
+`sedán` en la URL, errores que no son JSON) y casos con el API o la base de datos caídos.
+
+Pruebas reales en Chromium (con el API y el MVC ya levantados):
+
+```powershell
+cd pruebas-navegador
+npm install
+npx playwright install chromium
+node etapa1-automoviles-ingresos.cjs http://localhost:5130 Json salida-etapa1.txt capturas
+node etapa2-maestro-detalle.cjs http://localhost:5130 http://localhost:5246 Json salida-etapa2.txt capturas
+node verificacion-origen.cjs http://localhost:5130 Json salida-verificacion.txt capturas
+```
+
+El argumento `Json` o `BaseDatos` es el origen que se espera ver en `X-Origen-Datos`. Las
+pruebas esperan los datos iniciales (6 automóviles, 3 parqueos, 17 ingresos); los registros
+temporales que crean se borran al final. La etapa 2 levanta además un proxy local que demora
+el cuerpo de las respuestas para probar el cambio de tipo durante una carga.
+
+## Evidencias del Trabajo 04
+
+En `docs/evidencias/tc4/` (salidas reales; PostgreSQL es la base **local** del agente, no la
+instancia del profesor):
+
+- `00-linea-base.txt`: compilación y pruebas antes de modificar.
+- `etapa1-*`, `etapa2-*`: `dotnet test`, prueba en navegador para cada origen y registro de
+  las llamadas del MVC al API, por checkpoint.
+- `verificacion-origen-json.txt` y `verificacion-origen-basedatos.txt`: cambio de
+  `OrigenDatos` en `appsettings.json`, proceso y entorno del API, `X-Origen-Datos`, consultas
+  por el MVC y conexiones del proceso del API a PostgreSQL.
+- `verificacion-equivalencia.txt` y `verificacion-respuestas-*.json`: las mismas consultas
+  devuelven los mismos datos con ambos orígenes.
+- `verificacion-newman-*.txt`: la colección de Postman del Trabajo 03 sigue pasando.
+- `revision-js-anterior-etapa2.txt`: la prueba en navegador falla con el JavaScript previo a
+  la corrección de la revisión independiente (reproduce el hallazgo).
+- `final-dotnet-test.txt` y `final-navegador-*`: pruebas de toda la solución y en navegador
+  al cerrar el trabajo, en ambos orígenes.
+- `capturas/`: capturas de pantalla de Chromium usadas en el informe.
 
 ---
 
@@ -385,6 +542,11 @@ dotnet test Parqueo.slnx
   merge de `main` (verificación del 19 de octubre en el esquema `user_13`), `.gitattributes`
   y correcciones encontradas al ejecutar en el equipo del estudiante. Al terminar se fusiona
   en `main` con `merge --no-ff`, igual que la rama del Trabajo 02.
+- `feature/trabajo-en-clase-04`, creada desde `feature/trabajo-en-clase-03` (20e073b): un
+  commit con la ampliación del API (`X-Total-Registros`), el checkpoint 1 (MVC de automóviles
+  e ingresos), el checkpoint 2 (maestro/detalle con JavaScript), una corrección de diseño del
+  detalle, la verificación de ambos orígenes, las correcciones de una revisión independiente
+  y la documentación.
 - Repositorio: https://github.com/vanbrunt99/Parqueo-Programacion-Avanzada
 
 ## Evidencias
@@ -397,8 +559,10 @@ ejecuciones y el resultado de `dotnet test`. Los archivos `final-*` repiten todo
 de las correcciones de la revisión; `final-newman-guardia-variable-vacia.txt` muestra que
 una solicitud dependiente se omite si falta el id. Newman es el ejecutor de línea de
 comandos de Postman: estas salidas **no** sustituyen las capturas de la aplicación Postman.
-`docs/conversacion-agente.md` y `docs/conversacion-agente-tc3.md` contienen los prompts y el
-resumen de las sesiones con el agente de IA.
+Las evidencias del Trabajo 04 están en `docs/evidencias/tc4` (ver la sección del Trabajo 04).
+`docs/conversacion-agente.md`, `docs/conversacion-agente-tc3.md` y
+`docs/conversacion-agente-tc4.md` contienen los prompts y el resumen de las sesiones con el
+agente de IA.
 
 ## Seguridad
 
@@ -407,10 +571,16 @@ resumen de las sesiones con el agente de IA.
 - La consola solo muestra servidor, base y usuario de la conexión, nunca la contraseña.
 - Los errores 500 del API devuelven un mensaje genérico; el detalle queda en el registro
   del servidor.
+- El MVC no conoce la cadena de conexión: su `appsettings.json` solo contiene la URL del API.
+  Los formularios llevan token antifalsificación y el JavaScript escribe los datos con
+  `textContent`, no con `innerHTML`.
 
 ## Limitaciones conocidas
 
-- Los listados paginados no devuelven el total de registros (no hay `X-Total-Count`).
+- La verificación del Trabajo 04 en el entorno del agente usó JSON y una base PostgreSQL
+  local; la instancia del profesor en la nube no se consultó desde ese entorno (no tiene los
+  User Secrets del estudiante). Con el secreto configurado, el mismo cambio de `OrigenDatos`
+  en `appsettings.json` apunta el API a esa base.
 - No se valida que un mismo automóvil tenga dos estadías que se traslapan en el tiempo;
   el enunciado no lo pide y el script SQL tampoco lo restringe.
 - La política de cobro proporcional es provisional hasta que el profesor la confirme.
