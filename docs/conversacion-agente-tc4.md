@@ -376,3 +376,16 @@ orígenes y la base local termina con 6 automóviles, 3 parqueos y 17 ingresos.
   ni los archivos de entrega.
 - **Sección 1 de la plantilla.** Menciona el agente de Visual Studio Code; esta sesión no
   ocurrió en Visual Studio Code, por eso se identifica la herramienta realmente usada.
+
+
+## 7. Cierre en el equipo del estudiante el 1 de noviembre de 2026
+
+A solicitud del estudiante, Codex (OpenAI) revisó el traspaso y trabajó en una copia aislada reconstruida del bundle. No modificó las copias de trabajo previas del estudiante.
+
+- **Publicación inicial.** Reconstruyó la rama `feature/trabajo-en-clase-04`, configuró `origin` con la URL del repositorio existente y ejecutó un push normal. `git ls-remote` confirmó el commit `d618285e02ea4770a483658ed85744a7606803a1`. No se ejecutó Publicar-TC4.ps1: el clon ya tenía abierta la rama 04 y se realizaron sus operaciones Git equivalentes de forma directa y comprobada. No se forzó el push ni se modificaron otras ramas.
+- **Compilación en Windows.** .NET SDK 10.0.403: 0 errores y 0 advertencias.
+- **Pruebas locales.** Con `PARQUEO_PRUEBAS_BD` ausente, pasaron 151 pruebas de repositorios/modelo, 95 del API y 65 del MVC: 311 aprobadas y 0 fallidas. Las 252 pruebas que requieren PostgreSQL se omitieron deliberadamente para evitar escrituras en la base del profesor.
+- **Base del curso.** Se revisó y ejecutó `scripts/Verificar-Nube-TC4.ps1` con llamadas GET exclusivamente. Se añadieron resguardos de puertos libres, ejecución sin ventanas visibles, creación de la carpeta de evidencia y comprobación del directorio temporal antes de limpiarlo. El encabezado fue `X-Origen-Datos: BaseDatos`, el MVC mostró `data-origen="BaseDatos"` y el API abrió una conexión a `20.151.104.238:5432`, igual a la IP DNS de `postgresql-hecferme.postgres.database.azure.com`.
+- **Equivalencia.** Las 12 respuestas comparadas resultaron idénticas entre JSON y la nube. Se verificaron los tres tipos de automóvil, los detalles de los seis automóviles y los listados de automóviles, parqueos e ingresos.
+- **Datos y secretos.** Solo hubo GET en la nube. Se mantuvieron los 6 automóviles, 3 parqueos y 17 ingresos. No se leyó ni imprimió la contraseña; el API utilizó la configuración existente. `Parqueo.Api/appsettings.json` terminó restaurado en Json y sin diferencias respecto al commit.
+- **Documento final.** Se actualiza con el resultado real de publicación y nube. La evidencia visual de los flujos del navegador preserva su atribución al entorno original de Claude; no se atribuyen esas capturas a Windows.

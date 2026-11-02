@@ -236,6 +236,8 @@ instancia del profesor):
 - `verificacion-equivalencia.txt` y `verificacion-respuestas-*.json`: las mismas consultas
   devuelven los mismos datos con ambos orígenes.
 - `verificacion-newman-*.txt`: la colección de Postman del Trabajo 03 sigue pasando.
+- `verificacion-nube-*.txt` y `verificacion-nube-respuestas-*.json`: consultas GET a la base del curso desde Windows, el 1 de noviembre de 2026, con `scripts/Verificar-Nube-TC4.ps1`. Las 12 respuestas comparadas coinciden con JSON y la conexión TCP del API coincide con la IP DNS del servidor del curso.
+- `equipo-estudiante-compilacion-windows.txt` y `equipo-estudiante-pruebas-json.txt`: compilación con cero errores y advertencias; 311 pruebas aprobadas, 0 fallidas y 252 omitidas por requerir PostgreSQL. No se ejecutaron pruebas de escritura contra la nube.
 - `revision-js-anterior-etapa2.txt`: la prueba en navegador falla con el JavaScript previo a
   la corrección de la revisión independiente (reproduce el hallazgo).
 - `final-dotnet-test.txt` y `final-navegador-*`: pruebas de toda la solución y en navegador
@@ -578,10 +580,7 @@ agente de IA.
 
 ## Limitaciones conocidas
 
-- La verificación del Trabajo 04 en el entorno del agente usó JSON y una base PostgreSQL
-  local; la instancia del profesor en la nube no se consultó desde ese entorno (no tiene los
-  User Secrets del estudiante). Con el secreto configurado, el mismo cambio de `OrigenDatos`
-  en `appsettings.json` apunta el API a esa base.
+- La verificación inicial del Trabajo 04 usó JSON y PostgreSQL local. El 1 de noviembre de 2026, Codex completó desde el equipo del estudiante la consulta a la base del profesor en Azure, exclusivamente con GET. Las pruebas automatizadas de escritura en la nube se mantuvieron omitidas; no se presentan como aprobadas.
 - No se valida que un mismo automóvil tenga dos estadías que se traslapan en el tiempo;
   el enunciado no lo pide y el script SQL tampoco lo restringe.
 - La política de cobro proporcional es provisional hasta que el profesor la confirme.

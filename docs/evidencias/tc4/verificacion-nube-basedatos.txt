@@ -1,0 +1,28 @@
+# Verificación del MVC con "OrigenDatos": "BaseDatos" en Parqueo.Api/appsettings.json, en el equipo del estudiante.
+# BaseDatos = la base indicada por ConnectionStrings:ParqueoDb en los User Secrets del equipo (no se lee ni se muestra la cadena).
+# Fecha: 2026-11-01 19:30 (hora de Costa Rica). Solo solicitudes GET. Salida real, generada por Verificar-Nube-TC4.ps1.
+
+## 1. Configuración efectiva
+"OrigenDatos": "BaseDatos"
+Variables de entorno OrigenDatos/RutaDatosJson/ConnectionStrings__* en la sesión: ninguna
+Comando: dotnet run --project Parqueo.Api --launch-profile http --no-build   (sin argumentos)
+Origen de datos: BaseDatos
+Now listening on: http://localhost:5246
+Hosting environment: Development
+
+## 2. Respuestas del API y del MVC
+GET http://localhost:5246/api/automoviles?anioDesde=2015&anioHasta=2020 -> 200; X-Origen-Datos: BaseDatos; X-Total-Registros: 3
+GET http://localhost:5246/api/ingresos/6 -> 200; X-Origen-Datos: BaseDatos
+{"consecutivo":6,"idParqueo":1,"idAutomovil":2,"fechaHoraEntrada":"2026-10-05T12:00:00","fechaHoraSalida":"2026-10-05T13:20:00","duracionEstadiaMinutos":80,"duracionEstadiaHoras":1.3333,"montoTotalAPagar":1666.67,"automovil":{"id":2,"color":"Blanco","anio":2021,"fabricante":"Hyundai","tipo":"4x4"},"parqueo":{"id":1,"nombreProvincia":"San José","nombre":"Parqueo Central Avenida Segunda","precioPorHora":1250.00}}
+GET http://localhost:5130/Automoviles?anioDesde=2015&anioHasta=2020 -> pie del MVC: data-origen="BaseDatos"
+GET http://localhost:5130/MaestroDetalle/Ingresos/2 -> 200
+{"automovil":{"id":2,"color":"Blanco","anio":2021,"fabricante":"Hyundai","tipo":"4x4"},"origenDatos":"BaseDatos","ingresos":[{"consecutivo":2,"idParqueo":2,"nombreParqueo":"Parqueo Mercado de Heredia","fechaHoraEntrada":"2026-10-01T09:00:00","fechaHoraSalida":"2026-10-01T09:45:00","duracionEstadiaMinutos":45,"duracionEstadiaHoras":0.75,"montoACancelar":600.00},{"consecutivo":6,"idParqueo":1,"nombreParqueo":"Parqueo Central Avenida Segunda","fechaHoraEntrada":"2026-10-05T12:00:00","fechaHoraSalida":"2026-10-05T13:20:00","duracionEstadiaMinutos":80,"duracionEstadiaHoras":1.3333,"montoACancelar":1666.67},{"consecutivo":16,"idParqueo":1,"nombreParqueo":"Parqueo Central Avenida Segunda","fechaHoraEntrada":"2026-10-17T08:05:00","fechaHoraSalida":null,"duracionEstadiaMinutos":null,"duracionEstadiaHoras":null,"montoACancelar":null}]}
+
+## 3. Conexiones TCP del proceso del API al puerto 5432
+[equipo local] -> 20.151.104.238:5432 (proceso 4160)
+Direcciones IP de postgresql-hecferme.postgres.database.azure.com (DNS): 20.151.104.238
+
+## 4. Llamadas del MVC al API (registro del HttpClient, extracto)
+Start processing HTTP request GET http://localhost:5246/api/automoviles?pagina=1&tamanoPagina=1
+Start processing HTTP request GET http://localhost:5246/api/automoviles?anioDesde=2015&anioHasta=2020&pagina=1&tamanoPagina=10
+Start processing HTTP request GET http://localhost:5246/api/automoviles/2

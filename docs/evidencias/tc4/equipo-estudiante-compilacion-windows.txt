@@ -1,0 +1,40 @@
+
+Esto es .NET 10.0.
+---------------------
+Versión del SDK: 10.0.403
+
+----------------
+Instalar un certificado de desarrollo HTTPS de ASP.NET Core.
+Para confiar en el certificado, ejecute "dotnet dev-certs https --trust"
+Obtenga información sobre HTTPS: https://aka.ms/dotnet-https
+
+----------------
+Escribir su primera aplicación: https://aka.ms/dotnet-hello-world
+Descubra las novedades: https://aka.ms/dotnet-whats-new
+Explore la documentación: https://aka.ms/dotnet-docs
+Notificar problemas y encontrar el código fuente en GitHub: https://github.com/dotnet/core
+Use "dotnet --help" para ver los comandos disponibles o visite: https://aka.ms/dotnet-cli
+--------------------------------------------------------------------------------------
+  Determinando los proyectos que se van a restaurar...
+  Se ha restaurado C:\Users\Usuario\OneDrive\Escritorio\Documentos\ChatGPT\Cuatrimestre III 2026\Trabajo-En-Clase-04\Cierre-Codex\Repositorio\Parqueo.Mvc\Parqueo.Mvc.csproj (en 332 ms).
+  Se ha restaurado C:\Users\Usuario\OneDrive\Escritorio\Documentos\ChatGPT\Cuatrimestre III 2026\Trabajo-En-Clase-04\Cierre-Codex\Repositorio\Parqueo.Model\Parqueo.Model.csproj (en 8.35 s).
+  Se ha restaurado C:\Users\Usuario\OneDrive\Escritorio\Documentos\ChatGPT\Cuatrimestre III 2026\Trabajo-En-Clase-04\Cierre-Codex\Repositorio\Parqueo.BusinessLogic\Parqueo.BusinessLogic.csproj (en 8.35 s).
+  Se ha restaurado C:\Users\Usuario\OneDrive\Escritorio\Documentos\ChatGPT\Cuatrimestre III 2026\Trabajo-En-Clase-04\Cierre-Codex\Repositorio\Parqueo.Api\Parqueo.Api.csproj (en 8.35 s).
+  Se ha restaurado C:\Users\Usuario\OneDrive\Escritorio\Documentos\ChatGPT\Cuatrimestre III 2026\Trabajo-En-Clase-04\Cierre-Codex\Repositorio\Parqueo.Tests\Parqueo.Tests.csproj (en 15.12 s).
+  Se ha restaurado C:\Users\Usuario\OneDrive\Escritorio\Documentos\ChatGPT\Cuatrimestre III 2026\Trabajo-En-Clase-04\Cierre-Codex\Repositorio\Parqueo.Api.Tests\Parqueo.Api.Tests.csproj (en 15.4 s).
+  Se ha restaurado C:\Users\Usuario\OneDrive\Escritorio\Documentos\ChatGPT\Cuatrimestre III 2026\Trabajo-En-Clase-04\Cierre-Codex\Repositorio\Parqueo.Mvc.Tests\Parqueo.Mvc.Tests.csproj (en 15.41 s).
+  Se ha restaurado C:\Users\Usuario\OneDrive\Escritorio\Documentos\ChatGPT\Cuatrimestre III 2026\Trabajo-En-Clase-04\Cierre-Codex\Repositorio\Parqueo.AppConsole\Parqueo.AppConsole.csproj (en 17.94 s).
+  Parqueo.Model -> C:\Users\Usuario\OneDrive\Escritorio\Documentos\ChatGPT\Cuatrimestre III 2026\Trabajo-En-Clase-04\Cierre-Codex\Repositorio\Parqueo.Model\bin\Debug\net10.0\Parqueo.Model.dll
+  Parqueo.BusinessLogic -> C:\Users\Usuario\OneDrive\Escritorio\Documentos\ChatGPT\Cuatrimestre III 2026\Trabajo-En-Clase-04\Cierre-Codex\Repositorio\Parqueo.BusinessLogic\bin\Debug\net10.0\Parqueo.BusinessLogic.dll
+  Parqueo.Mvc -> C:\Users\Usuario\OneDrive\Escritorio\Documentos\ChatGPT\Cuatrimestre III 2026\Trabajo-En-Clase-04\Cierre-Codex\Repositorio\Parqueo.Mvc\bin\Debug\net10.0\Parqueo.Mvc.dll
+  Parqueo.AppConsole -> C:\Users\Usuario\OneDrive\Escritorio\Documentos\ChatGPT\Cuatrimestre III 2026\Trabajo-En-Clase-04\Cierre-Codex\Repositorio\Parqueo.AppConsole\bin\Debug\net10.0\Parqueo.AppConsole.dll
+  Parqueo.Api -> C:\Users\Usuario\OneDrive\Escritorio\Documentos\ChatGPT\Cuatrimestre III 2026\Trabajo-En-Clase-04\Cierre-Codex\Repositorio\Parqueo.Api\bin\Debug\net10.0\Parqueo.Api.dll
+  Parqueo.Tests -> C:\Users\Usuario\OneDrive\Escritorio\Documentos\ChatGPT\Cuatrimestre III 2026\Trabajo-En-Clase-04\Cierre-Codex\Repositorio\Parqueo.Tests\bin\Debug\net10.0\Parqueo.Tests.dll
+  Parqueo.Api.Tests -> C:\Users\Usuario\OneDrive\Escritorio\Documentos\ChatGPT\Cuatrimestre III 2026\Trabajo-En-Clase-04\Cierre-Codex\Repositorio\Parqueo.Api.Tests\bin\Debug\net10.0\Parqueo.Api.Tests.dll
+  Parqueo.Mvc.Tests -> C:\Users\Usuario\OneDrive\Escritorio\Documentos\ChatGPT\Cuatrimestre III 2026\Trabajo-En-Clase-04\Cierre-Codex\Repositorio\Parqueo.Mvc.Tests\bin\Debug\net10.0\Parqueo.Mvc.Tests.dll
+
+Compilación correcta.
+    0 Advertencia(s)
+    0 Errores
+
+Tiempo transcurrido 00:00:44.18

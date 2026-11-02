@@ -1,0 +1,17 @@
+# Equivalencia de resultados entre OrigenDatos=Json y OrigenDatos=BaseDatos (base de los User Secrets del equipo del estudiante).
+# Mismas URL; solo cambió "OrigenDatos" en Parqueo.Api/appsettings.json. Valores del JSON interpretado, sin el campo origenDatos.
+
+/MaestroDetalle/Automoviles?tipo=sed%C3%A1n                Json       BaseDatos  idéntico
+/MaestroDetalle/Automoviles?tipo=4x4                       Json       BaseDatos  idéntico
+/MaestroDetalle/Automoviles?tipo=moto                      Json       BaseDatos  idéntico
+/MaestroDetalle/Ingresos/1                                 Json       BaseDatos  idéntico
+/MaestroDetalle/Ingresos/2                                 Json       BaseDatos  idéntico
+/MaestroDetalle/Ingresos/3                                 Json       BaseDatos  idéntico
+/MaestroDetalle/Ingresos/4                                 Json       BaseDatos  idéntico
+/MaestroDetalle/Ingresos/5                                 Json       BaseDatos  idéntico
+/MaestroDetalle/Ingresos/6                                 Json       BaseDatos  idéntico
+/api/automoviles?tamanoPagina=100                          Json       BaseDatos  idéntico
+/api/parqueos?tamanoPagina=100                             Json       BaseDatos  idéntico
+/api/ingresos?tamanoPagina=100                             Json       BaseDatos  idéntico
+
+Resultado: 12 de 12 respuestas con contenido idéntico en ambos orígenes.
